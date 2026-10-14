@@ -289,9 +289,9 @@
       "area": "akashi",
       "kind": "places_csv_candidate",
       "url": "https://www.city.akashi.lg.jp/documents/29427/282031_preschool.csv",
-      "acquisition_candidate": "csv_review_required",
+      "acquisition_candidate": "not_suitable_for_open_playground_guide",
       "policy_url": "https://www.city.akashi.lg.jp/soumu/j_kanri_ka/shise/opendata/index.html",
-      "notes": "明石市オープンデータに掲載。子育て施設一覧には保育所や放課後児童クラブ等が含まれ、一般の遊び場と同一視できない。CSVの実カラム・児童館/公共子育て支援拠点の分類・公式URL・住所・商用再利用の個別条件を審査するまで取得しない。",
+      "notes": "2026-10-14単発メタデータ調査: 実CSV208件は保育所・こども園・放課後児童クラブ等であり、一般利用可能な遊び場の分類はない。URLのHTTPS値は28/208件のみ。家族向けお出かけ施設として不適合のため取込み見送り。",
       "organization_type": "municipality",
       "robots_review_status": "unverified",
       "terms_review_status": "unverified",
@@ -301,7 +301,9 @@
       "candidate_found_at": "2026-10-14",
       "maximum_requests_per_day": 1,
       "permission_document": null,
-      "enabled": false
+      "enabled": false,
+      "access_review_status": "reachable_metadata_only",
+      "audit_note": "CSV 208行、分類別件数のみを確認。個別施設データの保存・再掲載なし。"
     },
     {
       "id": "kakogawa_baby_stations",
