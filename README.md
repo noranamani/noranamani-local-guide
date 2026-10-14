@@ -151,3 +151,12 @@ Phase 1Cで新規に公開したイベントは0件です。GitHub Pages・Oracl
 公式商業施設のイベントページ（アリオ加古川、ニッケパークタウン、ABCハウジング加古川、イオン明石、アスピア明石、イオン姫路大津）には2026年10月の親子向けイベントが実在。地域メディア3件（かこがわノート、明石じゃーなる、加古川のこと）のRSSも、2026-10-14に単発メタデータ調査で取得できました。
 
 **取得できることと、商用サイトへの転載を許されることは別**です。候補はすべて無効のまま。情報源は28件、有効なのは明石市観光施設CSV1件だけです。調査結果は [民間情報源の監査台帳](planning/private-source-audit.md) を参照してください。
+
+
+## Phase 1I — 許可審査後に使うRSS確認待ちキュー（オフライン）
+
+RSSから記事URLを候補として拾う処理を追加しますが、**外部への定期取得は有効化しません**。かこがわノート・明石じゃーなる・加古川のこと・姫路の種はすべて`rss_discovery_review_status=unverified`のままです。
+
+RSS XMLを人手で準備し、利用規約、robots、内部発見用途、根拠URLと30日以内の審査が揃った場合のみ、`python -m scripts.stage_approved_feed --source-id <source_id> --xml-file <local.xml>` を利用できます。候補は`cache/rss_discovery_queue.json`へ、記事URLと発行日・暫定分類のみ保存されます。記事タイトル・本文・写真は保存せず、`data/events.json`や`docs/`へ直接掲載しません。
+
+詳細は[民間情報源監査](planning/private-source-audit.md)。
