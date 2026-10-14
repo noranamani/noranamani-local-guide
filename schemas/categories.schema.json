@@ -1,0 +1,73 @@
+{
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "primary": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9_-]+$",
+            "minLength": 1
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          }
+        },
+        "required": [
+          "id",
+          "label"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "facets": {
+      "type": "object",
+      "properties": {
+        "indoor_outdoor": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "indoor",
+              "outdoor",
+              "mixed",
+              "unknown"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "price_type": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "free",
+              "paid",
+              "conditional",
+              "unknown"
+            ]
+          },
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "indoor_outdoor",
+        "price_type"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "schema_version",
+    "primary",
+    "facets"
+  ],
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}

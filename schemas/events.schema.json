@@ -1,0 +1,272 @@
+{
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "event_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          },
+          "municipality": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          },
+          "place_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 160
+          },
+          "location_label": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 160
+          },
+          "category_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 160
+            },
+            "uniqueItems": true,
+            "minItems": 1
+          },
+          "occurrences": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "occurrence_id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 160
+                },
+                "start_at": {
+                  "anyOf": [
+                    {
+                      "type": "null"
+                    },
+                    {
+                      "type": "string",
+                      "format": "date"
+                    },
+                    {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  ]
+                },
+                "end_at": {
+                  "anyOf": [
+                    {
+                      "type": "null"
+                    },
+                    {
+                      "type": "string",
+                      "format": "date"
+                    },
+                    {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  ]
+                },
+                "timezone": {
+                  "const": "Asia/Tokyo"
+                },
+                "status": {
+                  "enum": [
+                    "scheduled",
+                    "cancelled",
+                    "postponed",
+                    "ended",
+                    "unconfirmed"
+                  ]
+                }
+              },
+              "required": [
+                "occurrence_id",
+                "start_at",
+                "end_at",
+                "timezone",
+                "status"
+              ],
+              "additionalProperties": false
+            },
+            "minItems": 1
+          },
+          "age_info": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 160
+          },
+          "indoor_outdoor": {
+            "enum": [
+              "indoor",
+              "outdoor",
+              "mixed",
+              "unknown"
+            ]
+          },
+          "price_type": {
+            "enum": [
+              "free",
+              "paid",
+              "conditional",
+              "unknown"
+            ]
+          },
+          "price_description": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 160
+          },
+          "reservation_required": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "source_id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 160
+                },
+                "url": {
+                  "type": "string",
+                  "format": "uri",
+                  "maxLength": 1000
+                },
+                "source_event_id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 160
+                },
+                "fetched_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "last_checked_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "source_published_at": {
+                  "anyOf": [
+                    {
+                      "type": "null"
+                    },
+                    {
+                      "type": "string",
+                      "format": "date"
+                    },
+                    {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  ]
+                },
+                "is_primary": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "source_id",
+                "url",
+                "source_event_id",
+                "fetched_at",
+                "last_checked_at",
+                "source_published_at",
+                "is_primary"
+              ],
+              "additionalProperties": false
+            },
+            "minItems": 1
+          },
+          "first_seen_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "last_verified_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "enum": [
+              "scheduled",
+              "cancelled",
+              "postponed",
+              "ended",
+              "unconfirmed"
+            ]
+          },
+          "organizer_label": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 160
+          },
+          "review_hold": {
+            "type": "boolean"
+          },
+          "official_url": {
+            "type": "string",
+            "format": "uri",
+            "maxLength": 1000
+          }
+        },
+        "required": [
+          "event_id",
+          "title",
+          "municipality",
+          "place_id",
+          "location_label",
+          "category_ids",
+          "occurrences",
+          "age_info",
+          "indoor_outdoor",
+          "price_type",
+          "price_description",
+          "reservation_required",
+          "sources",
+          "first_seen_at",
+          "last_verified_at",
+          "status"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "schema_version",
+    "items"
+  ],
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}

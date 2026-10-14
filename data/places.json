@@ -1,4 +1,89 @@
 {
   "schema_version": 1,
-  "items": []
+  "items": [
+    {
+      "place_id": "ea0fd2352fe2593f87006109",
+      "name": "明石市立天文科学館",
+      "municipality": "明石市",
+      "address": "兵庫県明石市人丸町2-6",
+      "indoor_outdoor": "unknown",
+      "admission": null,
+      "official_url": "https://www.am12.jp/",
+      "sources": [
+        {
+          "source_id": "akashi_open_data",
+          "url": "https://www.city.akashi.lg.jp/documents/29427/282031_tourism.csv",
+          "source_event_id": "011-00001",
+          "fetched_at": "2026-10-14T17:00:59.688710+09:00",
+          "last_checked_at": "2026-10-14T17:00:59.688710+09:00",
+          "source_published_at": "2026-08-25",
+          "is_primary": true
+        }
+      ],
+      "last_verified_at": "2026-10-14T17:00:59.688710+09:00"
+    },
+    {
+      "place_id": "c678fa5065c72c29b390ff38",
+      "name": "明石市立文化博物館",
+      "municipality": "明石市",
+      "address": "兵庫県明石市上ノ丸2-13-1",
+      "indoor_outdoor": "unknown",
+      "admission": null,
+      "official_url": "https://www.akashibunpaku.com/",
+      "sources": [
+        {
+          "source_id": "akashi_open_data",
+          "url": "https://www.city.akashi.lg.jp/documents/29427/282031_tourism.csv",
+          "source_event_id": "011-00002",
+          "fetched_at": "2026-10-14T17:00:59.688710+09:00",
+          "last_checked_at": "2026-10-14T17:00:59.688710+09:00",
+          "source_published_at": "2026-08-25",
+          "is_primary": true
+        }
+      ],
+      "last_verified_at": "2026-10-14T17:00:59.688710+09:00"
+    },
+    {
+      "place_id": "b16a45434bacfdbf98d459fa",
+      "name": "明石公園",
+      "municipality": "明石市",
+      "address": "兵庫県明石市明石公園1-27",
+      "indoor_outdoor": "unknown",
+      "admission": null,
+      "official_url": "https://hyogo-akashipark.jp/",
+      "sources": [
+        {
+          "source_id": "akashi_open_data",
+          "url": "https://www.city.akashi.lg.jp/documents/29427/282031_tourism.csv",
+          "source_event_id": "011-00003",
+          "fetched_at": "2026-10-14T17:00:59.688710+09:00",
+          "last_checked_at": "2026-10-14T17:00:59.688710+09:00",
+          "source_published_at": "2026-08-25",
+          "is_primary": true
+        }
+      ],
+      "last_verified_at": "2026-10-14T17:00:59.688710+09:00"
+    },
+    {
+      "place_id": "241023c407475fea1f1bc463",
+      "name": "魚の棚商店街",
+      "municipality": "明石市",
+      "address": "兵庫県明石市本町1-1-16",
+      "indoor_outdoor": "unknown",
+      "admission": null,
+      "official_url": "https://www.uonotana.or.jp/",
+      "sources": [
+        {
+          "source_id": "akashi_open_data",
+          "url": "https://www.city.akashi.lg.jp/documents/29427/282031_tourism.csv",
+          "source_event_id": "011-00004",
+          "fetched_at": "2026-10-14T17:00:59.688710+09:00",
+          "last_checked_at": "2026-10-14T17:00:59.688710+09:00",
+          "source_published_at": "2026-08-25",
+          "is_primary": true
+        }
+      ],
+      "last_verified_at": "2026-10-14T17:00:59.688710+09:00"
+    }
+  ]
 }

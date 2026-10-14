@@ -1,0 +1,174 @@
+{
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "timezone": {
+      "const": "Asia/Tokyo"
+    },
+    "site_url": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "uri",
+          "maxLength": 1000
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "publication": {
+      "type": "object",
+      "properties": {
+        "require_verified_source": {
+          "const": true
+        },
+        "exclude_cancelled": {
+          "const": true
+        },
+        "exclude_expired_occurrences": {
+          "const": true
+        },
+        "unknown_price_is_not_free": {
+          "const": true
+        },
+        "unknown_date_is_not_event": {
+          "const": true
+        }
+      },
+      "required": [
+        "require_verified_source",
+        "exclude_cancelled",
+        "exclude_expired_occurrences",
+        "unknown_price_is_not_free",
+        "unknown_date_is_not_event"
+      ],
+      "additionalProperties": false
+    },
+    "list_pages": {
+      "type": "object",
+      "properties": {
+        "min_active_items": {
+          "type": "integer",
+          "minimum": 5
+        },
+        "min_official_items": {
+          "type": "integer",
+          "minimum": 3
+        },
+        "min_distinct_organizers": {
+          "type": "integer",
+          "minimum": 2
+        },
+        "activate_after_days": {
+          "type": "integer",
+          "minimum": 7
+        },
+        "avoid_thin_pages": {
+          "const": true
+        }
+      },
+      "required": [
+        "min_active_items",
+        "min_official_items",
+        "min_distinct_organizers",
+        "activate_after_days",
+        "avoid_thin_pages"
+      ],
+      "additionalProperties": false
+    },
+    "event_archive": {
+      "type": "object",
+      "properties": {
+        "keep_internal_days_after_end": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "public_archive_default": {
+          "const": false
+        }
+      },
+      "required": [
+        "keep_internal_days_after_end",
+        "public_archive_default"
+      ],
+      "additionalProperties": false
+    },
+    "review": {
+      "type": "object",
+      "properties": {
+        "stale_event_after_hours": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "ambiguous_duplicate": {
+          "const": "manual_review"
+        }
+      },
+      "required": [
+        "stale_event_after_hours",
+        "ambiguous_duplicate"
+      ],
+      "additionalProperties": false
+    },
+    "seo": {
+      "type": "object",
+      "properties": {
+        "empty_draft_pages_public": {
+          "const": false
+        },
+        "sitemap_include_only_canonical_indexable": {
+          "const": true
+        }
+      },
+      "required": [
+        "empty_draft_pages_public",
+        "sitemap_include_only_canonical_indexable"
+      ],
+      "additionalProperties": false
+    },
+    "travel": {
+      "type": "object",
+      "properties": {
+        "is_primary_content": {
+          "const": false
+        },
+        "early_stage_auto_generate": {
+          "const": false
+        },
+        "family_sizes": {
+          "type": "array",
+          "items": {
+            "enum": [
+              4,
+              5,
+              6
+            ]
+          },
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "is_primary_content",
+        "early_stage_auto_generate",
+        "family_sizes"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "schema_version",
+    "timezone",
+    "site_url",
+    "publication",
+    "list_pages",
+    "event_archive",
+    "review",
+    "seo",
+    "travel"
+  ],
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}
