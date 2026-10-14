@@ -130,6 +130,16 @@ class RSSStageTests(unittest.TestCase):
         self.assertEqual({x["discovered_at"] for x in rows}, {NOW.isoformat()})
         self.assertEqual({x["last_seen_at"] for x in rows}, {(NOW + timedelta(days=1)).isoformat()})
 
+    def test_corrupted_queue_cannot_be_promoted_to_public(self):
+        stage_snapshot(self.root, "demo_rss", self.xml, NOW)
+        target = self.root / "cache/rss_discovery_queue.json"
+        state = read_json(target)
+        state["items"][0]["publishable"] = True
+        state["items"][0]["review_state"] = "approved"
+        atomic_json(target, state)
+        with self.assertRaises(GuideError):
+            stage_snapshot(self.root, "demo_rss", self.xml, NOW)
+
     def test_unknown_source_rejected(self):
         with self.assertRaises(GuideError):
             stage_snapshot(self.root, "wrong", self.xml, NOW)
