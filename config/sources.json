@@ -446,7 +446,10 @@
       "notes": "2026-10-14単発検査でRSS2.0、10件、最新投稿2026-10-13。新着発見には有望。RSSの再掲載/商用利用権は未確認。記事本文・画像を複製しない。",
       "audit_feed_format": "rss2",
       "audit_feed_entries": 10,
-      "audit_feed_latest": "2026-10-13"
+      "audit_feed_latest": "2026-10-13",
+      "rss_discovery_review_status": "unverified",
+      "rss_discovery_checked_at": null,
+      "rss_discovery_permission_document": null
     },
     {
       "id": "akashi_journal_rss",
@@ -469,7 +472,10 @@
       "notes": "2026-10-14単発検査でRSS2.0、10件、最新投稿2026-10-14。発表日とイベント日を混同しない。再掲載/商用利用は未確認。",
       "audit_feed_format": "rss2",
       "audit_feed_entries": 10,
-      "audit_feed_latest": "2026-10-14"
+      "audit_feed_latest": "2026-10-14",
+      "rss_discovery_review_status": "unverified",
+      "rss_discovery_checked_at": null,
+      "rss_discovery_permission_document": null
     },
     {
       "id": "harimania_rss",
@@ -492,7 +498,10 @@
       "notes": "2026-10-14単発検査でRSS2.0、10件、最新投稿2026-10-14。イベントまとめの情報発見用。二次掲載やRSS再利用許可は未確認。",
       "audit_feed_format": "rss2",
       "audit_feed_entries": 10,
-      "audit_feed_latest": "2026-10-14"
+      "audit_feed_latest": "2026-10-14",
+      "rss_discovery_review_status": "unverified",
+      "rss_discovery_checked_at": null,
+      "rss_discovery_permission_document": null
     },
     {
       "id": "himeji_no_tane_rss",
@@ -512,7 +521,10 @@
       "maximum_requests_per_day": 1,
       "permission_document": null,
       "enabled": false,
-      "notes": "robots上メタデータ検査は許可と判定、HTTPではapplication/rss+xmlの応答。ただし今回のXML/RSSパーサーで解析できず。詳細形式と転載禁止規約を審査するまで無効。"
+      "notes": "robots上メタデータ検査は許可と判定、HTTPではapplication/rss+xmlの応答。ただし今回のXML/RSSパーサーで解析できず。詳細形式と転載禁止規約を審査するまで無効。",
+      "rss_discovery_review_status": "unverified",
+      "rss_discovery_checked_at": null,
+      "rss_discovery_permission_document": null
     },
     {
       "id": "abc_kakogawa_events",

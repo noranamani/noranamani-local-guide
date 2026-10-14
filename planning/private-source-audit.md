@@ -57,3 +57,27 @@
 - 民間RSS3本について「新着URLの内部検知と主催者公式ページへの紹介」に利用可能かを問い合わせる。許可不要との判断でも範囲を記録。
 - 姫路の種のRSSはXML/配信形式の不整合を再調査（権利問題とは別）。
 - 自動化の前に権利/robots/機密情報/リンク/開催日を再審査。現時点で新イベント掲載は0件。
+
+
+## Phase 1I — 利用条件の確認とオフラインRSS発見キュー（2026-10-14）
+
+### 根拠として確認した一次資料
+- 文化庁: [著作物に当たらない単なる事実・データ](https://www.bunka.go.jp/seisaku/chosakuken/seidokaisetsu/chosakukensha_fumei/) は著作権許諾を要しないが、具体的な文面・画像・サイト利用条件は別途確認が必要。
+- かこがわノート: [リンク方針](https://kakogawa-note.com/link/) で、個別記事リンク歓迎・連絡は基本不要。**これはRSS自動巡回や原文転載の許可ではない**。
+- ABCハウジング: [サイト利用のご案内](https://abc-housing.asahi.co.jp/infouse.html) はリンク原則自由、著作権法の範囲を超える文章・写真等の無断複製は禁止。
+- アスピア明石: [サイトポリシー](https://www.aspia-akashi.com/sitepolicy) でデジタル素材の複製/二次利用は禁止、トップページへのリンクは基本自由。個別イベントURLや自動機械取得については明示なし。
+- Kiss PRESS: [コンテンツ二次利用](https://kisspress.jp/copyright/) に原則著作権者の許諾が必要と明記。
+- 姫路の種: [注意事項](https://budou-chan.jp/contact/privacy-policy/) に記事と写真の無断加工・転載禁止。
+- [文化庁のリンクに関する解説](https://www.bunka.go.jp/seisaku/bunkashingikai/chosakuken/hoki/h29_05/)も参照。通常のURLをリンクする行為と、記事の文章・写真・見出しなどを反復して再掲載する行為を区別する。後者は個別の著作権・利用条件等を確認する必要があるため、RSSタイトルを大量にコピーするアンテナ方式は採用しない。
+
+### 技術・運用方針
+- RSSのメタデータが読めたことと、第三者向けサイトでのRSS再配布・URLの自動定期取得許可は区別する。著作権対象外の**事実**を独自に記述・リンクする余地はあるが、アクセス方法の条件を別途審査する。
+- `localguide/rss_discovery.py` はネットワークアクセスを**一切行わない**。手動で準備したRSS XMLを指定し、`rss_discovery_review_status=allowed`、利用条件・robots審査が許可済み、許可根拠URLと30日以内の審査日時が揃った場合だけ処理する。
+- `cache/rss_discovery_queue.json` はGitで除外済み。記事リンク、情報源ID、RSS発行日、暫定分類だけ保管し、元記事タイトル/本文/画像は保存しない。すべて`review_state=needs_primary_confirmation`、`publishable=false`。これは公開用イベントデータとは分離。
+- 発見キューにあるRSS発行日時は**イベント開催日ではない**。催事の日時・場所・料金・対象年齢・中止は主催者の公式ページから別途確認する。
+- マニュアル起動用CLI:
+  `python -m scripts.stage_approved_feed --source-id kakogawa_note_rss --xml-file /path/to/approved.xml`
+  （現時点では審査未完了のため**意図的に失敗**する。許可を設定してから利用。）
+- 将来の無料枠候補: [connpass API](https://help.connpass.com/api/) は個人・コミュニティ向けに審査申請後無料。企業・法人向けは有料。子連れ行事のカバー範囲とサイト運営主体の適格性を確認するまで導入しない。
+
+**現状:** 民間RSS3件の読み取り確認のみ。再利用・内部定期巡回の許可は未確認。実イベント0件、公開設定変更なし。
