@@ -342,6 +342,26 @@
       "maximum_requests_per_day": 1,
       "permission_document": null,
       "enabled": false
+    },
+    {
+      "id": "kakogawa_urban_parks",
+      "label": "加古川市 都市公園（公式CSV・取込み審査待ち）",
+      "area": "kakogawa",
+      "organization_type": "municipality",
+      "kind": "places_csv_candidate",
+      "url": "https://opendata-api-kakogawa.jp/ckan/dataset/c529cd71-6296-41dd-b853-a54edff57601/resource/6213c4ba-c8c4-4831-8244-9f092cfa3e92/download/67_kouen.csv",
+      "acquisition_candidate": "csv_review_required",
+      "robots_review_status": "unverified",
+      "terms_review_status": "unverified",
+      "reuse_rights_status": "unverified",
+      "attribution_required": null,
+      "policy_url": "https://opendata-api-kakogawa.jp/ckan/dataset/urbanpark",
+      "checked_at": null,
+      "candidate_found_at": "2026-10-14",
+      "maximum_requests_per_day": 1,
+      "permission_document": null,
+      "enabled": false,
+      "notes": "公式カタログに都市公園のCSV/CC BY表示あり。リソース最終更新表示は2024-03-22で古い。各公園の実データ・列・遊具/設備・住所・公式URL・現在の開放状況・匿名CSV取得の利用条件/申請要否を未審査。遊具ありや無料とは推測しない。"
     }
   ]
 }

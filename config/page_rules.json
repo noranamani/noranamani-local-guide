@@ -36,5 +36,11 @@
       5,
       6
     ]
+  },
+  "place_pages": {
+    "min_places": 5,
+    "min_official_places": 3,
+    "min_distinct_official_hosts": 2,
+    "activate_after_days": 7
   }
 }
