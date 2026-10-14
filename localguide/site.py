@@ -5,13 +5,13 @@ import os
 import shutil
 import tempfile
 import xml.etree.ElementTree as ET
-from datetime import timedelta
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urljoin, urlsplit
 
 from .core import GuideError, active_occurrences, atomic_json, read_json, safe_url, serialized
 from .normalize import identifier
+from .page_places import qualified_places, sustained_listing
 from .validation import inspect_text, publishable, validate_data, validate_config
 
 STYLE = """*{box-sizing:border-box}body{margin:0;background:#faf8f3;color:#233d38;font:16px/1.8 system-ui,sans-serif}header,main,footer{max-width:960px;margin:auto;padding:24px}header{border-bottom:3px solid #ddaf54}a{color:#00695c;text-underline-offset:3px}nav{display:flex;gap:20px;flex-wrap:wrap}.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:20px}.card,.notice{background:white;border:1px solid #d9e0d7;border-radius:12px;padding:20px;margin:16px 0}h1{font-size:clamp(1.6rem,5vw,2.4rem);line-height:1.4}h2{font-size:1.25rem}dt{font-weight:bold}dd{margin:0 0 8px}.muted,footer{font-size:.9rem;color:#53655e}.tag{display:inline-block;background:#eef2df;padding:2px 10px;border-radius:20px}ul{padding-left:1.3em}a:focus-visible{outline:3px solid #c36f16;outline-offset:3px}"""
@@ -75,6 +75,17 @@ def event_content(event, sources, now, detail=False):
             '<p>お出かけ前に公式情報で開催状況と参加条件をご確認ください。</p>' + official + source_links(event, sources) + '</article>')
 
 
+def place_content(place, sources):
+    """Render public facility facts and source attribution; no inferred ratings."""
+    address = escaped(place["address"] or "住所不明")
+    admission = escaped(place["admission"] or "不明")
+    return (f'<article class="card"><h3>{escaped(place["name"])}</h3>'
+            f'<p>{escaped(place["municipality"])} / {address}</p>'
+            f'<p>料金：{admission}</p>'
+            f'<a href="{escaped(place["official_url"])}" rel="noopener noreferrer">公式情報</a>'
+            + source_links(place, sources) + '</article>')
+
+
 def qualified(events, rules):
     minimum = rules["list_pages"]
     return (len(events) >= minimum["min_active_items"]
@@ -100,23 +111,15 @@ def create_files(root, now):
             groups[f'category-{category["id"]}.html'] = (category["label"] + "の開催情報", [e for e in events if category["id"] in e["category_ids"]])
     ready = {}
     for filename, (title, items) in groups.items():
-        if qualified(items, rules):
-            first = page_state.get(filename, {}).get("first_qualified_at", now.isoformat())
-            from .core import parse_time
-            first_time = parse_time(first)
-            if first_time > now:
-                first = now.isoformat()
-                first_time = now
-            # Consecutive daily checks are required, not a stale historical observation.
-            last = parse_time(page_state.get(filename, {}).get("last_qualified_at", now.isoformat()))
-            if now - last > timedelta(days=2):
-                first, first_time = now.isoformat(), now
-            page_state[filename] = {"first_qualified_at": first, "last_qualified_at": now.isoformat()}
-            if now - first_time >= timedelta(days=rules["list_pages"]["activate_after_days"]):
-                ready[filename] = (title, items)
-        else:
-            page_state.pop(filename, None)
-    nav = '<a href="index.html">ホーム</a>' + ('<a href="events.html">開催情報一覧</a>' if events else '')
+        if sustained_listing(filename, qualified(items, rules), page_state, now,
+                             rules["list_pages"]["activate_after_days"]):
+            ready[filename] = (title, items)
+
+    # Place listings do not depend on organizer_label or event availability.
+    places_ready = sustained_listing("places.html",
+                                    qualified_places(places, rules["place_pages"]),
+                                    page_state, now, rules["place_pages"]["activate_after_days"])
+    nav = '<a href="index.html">ホーム</a>' + ('<a href="events.html">開催情報一覧</a>' if events else '') + ('<a href="places.html">施設一覧</a>' if places else '')
     files, indexable_files = {"styles.css": STYLE}, []
     url = rules["site_url"]
 
@@ -126,18 +129,16 @@ def create_files(root, now):
             indexable_files.append(filename)
 
     cards = "".join(event_content(e, sources, now) for e in events)
+    place_cards = "".join(place_content(p, sources) for p in places)
     if not events and not places:
         content = '<section class="notice"><h2>掲載準備中です</h2><p>現在、公開できる確認済みの情報はありません。情報源の利用条件と掲載内容を確認してから掲載します。</p></section>'
     else:
         content = ('<h2>開催情報</h2><div class="cards">' + cards + '</div>') if events else ''
         if places:
-            content += '<h2>確認済みの施設</h2><div class="cards">'
-            for p in places:
-                content += (f'<article class="card"><h3>{escaped(p["name"])}</h3><p>{escaped(p["municipality"])} / '
-                            f'{escaped(p["address"] or "住所不明")}</p><p>料金：{escaped(p["admission"] or "不明")}</p>'
-                            f'<a href="{escaped(p["official_url"])}" rel="noopener noreferrer">公式情報</a>' + source_links(p, sources) + '</article>')
-            content += '</div>'
-    add("index.html", "家族で出かける地域ガイド", "加古川・明石・姫路周辺の確認済み開催情報と施設案内。公式情報と確認日時を表示します。", content, qualified(events, rules))
+            content += '<h2>確認済みの施設</h2><div class="cards">' + place_cards + '</div>'
+    add("index.html", "家族で出かける地域ガイド", "加古川・明石・姫路周辺の確認済み開催情報と施設案内。公式情報と確認日時を表示します。", content, qualified(events, rules) or places_ready)
+    if places:
+        add("places.html", "確認済みの施設一覧", "加古川・明石・姫路周辺の施設名称、所在地と公式リンクを出典付きでまとめています。料金など不明な項目は推測しません。", '<div class="cards">' + place_cards + '</div>', places_ready)
     if events:
         add("events.html", "開催情報一覧", "確認済みの将来・開催中の開催回を掲載しています。終了・中止・未確認のイベントは掲載しません。", '<div class="cards">' + cards + '</div>', qualified(events, rules))
         for event in events:

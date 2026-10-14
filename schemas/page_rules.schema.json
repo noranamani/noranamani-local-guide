@@ -156,6 +156,34 @@
         "family_sizes"
       ],
       "additionalProperties": false
+    },
+    "place_pages": {
+      "type": "object",
+      "properties": {
+        "min_places": {
+          "type": "integer",
+          "minimum": 5
+        },
+        "min_official_places": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "min_distinct_official_hosts": {
+          "type": "integer",
+          "minimum": 2
+        },
+        "activate_after_days": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "required": [
+        "min_places",
+        "min_official_places",
+        "min_distinct_official_hosts",
+        "activate_after_days"
+      ],
+      "additionalProperties": false
     }
   },
   "required": [
@@ -167,7 +195,8 @@
     "event_archive",
     "review",
     "seo",
-    "travel"
+    "travel",
+    "place_pages"
   ],
   "additionalProperties": false,
   "$schema": "https://json-schema.org/draft/2020-12/schema"
