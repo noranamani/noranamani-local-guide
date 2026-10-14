@@ -1,0 +1,91 @@
+{
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "news_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          },
+          "venue_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          },
+          "event_type": {
+            "enum": [
+              "opening",
+              "closing",
+              "relocation",
+              "unknown"
+            ]
+          },
+          "announced_at": {
+            "anyOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "string",
+                "format": "date-time"
+              }
+            ]
+          },
+          "effective_date": {
+            "anyOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "string",
+                "format": "date-time"
+              }
+            ]
+          },
+          "verification_status": {
+            "enum": [
+              "verified",
+              "unconfirmed"
+            ]
+          },
+          "source_url": {
+            "type": "string",
+            "format": "uri",
+            "maxLength": 1000
+          }
+        },
+        "required": [
+          "news_id",
+          "venue_id",
+          "event_type",
+          "announced_at",
+          "effective_date",
+          "verification_status",
+          "source_url"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "schema_version",
+    "items"
+  ],
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}

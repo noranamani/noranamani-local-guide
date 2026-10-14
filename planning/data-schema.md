@@ -13,6 +13,10 @@
 - price_type は free / paid / conditional / unknown。屋内外は indoor / outdoor / mixed / unknown。
 - status は scheduled / cancelled / postponed / ended / unconfirmed。
 - イベントIDと開催回IDを分け、複数日・午前午後・毎週開催を混同しない。
+- Phase 1実装のJSON Schemaはschemas/に配置。start_at/end_atは日付のみも保持でき、時刻は創作しない。
+- organizer_labelは確認済みの主催者名（不明はnull）。地域・カテゴリ一覧の主催者数に使用する。
+- review_hold=trueのイベントは手動確認が終わるまで非公開。通常の再取得で解除しない。
+- 取得状態はdata/source_state.json、レビュー候補と一覧の継続確認状態は非公開のcache/に記録する。
 
 ## 重複排除
 1. 同一ソースのイベントID一致なら同一候補。

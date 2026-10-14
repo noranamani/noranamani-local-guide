@@ -1,0 +1,140 @@
+{
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "place_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          },
+          "municipality": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          },
+          "address": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 160
+          },
+          "indoor_outdoor": {
+            "enum": [
+              "indoor",
+              "outdoor",
+              "mixed",
+              "unknown"
+            ]
+          },
+          "admission": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 160
+          },
+          "official_url": {
+            "type": "string",
+            "format": "uri",
+            "maxLength": 1000
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "source_id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 160
+                },
+                "url": {
+                  "type": "string",
+                  "format": "uri",
+                  "maxLength": 1000
+                },
+                "source_event_id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 160
+                },
+                "fetched_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "last_checked_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "source_published_at": {
+                  "anyOf": [
+                    {
+                      "type": "null"
+                    },
+                    {
+                      "type": "string",
+                      "format": "date"
+                    },
+                    {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  ]
+                },
+                "is_primary": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "source_id",
+                "url",
+                "source_event_id",
+                "fetched_at",
+                "last_checked_at",
+                "source_published_at",
+                "is_primary"
+              ],
+              "additionalProperties": false
+            },
+            "minItems": 1
+          },
+          "last_verified_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "place_id",
+          "name",
+          "municipality",
+          "address",
+          "indoor_outdoor",
+          "admission",
+          "official_url",
+          "sources",
+          "last_verified_at"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "schema_version",
+    "items"
+  ],
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}

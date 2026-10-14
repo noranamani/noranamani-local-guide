@@ -1,0 +1,149 @@
+{
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "retrieval_is_disabled_until_review": {
+      "const": true
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9_-]+$",
+            "minLength": 1
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "area": {
+            "type": "string",
+            "pattern": "^[a-z0-9_-]+$",
+            "minLength": 1
+          },
+          "organization_type": {
+            "enum": [
+              "municipality",
+              "organizer",
+              "commercial_facility",
+              "tourism_bureau",
+              "regional_media",
+              "aggregator"
+            ]
+          },
+          "kind": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "maxLength": 1000
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "robots_review_status": {
+            "enum": [
+              "unverified",
+              "allowed",
+              "denied"
+            ]
+          },
+          "terms_review_status": {
+            "enum": [
+              "unverified",
+              "allowed",
+              "denied"
+            ]
+          },
+          "reuse_rights_status": {
+            "enum": [
+              "unverified",
+              "allowed",
+              "denied"
+            ]
+          },
+          "attribution_required": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          },
+          "policy_url": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uri",
+                "maxLength": 1000
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "checked_at": {
+            "anyOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string",
+                "format": "date-time"
+              }
+            ]
+          },
+          "maximum_requests_per_day": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10
+          },
+          "permission_document": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uri",
+                "maxLength": 1000
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "label",
+          "area",
+          "organization_type",
+          "kind",
+          "url",
+          "enabled",
+          "robots_review_status",
+          "terms_review_status",
+          "reuse_rights_status",
+          "attribution_required",
+          "policy_url",
+          "checked_at",
+          "maximum_requests_per_day",
+          "permission_document"
+        ],
+        "additionalProperties": true
+      }
+    }
+  },
+  "required": [
+    "schema_version",
+    "retrieval_is_disabled_until_review",
+    "sources"
+  ],
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}
