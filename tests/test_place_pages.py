@@ -22,6 +22,7 @@ def facility(number, source_id="fixture", primary=True, url=None):
         "official_url": url or f"https://example{number % 3}.org/place/{number}",
         "sources": [{
             "source_id": source_id,
+            "url": "https://example.org/datasets/official.csv",
             "source_event_id": str(number),
             "fetched_at": NOW.isoformat(),
             "last_checked_at": NOW.isoformat(),
