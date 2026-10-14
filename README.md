@@ -125,3 +125,14 @@ Phase 1Cで新規に公開したイベントは0件です。GitHub Pages・Oracl
 - イベントの掲載条件とは独立していても、`site_url` 未設定時は `index.html` と `places.html` とも `noindex` のままです。
 - 本番サイト（docs）の更新は次のサイト生成時に行われます。このPRはGitHub PagesやSearch Consoleを有効化しません。
 - 加古川市「都市公園」の公式CSV候補は未審査なので `enabled=false` のまま。公開対象かどうか・データの鮮度と公式URLを確認してから判断します。
+
+## Phase 1E — GitHub Actionsの未公開サイトプレビュー
+
+- すべてのPRとmain更新時にオフライン単体テストを実行し、**成功した場合のみ**、チェックイン済みデータからサイトを再生成・検証します。
+- `Offline Python tests and unpublished preview` の実行結果画面に、日本語の掲載件数・情報源数・noindex件数のレポートを表示します。
+- `unpublished-local-guide-preview` アーティファクトは7日間ダウンロードでき、`docs/index.html`、`docs/places.html`、CSSなどをブラウザ等で確認できます。Google検索への登録・Pagesへの公開ではありません。
+- `workflow_dispatch` にも対応しますが、手動実行でもネットワークからのデータ収集やGitHubへのpushは行いません。
+- ビルドは公式な実データのみを使用し、架空のイベントを生成しません。失敗するとチェックが赤くなるため、問題のあるPRはマージしないでください。
+- `scripts/preview_report.py` を使えばローカルでも `python scripts/preview_report.py --output preview-report.md` で安全な件数レポートを生成できます。
+- **Oracle cron、note、Search Console、Pages公開は未設定のまま**です。
+
