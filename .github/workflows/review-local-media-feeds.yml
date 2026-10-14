@@ -1,17 +1,13 @@
-name: One-time local media RSS metadata review
+name: Manual local media RSS metadata review
 
 on:
-  pull_request:
-    paths:
-      - "scripts/review_local_media_feeds.py"
-      - ".github/workflows/review-local-media-feeds.yml"
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
   review:
-    if: github.head_ref == 'phase1h-private-feeds-audit' && github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
