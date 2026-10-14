@@ -65,7 +65,10 @@ class PlaceListingUnitTests(unittest.TestCase):
         self.assertFalse(sustained_listing("places.html", True, state, NOW + timedelta(days=1), 7))
         self.assertFalse(sustained_listing("places.html", True, state, NOW + timedelta(days=5), 7))
         self.assertFalse(sustained_listing("places.html", True, state, NOW + timedelta(days=6), 7))
-        self.assertTrue(sustained_listing("places.html", True, state, NOW + timedelta(days=12), 7))
+        self.assertFalse(sustained_listing("places.html", True, state, NOW + timedelta(days=12), 7))
+        for day in range(13, 19):
+            self.assertFalse(sustained_listing("places.html", True, state, NOW + timedelta(days=day), 7))
+        self.assertTrue(sustained_listing("places.html", True, state, NOW + timedelta(days=19), 7))
 
     def test_history_resets_when_quality_drops(self):
         state = {}
