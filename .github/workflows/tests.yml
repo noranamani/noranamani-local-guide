@@ -39,7 +39,7 @@ jobs:
       - name: Validate generated static files and SEO directives
         run: python -m localguide validate --site
       - name: Record privacy-safe preview inventory
-        run: python scripts/preview_report.py --output preview-report.md
+        run: python -m scripts.preview_report --output preview-report.md
       - name: Upload preview files (not deployed to Pages)
         uses: actions/upload-artifact@v4
         with:
