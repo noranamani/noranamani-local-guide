@@ -7,6 +7,7 @@ from urllib.robotparser import RobotFileParser
 
 from .core import GuideError, atomic_json, parse_time, read_json, safe_url, serialized
 from .normalize import csv_records, merge_events
+from .places import ensure_event_place_references, replace_places
 
 USER_AGENT = "noranamani-local-guide/0.1"
 MAX_BYTES = 2 * 1024 * 1024
@@ -128,8 +129,8 @@ def collect(root, now, fetcher=fetch):
                 if target == "events":
                     items, reviews = merge_events(dataset["items"], incoming)
                 else:
-                    ids = {p["place_id"] for p in incoming}
-                    items = [p for p in dataset["items"] if p["place_id"] not in ids] + incoming
+                    items = replace_places(dataset["items"], incoming, sid)
+                    ensure_event_place_references(items, read_json(root / "data/events.json")["items"])
                 candidate = {"schema_version": 1, "items": items}
                 validate_dataset(root, target, candidate, now)
                 if reviews:
