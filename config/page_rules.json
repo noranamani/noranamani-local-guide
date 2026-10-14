@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "timezone": "Asia/Tokyo",
+  "site_url": null,
+  "publication": {
+    "require_verified_source": true,
+    "exclude_cancelled": true,
+    "exclude_expired_occurrences": true,
+    "unknown_price_is_not_free": true,
+    "unknown_date_is_not_event": true
+  },
+  "list_pages": {
+    "min_active_items": 5,
+    "min_official_items": 3,
+    "min_distinct_organizers": 2,
+    "activate_after_days": 7,
+    "avoid_thin_pages": true
+  },
+  "event_archive": {
+    "keep_internal_days_after_end": 60,
+    "public_archive_default": false
+  },
+  "review": {
+    "stale_event_after_hours": 72,
+    "ambiguous_duplicate": "manual_review"
+  },
+  "seo": {
+    "empty_draft_pages_public": false,
+    "sitemap_include_only_canonical_indexable": true
+  },
+  "travel": {
+    "is_primary_content": false,
+    "early_stage_auto_generate": false,
+    "family_sizes": [
+      4,
+      5,
+      6
+    ]
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "areas": [
+    {
+      "id": "kakogawa",
+      "name": "加古川市",
+      "prefecture": "兵庫県",
+      "priority": 1
+    },
+    {
+      "id": "akashi",
+      "name": "明石市",
+      "prefecture": "兵庫県",
+      "priority": 1
+    },
+    {
+      "id": "himeji",
+      "name": "姫路市",
+      "prefecture": "兵庫県",
+      "priority": 1
+    },
+    {
+      "id": "takasago",
+      "name": "高砂市",
+      "prefecture": "兵庫県",
+      "priority": 2
+    },
+    {
+      "id": "harima",
+      "name": "播磨町",
+      "prefecture": "兵庫県",
+      "priority": 2
+    },
+    {
+      "id": "inami",
+      "name": "稲美町",
+      "prefecture": "兵庫県",
+      "priority": 2
+    }
+  ]
+}

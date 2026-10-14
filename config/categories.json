@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "primary": [
+    {
+      "id": "event",
+      "label": "イベント"
+    },
+    {
+      "id": "family",
+      "label": "子ども向け"
+    },
+    {
+      "id": "free_low_cost",
+      "label": "無料・低価格"
+    },
+    {
+      "id": "indoor",
+      "label": "室内遊び"
+    },
+    {
+      "id": "mall",
+      "label": "商業施設"
+    },
+    {
+      "id": "sale",
+      "label": "特売・セール"
+    },
+    {
+      "id": "store_news",
+      "label": "新店・閉店"
+    },
+    {
+      "id": "factory_direct",
+      "label": "工場直売・直売所"
+    },
+    {
+      "id": "flea_market",
+      "label": "フリーマーケット"
+    },
+    {
+      "id": "limited_shop",
+      "label": "期間限定ショップ"
+    },
+    {
+      "id": "trip",
+      "label": "家族旅行（サブ）"
+    }
+  ],
+  "facets": {
+    "indoor_outdoor": [
+      "indoor",
+      "outdoor",
+      "mixed",
+      "unknown"
+    ],
+    "price_type": [
+      "free",
+      "paid",
+      "conditional",
+      "unknown"
+    ]
+  }
+}
