@@ -133,6 +133,6 @@ Phase 1Cで新規に公開したイベントは0件です。GitHub Pages・Oracl
 - `unpublished-local-guide-preview` アーティファクトは7日間ダウンロードでき、`docs/index.html`、`docs/places.html`、CSSなどをブラウザ等で確認できます。Google検索への登録・Pagesへの公開ではありません。
 - `workflow_dispatch` にも対応しますが、手動実行でもネットワークからのデータ収集やGitHubへのpushは行いません。
 - ビルドは公式な実データのみを使用し、架空のイベントを生成しません。失敗するとチェックが赤くなるため、問題のあるPRはマージしないでください。
-- `scripts/preview_report.py` を使えばローカルでも `python scripts/preview_report.py --output preview-report.md` で安全な件数レポートを生成できます。
+- `scripts/preview_report.py` を使えばローカルでも `python -m scripts.preview_report --output preview-report.md` で安全な件数レポートを生成できます。
 - **Oracle cron、note、Search Console、Pages公開は未設定のまま**です。
 
