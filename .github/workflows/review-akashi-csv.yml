@@ -1,0 +1,19 @@
+name: Manual review of official Akashi childcare CSV
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Read only official open CSV for column/category counts
+        run: python -m scripts.review_akashi_csv
