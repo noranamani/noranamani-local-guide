@@ -160,3 +160,12 @@ RSSから記事URLを候補として拾う処理を追加しますが、**外部
 RSS XMLを人手で準備し、利用規約、robots、内部発見用途、根拠URLと30日以内の審査が揃った場合のみ、`python -m scripts.stage_approved_feed --source-id <source_id> --xml-file <local.xml>` を利用できます。候補は`cache/rss_discovery_queue.json`へ、記事URLと発行日・暫定分類のみ保存されます。記事タイトル・本文・写真は保存せず、`data/events.json`や`docs/`へ直接掲載しません。
 
 詳細は[民間情報源監査](planning/private-source-audit.md)。
+
+## Phase 1J — 民間情報源のリンク方針とRSS取得許諾を区別（2026-10-15）
+
+かこがわノートは個別記事へのリンクを歓迎し、ABCハウジングは通常のリンクを原則自由としています。しかし**RSS/HTMLの自動定期取得まで許可されたわけではありません**。各ソースにはリンク方針のみ確認済みと記録し、権利/robots/内部RSS発見/本番取得の許諾審査は未承認のままです。
+
+- 詳細: [民間情報源監査](planning/private-source-audit.md)
+- 未送信の問い合わせ草案: [民間情報源への確認依頼](planning/private-source-permission-requests.md)
+
+本変更では本番データ0件追加・外部アクセスジョブ追加なし、GitHub Pages/Oracle cron/note設定も変更しません。

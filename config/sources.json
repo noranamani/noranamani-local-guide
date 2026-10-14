@@ -443,13 +443,16 @@
       "maximum_requests_per_day": 1,
       "permission_document": null,
       "enabled": false,
-      "notes": "2026-10-14単発検査でRSS2.0、10件、最新投稿2026-10-13。新着発見には有望。RSSの再掲載/商用利用権は未確認。記事本文・画像を複製しない。",
+      "notes": "2026-10-15: リンク方針では個別記事のリンク歓迎（基本的に事前/事後連絡不要）。RSS2.0を2026-10-14に一度読取確認。ただしRSSの定期機械取得・商用利用や本文/タイトルの再利用は未承認。掲載ではなく内部発見の許可を個別に問い合わせる。",
       "audit_feed_format": "rss2",
       "audit_feed_entries": 10,
       "audit_feed_latest": "2026-10-13",
       "rss_discovery_review_status": "unverified",
       "rss_discovery_checked_at": null,
-      "rss_discovery_permission_document": null
+      "rss_discovery_permission_document": null,
+      "link_policy_status": "allowed",
+      "link_policy_checked_at": "2026-10-15T07:15:00+09:00",
+      "link_policy_url": "https://kakogawa-note.com/link/"
     },
     {
       "id": "akashi_journal_rss",
@@ -544,7 +547,10 @@
       "maximum_requests_per_day": 1,
       "permission_document": null,
       "enabled": false,
-      "notes": "10月17-18日に子ども向け催事・観覧無料ショー等を確認。アンケート/アカウント条件・組数制限は個別確認。著作権上、無断の文章・画像複製は不可。自動収集条件/事実抜粋の許可未確認。"
+      "notes": "2026-10-15: サイト規約では通常のハイパーリンクを原則自由とする。著作権対象の文章/写真の無断複製は禁止。毎日のHTML取得、日時/料金/会場などの事実の機械抽出と広告掲載サイトでの利用は未承認。参加者数、登録条件、アンケート、整理券の有無は催事ごとに要確認。",
+      "link_policy_status": "allowed",
+      "link_policy_checked_at": "2026-10-15T07:15:00+09:00",
+      "link_policy_url": "https://abc-housing.asahi.co.jp/infouse.html"
     },
     {
       "id": "aeon_akashi_events",
