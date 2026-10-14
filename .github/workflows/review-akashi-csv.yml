@@ -1,0 +1,23 @@
+name: Single-run review of official Akashi childcare CSV
+
+on:
+  pull_request:
+    paths:
+      - "scripts/review_akashi_csv.py"
+      - ".github/workflows/review-akashi-csv.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  review:
+    if: github.head_ref == 'phase1g-akashi-childcare-audit' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Read only official open CSV for column/category counts
+        run: python -m scripts.review_akashi_csv
