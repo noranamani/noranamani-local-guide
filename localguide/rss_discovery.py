@@ -160,13 +160,18 @@ def stage_snapshot(root, source_id, snapshot_path, now):
     old_items = previous.get("items")
     if previous.get("schema_version") != 1 or not isinstance(old_items, list):
         raise GuideError("確認待ちキューの形式が不正です")
+    # Fail closed if somebody tried to turn a private review queue into a
+    # publication source. The queue is not a verified-events database.
+    for item in old_items:
+        if (not isinstance(item, dict) or not isinstance(item.get("candidate_id"), str)
+                or item.get("review_state") != "needs_primary_confirmation"
+                or item.get("publishable") is not False):
+            raise GuideError("確認待ちキューに未承認の状態が含まれています")
     combined = {x["candidate_id"]: x for x in old_items}
     for record in candidates:
         if record["candidate_id"] in combined:
             old = combined[record["candidate_id"]]
             record["discovered_at"] = old["discovered_at"]
-            record["review_state"] = old["review_state"]
-            record["publishable"] = False
         combined[record["candidate_id"]] = record
     if len(combined) > MAX_QUEUE:
         raise GuideError("確認待ちキューが上限を超えています")
