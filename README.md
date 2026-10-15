@@ -189,3 +189,12 @@ RSS XMLを人手で準備し、利用規約、robots、内部発見用途、根�
 - CloudflareのプレビューURLは初期状態で一般閲覧可能（検索エンジン向け`noindex`は付与）。正式公開まで自動プレビュー展開も有効にしません。
 - 現時点でイベント0件・明石市の確認済み施設4件。正式公開、URL確定、楽天アフィリエイト媒体登録、Oracle cron、Search Consoleは未実施です。
 
+
+## Phase 1O — 公開前点検とイベント編集の準備（2026-10-15）
+
+GitHub Actionsの未公開ビルド後に `python -m scripts.release_readiness --output launch-readiness-report.md` を実行して、情報源、イベント、施設、SEO保護、公開URLの不足を毎回オフライン点検します。レポートはプレビューArtifactに保存します。点検結果は公開の承認ではありません。
+
+- [イベントの手動確認テンプレート](planning/manual-event-review-template.md)
+- [運営ページ・個人情報・広告表示の未公開草案](planning/operator-policy-draft.md)
+
+Cloudflare接続・RSS/HTML自動収集・検索登録・課金・実イベントの追加は未実施です。
