@@ -1,4 +1,4 @@
-# noranamani LOCAL GUIDE — 運用ポリシー
+# はりまよりみち — 運用ポリシー
 
 ## 目的
 加古川・明石・姫路と周辺地域の家族向け地域情報を、安全に毎日更新できる静的サイトにする。
@@ -49,3 +49,8 @@
 - `python -m scripts.release_readiness` は診断用であり、ユーザーの公開承認やホスト側デプロイの許可ではない。
 - `planning/manual-event-review-template.md` は手動で公式イベント情報を確認するための書式。RSS発行日を開催日扱いしない。
 - `planning/operator-policy-draft.md` は未公開の草案。運営者・連絡先・アクセス解析等の実態を決めずに公開しない。
+
+## 公開ブランド（Phase 1Q）
+- 公開用サイト名は**「はりまよりみち」**、画面の説明文は**「加古川・明石・姫路と周辺のイベント・お店・おでかけ情報」**に統一する。
+- GitHubの個人アカウント名は、公開HTMLのサイト名、出典加工表記、Cloudflareのプロジェクト名・URLに含めない。内部リポジトリ名とPythonパッケージ名はそのまま維持する。
+- Cloudflare Pagesのプロジェクト名候補は`harima-yorimichi`。空き確認・初回Git連携・デプロイは公開承認後に実施。未確認のpages.dev URLを確定URLとして設定しない。

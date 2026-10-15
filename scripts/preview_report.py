@@ -37,7 +37,7 @@ def preview_status(root):
 
 def markdown_report(result):
     sections = [
-        "## noranamani LOCAL GUIDE — 未公開プレビュー",
+        "## はりまよりみち — 未公開プレビュー",
         "",
         "この結果はGitHub Actions内で生成したものです。**GitHub Pagesへの公開や外部情報取得は行っていません。**",
         "",
