@@ -1,6 +1,10 @@
 """No-network Rakuten Travel preparation tests; all hotels are fictitious."""
 import copy
+import json
 import unittest
+from pathlib import Path
+
+from jsonschema import Draft202012Validator, FormatChecker
 
 from localguide.core import GuideError
 from localguide.travel_rakuten import (api_fetch_ready, normalize_hotel_snapshot,
@@ -160,6 +164,28 @@ class FamilyQuoteTests(unittest.TestCase):
         q=quote();q["meal_plan"]=""
         with self.assertRaises(GuideError):
             approve_exact_booking_quote(q)
+
+
+class RepoTravelPolicyTests(unittest.TestCase):
+    def test_committed_configuration_is_schema_valid_and_all_gates_off(self):
+        root = Path(__file__).resolve().parents[1]
+        config = json.loads((root / "config/travel_affiliate.json").read_text(encoding="utf-8"))
+        schema = json.loads((root / "schemas/travel_affiliate.schema.json").read_text(encoding="utf-8"))
+        Draft202012Validator.check_schema(schema)
+        Draft202012Validator(schema, format_checker=FormatChecker()).validate(config)
+        self.assertFalse(config["enabled"])
+        self.assertFalse(config["api_fetch_enabled"])
+        self.assertFalse(config["affiliate_publication_enabled"])
+        self.assertFalse(any(config["approvals"].values()))
+        self.assertFalse(publication_ready(config, "https://example.org/localguide"))
+        self.assertFalse(api_fetch_ready(config))
+
+    def test_current_localguide_rules_keep_travel_secondary_and_disabled(self):
+        root = Path(__file__).resolve().parents[1]
+        rules = json.loads((root / "config/page_rules.json").read_text(encoding="utf-8"))
+        self.assertFalse(rules["travel"]["early_stage_auto_generate"])
+        self.assertFalse(rules["travel"]["is_primary_content"])
+        self.assertIsNone(rules["site_url"])
 
 
 if __name__=="__main__":
