@@ -36,7 +36,9 @@
 
 ## 4. 公開に向けた設計（未実施）
 - [x] 公開先をCloudflare Pagesに決定（公開設定は未実施）
-- [ ] Cloudflareの登録・GitHub権限承認・初回デプロイ（公開を伴うためユーザー確認後）
+- [x] Cloudflareアカウント作成済み（2026-10-15、Googleアカウントで登録したとユーザーから報告）
+- [ ] Cloudflareで無料プラン（Free）であることを画面で確認（未検証）
+- [ ] GitHub権限承認・Cloudflare Pages初回デプロイ（公開を伴うためユーザー確認後）
 - [ ] 公開場所/リポジトリ名/最終URLを確認し、`config/page_rules.json` の `site_url` を正しく設定
 - [ ] トップ・施設一覧・イベント詳細が、SEO件数・鮮度条件を満たすか検証
 - [ ] `canonical`、`sitemap.xml`、`robots.txt`、`noindex` の整合を検証
@@ -63,6 +65,7 @@
 ## Phase 1L — Cloudflare Pages移行準備
 
 - [x] 公開先をCloudflare Pagesに選定。Python3.12に固定、オフラインのPages用ビルド・SEO/X-Robots-Tag検証をCIに追加。
+- [x] CloudflareアカウントをGoogleアカウントで作成（2026-10-15、ユーザー申告）。Cloudflare Pagesプロジェクトは未作成。
 - [ ] クラウド側にPagesプロジェクトを作成する。**初回公開が発生するので本番サイトの内容確認・ユーザー承認後**。
 - [ ] 無料枠を選択。Preview branch build controlは初期値のAllからNoneへ変更し、不要な公開プレビューを避ける。
 - [ ] pages.dev実URLを確認し、index/placesとリンク・安全なキャッシュ・HTTP noindexを実際に検証。
