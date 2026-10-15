@@ -21,13 +21,13 @@ STYLE = """*{box-sizing:border-box}body{margin:0;background:#faf8f3;color:#233d3
 # depth: the HTTP header blocks indexing if no individual HTML is indexable.
 def cloudflare_headers(block_indexing):
     result = (
-        "/*\\n"
-        "  X-Frame-Options: DENY\\n"
-        "  X-Content-Type-Options: nosniff\\n"
-        "  Referrer-Policy: strict-origin-when-cross-origin\\n"
+        "/*\n"
+        "  X-Frame-Options: DENY\n"
+        "  X-Content-Type-Options: nosniff\n"
+        "  Referrer-Policy: strict-origin-when-cross-origin\n"
     )
     if block_indexing:
-        result += "  X-Robots-Tag: noindex\\n"
+        result += "  X-Robots-Tag: noindex\n"
     return result
 
 
