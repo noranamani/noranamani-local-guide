@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "provider": "rakuten_travel",
+  "enabled": false,
+  "api_fetch_enabled": false,
+  "affiliate_publication_enabled": false,
+  "approvals": {
+    "travel_api_access_confirmed": false,
+    "local_guide_registered_as_affiliate_site": false,
+    "rakuten_webservice_data_terms_reviewed": false,
+    "rakuten_official_credit_reviewed": false,
+    "hosting_terms_reviewed": false
+  },
+  "api": {
+    "simple_hotel_search": "https://openapi.rakuten.co.jp/engine/api/Travel/SimpleHotelSearch/20260731",
+    "hotel_detail_search": "https://openapi.rakuten.co.jp/engine/api/Travel/HotelDetailSearch/20260731",
+    "keyword_hotel_search": "https://openapi.rakuten.co.jp/engine/api/Travel/KeywordHotelSearch/20260731",
+    "required_env_names": [
+      "LOCALGUIDE_RAKUTEN_APPLICATION_ID",
+      "LOCALGUIDE_RAKUTEN_ACCESS_KEY",
+      "LOCALGUIDE_RAKUTEN_AFFILIATE_ID"
+    ]
+  },
+  "publication": {
+    "content_kind": "editorial_family_travel_only",
+    "ad_notice": "広告｜このページには楽天トラベルのアフィリエイトリンクが含まれる場合があります。",
+    "no_auto_hotel_pages": true,
+    "no_api_images_until_license_review": true,
+    "no_hotel_min_charge_as_family_total": true,
+    "no_price_without_exact_occupancy_and_dates": true,
+    "no_links_without_registered_public_site": true
+  },
+  "trip_focus": {
+    "origin": "加古川発",
+    "party_sizes": [
+      4,
+      5,
+      6
+    ],
+    "planned_articles_per_month_max": 2
+  }
+}

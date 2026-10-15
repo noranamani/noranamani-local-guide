@@ -1,0 +1,164 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "provider": {
+      "const": "rakuten_travel"
+    },
+    "enabled": {
+      "type": "boolean"
+    },
+    "api_fetch_enabled": {
+      "type": "boolean"
+    },
+    "affiliate_publication_enabled": {
+      "type": "boolean"
+    },
+    "approvals": {
+      "type": "object",
+      "properties": {
+        "travel_api_access_confirmed": {
+          "type": "boolean"
+        },
+        "local_guide_registered_as_affiliate_site": {
+          "type": "boolean"
+        },
+        "rakuten_webservice_data_terms_reviewed": {
+          "type": "boolean"
+        },
+        "rakuten_official_credit_reviewed": {
+          "type": "boolean"
+        },
+        "hosting_terms_reviewed": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "travel_api_access_confirmed",
+        "local_guide_registered_as_affiliate_site",
+        "rakuten_webservice_data_terms_reviewed",
+        "rakuten_official_credit_reviewed",
+        "hosting_terms_reviewed"
+      ],
+      "additionalProperties": false
+    },
+    "api": {
+      "type": "object",
+      "properties": {
+        "simple_hotel_search": {
+          "type": "string",
+          "format": "uri"
+        },
+        "hotel_detail_search": {
+          "type": "string",
+          "format": "uri"
+        },
+        "keyword_hotel_search": {
+          "type": "string",
+          "format": "uri"
+        },
+        "required_env_names": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "simple_hotel_search",
+        "hotel_detail_search",
+        "keyword_hotel_search",
+        "required_env_names"
+      ],
+      "additionalProperties": false
+    },
+    "publication": {
+      "type": "object",
+      "properties": {
+        "content_kind": {
+          "const": "editorial_family_travel_only"
+        },
+        "ad_notice": {
+          "type": "string",
+          "minLength": 20
+        },
+        "no_auto_hotel_pages": {
+          "const": true
+        },
+        "no_api_images_until_license_review": {
+          "const": true
+        },
+        "no_hotel_min_charge_as_family_total": {
+          "const": true
+        },
+        "no_price_without_exact_occupancy_and_dates": {
+          "const": true
+        },
+        "no_links_without_registered_public_site": {
+          "const": true
+        }
+      },
+      "required": [
+        "content_kind",
+        "ad_notice",
+        "no_auto_hotel_pages",
+        "no_api_images_until_license_review",
+        "no_hotel_min_charge_as_family_total",
+        "no_price_without_exact_occupancy_and_dates",
+        "no_links_without_registered_public_site"
+      ],
+      "additionalProperties": false
+    },
+    "trip_focus": {
+      "type": "object",
+      "properties": {
+        "origin": {
+          "const": "加古川発"
+        },
+        "party_sizes": {
+          "type": "array",
+          "items": {
+            "enum": [
+              4,
+              5,
+              6
+            ]
+          },
+          "uniqueItems": true,
+          "minItems": 3,
+          "maxItems": 3
+        },
+        "planned_articles_per_month_max": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2
+        }
+      },
+      "required": [
+        "origin",
+        "party_sizes",
+        "planned_articles_per_month_max"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "schema_version",
+    "provider",
+    "enabled",
+    "api_fetch_enabled",
+    "affiliate_publication_enabled",
+    "approvals",
+    "api",
+    "publication",
+    "trip_focus"
+  ],
+  "additionalProperties": false
+}
