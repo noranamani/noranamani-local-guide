@@ -1,0 +1,27 @@
+name: Check weekly note draft
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'scripts/build_note_weekly.py'
+      - 'note/COMMON_CONTRACT.md'
+      - '.github/workflows/note-weekly-check.yml'
+permissions:
+  contents: read
+jobs:
+  dry-run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build safe note bundle (no public URL)
+        run: python scripts/build_note_weekly.py
+      - name: Assert initial run is skipped
+        run: python -c "import json; assert json.load(open('note/latest/manifest.json'))['status'] == 'skip'"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: local-note-dry-run
+          path: note/latest/manifest.json
+          retention-days: 7
