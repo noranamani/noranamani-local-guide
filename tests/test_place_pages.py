@@ -122,6 +122,21 @@ class PlaceListingSiteTests(unittest.TestCase):
         atomic_json(self.root / "cache/page_state.json", state)
         return files
 
+    def test_cloudflare_header_noindex_while_thin(self):
+        files = self.render()
+        self.assertIn("_headers", files)
+        self.assertIn("X-Robots-Tag: noindex", files["_headers"])
+        self.assertIn("X-Frame-Options: DENY", files["_headers"])
+
+    def test_cloudflare_header_allows_indexing_only_after_quality_gate(self):
+        self.places = [facility(i) for i in range(5)]
+        files = self.render()
+        self.assertIn("X-Robots-Tag: noindex", files["_headers"])
+        for day in range(1, 8):
+            files = self.render(NOW + timedelta(days=day))
+        self.assertNotIn("X-Robots-Tag: noindex", files["_headers"])
+        self.assertIn("sitemap.xml", files)
+
     def test_four_places_render_but_stay_noindex(self):
         files = self.render()
         self.assertIn("places.html", files)

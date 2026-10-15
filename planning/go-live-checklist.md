@@ -1,4 +1,4 @@
-# GitHub Pages公開・自動化の前提チェック（2026-10-14）
+# Cloudflare Pages公開・自動化の前提チェック（2026-10-14）
 
 **この文書はチェックリストであり、公開・課金・cron設定を実行する指示ではありません。**
 
@@ -35,10 +35,12 @@
 - [ ] Google登録前に少なくとも内容のある複数ページを用意
 
 ## 4. 公開に向けた設計（未実施）
+- [x] 公開先をCloudflare Pagesに決定（公開設定は未実施）
+- [ ] Cloudflareの登録・GitHub権限承認・初回デプロイ（公開を伴うためユーザー確認後）
 - [ ] 公開場所/リポジトリ名/最終URLを確認し、`config/page_rules.json` の `site_url` を正しく設定
 - [ ] トップ・施設一覧・イベント詳細が、SEO件数・鮮度条件を満たすか検証
 - [ ] `canonical`、`sitemap.xml`、`robots.txt`、`noindex` の整合を検証
-- [ ] GitHub Pages公開をユーザーが承認してから有効化
+- [ ] Cloudflare PagesのGitHub接続・初回公開はユーザーの公開承認後に有効化（接続時点でpages.devの公開が始まる）
 - [ ] 本番のURLへアクセス・表示確認（スマホ/PC）
 
 ## 5. 毎朝の自動運用（未実施）
@@ -57,3 +59,12 @@
 - [ ] 検索順位・インデックス登録は保証されない
 
 **現時点で公開を自動承認しない理由:** 開催イベント0件、確認済み施設4件しかなく、今週末の地域情報という本来の目的にまだ達していないため。
+
+## Phase 1L — Cloudflare Pages移行準備
+
+- [x] 公開先をCloudflare Pagesに選定。Python3.12に固定、オフラインのPages用ビルド・SEO/X-Robots-Tag検証をCIに追加。
+- [ ] クラウド側にPagesプロジェクトを作成する。**初回公開が発生するので本番サイトの内容確認・ユーザー承認後**。
+- [ ] 無料枠を選択。Preview branch build controlは初期値のAllからNoneへ変更し、不要な公開プレビューを避ける。
+- [ ] pages.dev実URLを確認し、index/placesとリンク・安全なキャッシュ・HTTP noindexを実際に検証。
+- [ ] 掲載条件を満たしてから`config/page_rules.json.site_url`を確定し、canonical・sitemap・robotsを出力する。
+- [ ] 楽天トラベル用アフィリエイト媒体登録やPR表示は正式URL・提供規約確認後。
