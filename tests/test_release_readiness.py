@@ -58,6 +58,8 @@ class ReadinessTests(unittest.TestCase):
         report = markdown_report(state)
         self.assertEqual(report.count("- [ ]"), len(state["manual_checks"]))
         self.assertIn("Cloudflare初回デプロイの承認", report)
+        self.assertIn("問い合わせ窓口（任意）", report)
+        self.assertIn("すべてが公開の必須条件ではありません", report)
 
     def test_missing_xrobots_header_rejected_before_url_set(self):
         self.headers.write_text("/*\n", encoding="utf-8")
