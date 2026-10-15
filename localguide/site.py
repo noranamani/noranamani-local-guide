@@ -31,6 +31,10 @@ def cloudflare_headers(block_indexing):
     return result
 
 
+SITE_NAME = "はりまよりみち"
+SITE_TAGLINE = "加古川・明石・姫路と周辺のイベント・お店・おでかけ情報"
+
+
 def escaped(value):
     return html.escape(str(value), quote=True)
 
@@ -50,9 +54,9 @@ def page(title, description, body, filename, site_url, indexable, nav):
     robots = "index,follow" if site_url and indexable else "noindex,follow"
     return f'''<!doctype html>
 <html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{escaped(title)} | noranamani LOCAL GUIDE</title><meta name="description" content="{escaped(description)}">
+<title>{escaped(title)} | {escaped(SITE_NAME)}</title><meta name="description" content="{escaped(description)}">
 <meta name="robots" content="{robots}">{canonical}<link rel="stylesheet" href="styles.css"></head>
-<body><header><a href="index.html">noranamani LOCAL GUIDE</a><p>加古川・明石・姫路と周辺の家族向け地域情報</p>
+<body><header><a href="index.html">{escaped(SITE_NAME)}</a><p>{escaped(SITE_TAGLINE)}</p>
 <nav aria-label="主なページ">{nav}</nav></header><main><h1>{escaped(title)}</h1>{body}</main>
 <footer>料金・日程の変更や中止は公式情報をご確認ください。確認できない情報は「不明」と表示します。</footer></body></html>'''
 

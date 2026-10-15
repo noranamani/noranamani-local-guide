@@ -83,7 +83,7 @@ def markdown_report(report):
          "URL設定あり。配信中かどうかは別途確認" if report["site_url"] else "site_url未設定"),
     ]
     lines = [
-        "# LOCAL GUIDE — 公開前の自動点検（未公開）", "",
+        "# はりまよりみち — 公開前の自動点検（未公開）", "",
         f"点検日時：{report['generated_at']}", "",
         "**公開判定：保留。** 自動チェックが成功しても公開許可にはなりません。",
         "このチェックは外部アクセス、メール送信、課金、Cloudflare接続、デプロイを行いません。",
