@@ -15,7 +15,7 @@
 1. https://dash.cloudflare.com/ にログイン（未登録ならCloudflareの無料アカウントを作成し、Freeプランを選択）。
 2. Workers & Pages → Create application → Pages → Connect to Git（画面表示は変更される場合があります）。
 3. GitHubとの連携を許可。リポジトリ選択が可能なら**Only select repositories**を選び、**`noranamani/noranamani-local-guide`だけ**に権限を与える。既存ガジェットサイトには許可しない。
-4. Framework preset: `None` / Project name: `noranamani-local-guide`（利用可能なら） / Production branch: `main` / Root directory: リポジトリ直下 `/`。
+4. Framework preset: `None` / Project name: `harima-yorimichi`（利用可能なら） / Production branch: `main` / Root directory: リポジトリ直下 `/`。
 5. Build command: `python3 -m pip install -r requirements.txt && python3 -m scripts.cloudflare_build`
 6. Build output directory: `docs`（`/docs`ではなくルートからの相対パス）。
 7. Python version: `.python-version`に`3.12`固定。必要に応じて環境変数`PYTHON_VERSION=3.12`を指定。
@@ -45,3 +45,10 @@
 - https://developers.cloudflare.com/pages/configuration/branch-build-controls/
 - https://developers.cloudflare.com/pages/configuration/preview-deployments/
 - https://developers.cloudflare.com/pages/configuration/headers/
+
+## Phase 1Q — 公開ブランド名への対応（2026-10-15）
+
+- サイトの画面表示名は「はりまよりみち」。技術用のGitHubリポジトリは既存のままでよい。
+- Cloudflare Pagesの**Project name候補は`harima-yorimichi`**。空きが確認できるまで `https://harima-yorimichi.pages.dev` は**未確定の例示**であり、存在すると断定しない。
+- 名前が使えない場合は、ユーザーと相談して別の短い英数字名にする。個人のGitHubハンドルは公開URLに使わない。
+- プロジェクト名の確保はPages初回公開につながるため、ユーザーから公開承認を得るまでは実施しない。
