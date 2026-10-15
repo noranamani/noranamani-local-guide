@@ -8,8 +8,8 @@ from .validation import publishable, validate_config, validate_data
 
 
 MANUAL_CHECKS = (
-    ("公開用の問い合わせ先", "私用メールアドレスを公開しない方法で決定"),
-    ("運営情報・プライバシー・広告表示", "実際に利用するサービス・個人情報の取扱いを確定"),
+    ("問い合わせ窓口（任意）", "初期公開の必須条件ではない。誤掲載対応用に設ける場合も私用メールを公開しない"),
+    ("個人情報・広告・販売要件（導入時に確認）", "個人データ収集・広告・自サイト販売の実施内容に応じて法令・規約を確認する"),
     ("スマホとPCの実機レビュー", "表示・出典・料金・イベント条件・公式リンクを確認"),
     ("Cloudflare初回デプロイの承認", "pages.devは公開URLになるため所有者の明示承認が必要"),
 )
@@ -92,7 +92,7 @@ def markdown_report(report):
     lines += [f"| {item} | {result} | {detail} |" for item, result, detail in rows]
     lines += ["", f"有効情報源：{report['sources_enabled']} / {report['sources_total']}件。"
               " 情報源の有効化とイベント開催情報の取得許可は別に確認します。",
-              "", "## 人による確認が必要な項目"]
+              "", "## 人による確認・任意項目（すべてが公開の必須条件ではありません）"]
     lines += [f"- [ ] **{title}**：{detail}" for title, detail in report["manual_checks"]]
     lines += [
         "", "※ noindexは検索エンジン向けで、ページへの一般アクセスを制限しません。",
