@@ -44,3 +44,8 @@
 - 公開先はCloudflare Pagesに決定。**GitHub連携/初回ビルドも一般公開につながる**ため、ユーザーの公開承認と掲載内容の確認までCloudflareへの接続・デプロイをしない。
 - `python -m scripts.cloudflare_build` とCIによるオフライン検証を維持する。`site_url=null`またはSEO基準未達の間はHTTP `X-Robots-Tag: noindex` を付与する。
 - 公開専用のAPIトークンや接続資格情報をGitHubへ記録しない。既存ガジェットサイトの秘密値も転用しない。
+
+## Phase 1O — リリース診断と編集準備
+- `python -m scripts.release_readiness` は診断用であり、ユーザーの公開承認やホスト側デプロイの許可ではない。
+- `planning/manual-event-review-template.md` は手動で公式イベント情報を確認するための書式。RSS発行日を開催日扱いしない。
+- `planning/operator-policy-draft.md` は未公開の草案。運営者・連絡先・アクセス解析等の実態を決めずに公開しない。

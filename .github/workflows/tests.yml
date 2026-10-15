@@ -40,6 +40,8 @@ jobs:
         run: python -m localguide validate --site
       - name: Record privacy-safe preview inventory
         run: python -m scripts.preview_report --output preview-report.md
+      - name: Generate release readiness report without network access
+        run: python -m scripts.release_readiness --output launch-readiness-report.md
       - name: Upload preview files (not deployed to Pages)
         uses: actions/upload-artifact@v4
         with:
@@ -47,6 +49,7 @@ jobs:
           path: |
             docs/
             preview-report.md
+            launch-readiness-report.md
           include-hidden-files: false
           if-no-files-found: error
           retention-days: 7
