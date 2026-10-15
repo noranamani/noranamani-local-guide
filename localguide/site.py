@@ -17,6 +17,20 @@ from .validation import inspect_text, publishable, validate_data, validate_confi
 STYLE = """*{box-sizing:border-box}body{margin:0;background:#faf8f3;color:#233d38;font:16px/1.8 system-ui,sans-serif}header,main,footer{max-width:960px;margin:auto;padding:24px}header{border-bottom:3px solid #ddaf54}a{color:#00695c;text-underline-offset:3px}nav{display:flex;gap:20px;flex-wrap:wrap}.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:20px}.card,.notice{background:white;border:1px solid #d9e0d7;border-radius:12px;padding:20px;margin:16px 0}h1{font-size:clamp(1.6rem,5vw,2.4rem);line-height:1.4}h2{font-size:1.25rem}dt{font-weight:bold}dd{margin:0 0 8px}.muted,footer{font-size:.9rem;color:#53655e}.tag{display:inline-block;background:#eef2df;padding:2px 10px;border-radius:20px}ul{padding-left:1.3em}a:focus-visible{outline:3px solid #c36f16;outline-offset:3px}"""
 
 
+# Cloudflare Pages uses docs/_headers when serving static assets. Defense in
+# depth: the HTTP header blocks indexing if no individual HTML is indexable.
+def cloudflare_headers(block_indexing):
+    result = (
+        "/*\\n"
+        "  X-Frame-Options: DENY\\n"
+        "  X-Content-Type-Options: nosniff\\n"
+        "  Referrer-Policy: strict-origin-when-cross-origin\\n"
+    )
+    if block_indexing:
+        result += "  X-Robots-Tag: noindex\\n"
+    return result
+
+
 def escaped(value):
     return html.escape(str(value), quote=True)
 
@@ -156,6 +170,7 @@ def create_files(root, now):
                 ET.SubElement(entry, f"{{{ns}}}loc").text = url.rstrip("/") + "/" + filename
             files["sitemap.xml"] = ET.tostring(tree, encoding="unicode", xml_declaration=True)
             files["robots.txt"] += "Sitemap: " + url.rstrip("/") + "/sitemap.xml\n"
+    files["_headers"] = cloudflare_headers(not bool(indexable_files))
     files[".guide-manifest.json"] = json.dumps({"schema_version": 1, "generated_at": now.isoformat(),
                                                "files": sorted(files), "events": len(events), "places": len(places)}, ensure_ascii=False, indent=2) + "\n"
     return files, page_state
@@ -245,6 +260,12 @@ def validate_site(output, site_url=None):
                     raise GuideError("イベントページの出典がありません")
                 for provenance in document.provenance:
                     parse_time(provenance.get("data-verified-at"))
+    if "_headers" in expected:
+        actual_headers = (output / "_headers").read_text(encoding="utf-8")
+        any_indexable = any(doc.metas.get("robots") == "index,follow"
+                            for doc in documents.values())
+        if actual_headers != cloudflare_headers(not any_indexable):
+            raise GuideError("CloudflareのHTTPヘッダーが検索登録条件と一致しません")
     for filename, document in documents.items():
         for link in document.links:
             parts = urlsplit(link)

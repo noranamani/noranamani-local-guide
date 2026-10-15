@@ -19,7 +19,7 @@
 12. HTMLとJSONは公開前にスキーマ、無断転載、秘密値、日付、リンク、空ページを検証する。
 13. 公開されたページでは公式リンク・情報源・確認日時を表示する。薄い組合せSEOページを量産しない。
 14. 新しい有料APIやサービスを導入しない。Oracleの既存VM・GitHub・GitHub Pages・ChatGPTの既存契約範囲を優先する。
-15. Google Search Consoleやnote投稿の設定、Oracle cron、GitHub Pages公開は、明示的な承認前に有効化しない。
+15. Google Search Consoleやnote投稿の設定、Oracle cron、Cloudflare Pages公開は、明示的な承認前に有効化しない。
 
 ## データ利用と監査
 - ソースごとに terms_review_status, robots_review_status, reuse_rights_status, checked_at, attribution_required を管理する。
@@ -32,10 +32,15 @@
 - 既存のURLを継続更新する。件数、公式性、異なる主催者数に条件を設ける。
 - 期限切れ情報を今週末情報として扱わない。
 - データ0件のときは架空の掲載をせず、空のSEOページを生成しない。
-- GitHub Pagesでのsite_urlが確定するまでcanonicalやsitemapに架空のURLを入れない。
+- Cloudflare Pagesでのsite_urlが確定するまでcanonicalやsitemapに架空のURLを入れない。
 
 ## 旅行サブコンテンツ・楽天トラベル広告
 - `config/travel_affiliate.json` が無効の間は、楽天トラベルAPIへの通信、アフィリエイトのリンク公開、楽天素材・写真転載、広告自動生成を実施しない。
 - 既存ガジェットサイトのAPI認証情報・Oracleの設定をコピーしたりリポジトリにコミットしない。旅行APIの利用資格は別途確認する。
 - 宿泊候補の最安料金と、家族4〜6人・複数室の合計見積を混同しない。子どもの年齢・食事・添い寝区分の条件が欠ければ金額は不明。
 - 新サイトの楽天アフィリエイト登録、公式クレジット、明瞭なPR表示、ホスティング条件を確認してから公開機能を導入する。
+
+## Cloudflare Pages
+- 公開先はCloudflare Pagesに決定。**GitHub連携/初回ビルドも一般公開につながる**ため、ユーザーの公開承認と掲載内容の確認までCloudflareへの接続・デプロイをしない。
+- `python -m scripts.cloudflare_build` とCIによるオフライン検証を維持する。`site_url=null`またはSEO基準未達の間はHTTP `X-Robots-Tag: noindex` を付与する。
+- 公開専用のAPIトークンや接続資格情報をGitHubへ記録しない。既存ガジェットサイトの秘密値も転用しない。

@@ -5,7 +5,7 @@
 ## 方針
 - **メイン**: 地域イベント、無料・低価格のお出かけ、屋内遊び、商業施設、特売・セール、新店・閉店、直売所
 - **サブ**: 加古川発・家族4〜6人向けの旅行モデルコースと宿泊施設比較
-- **基盤**: Oracle Cloud Always Free / GitHub / GitHub Pages / Python / 既存ChatGPT契約内の編集タスク
+- **基盤**: Oracle Cloud Always Free / GitHub / Cloudflare Pages / Python / 既存ChatGPT契約内の編集タスク
 - **追加費用目標**: 0円/月（既存契約料は除く）
 - 既存の noranamani/noranamani-gadget-deals は変更しない。
 
@@ -13,7 +13,7 @@
 Phase 1の取得基盤・正規化・検証・静的サイト生成とオフラインテストを実装済みです。
 **明石市の観光施設オープンデータCSVを審査し、実施設4件の取得・生成を確認済みです。**
 2026-10-14の初回調査は接続制限で拒否されましたが、設定変更後に再調査しました。利用規約は商用利用・加工・再配布を許可し、出典と加工表示が必要です。
-19候補のうち、このCSV1件だけを有効化しています。残り18件は利用不可または未審査で無効です。イベントは0件、自動運用・サイト公開は未設定です。
+28候補のうち、このCSV1件だけを有効化しています。残り27件は利用不可または未審査で無効です。イベントは0件、自動運用・サイト公開は未設定です。
 実データ0件では掲載準備中のトップだけを生成し、架空イベント・空の地域/カテゴリページを生成しません。
 
 ## 主なファイル
@@ -25,7 +25,7 @@ Phase 1の取得基盤・正規化・検証・静的サイト生成とオフラ�
 - localguide/: Pythonの取得・正規化・検証・静的サイト生成
 - schemas/: 設定・データのJSON Schema
 - tests/: 外部接続しない単体・統合テスト（架空データは一時ディレクトリ内のみ）
-- docs/: 検証済みのローカル生成物（GitHub Pagesは未設定）
+- docs/: 検証済み静的生成物（将来Cloudflare Pagesから配信。まだ未公開）
 - note/: 後日の週次note連携用
 
 ## 希望する日次時刻（未設定）
@@ -39,7 +39,7 @@ Phase 1の取得基盤・正規化・検証・静的サイト生成とオフラ�
 - イベント日時・開催場所・参加費を推測しない。情報がなければ「不明」とする。
 - 過去イベントの自動除外、重複判定、ソース表示、失敗時の安全停止を必須とする。
 - 掲載件数が少ないカテゴリや検索用の薄いページを大量生成しない。
-- GitHub PagesとSearch Consoleは、公開物を生成し検証した後に設定する。
+- Cloudflare PagesとSearch Consoleは、公開内容を検証してから設定する。
 
 最初の作業は planning/phase1-checklist.md と codex/phase1-prompt.md を参照してください。
 
@@ -177,3 +177,15 @@ RSS XMLを人手で準備し、利用規約、robots、内部発見用途、根�
 新設`config/travel_affiliate.json` は`enabled=false`かつAPI取得・広告公開も無効。実際の公開URLの楽天アフィリエイトサイト登録、GitHub Pagesの営利目的制限、楽天APIの利用/クレジット・宿泊料金の確認が済むまで有効化しません。`localguide/travel_rakuten.py` はネットワークなしのオフライン候補処理と、人数・年齢・室数・食事・旅行日程の料金見積条件のチェックだけです。
 
 **楽天トラベル公式APIの最安料金は家族合計額ではありません**。写真/レビュー原文の保存・自動記事量産は行いません。詳細と公開前チェックは [旅行モジュール計画](planning/travel-module.md) を参照。
+
+## Phase 1L — Cloudflare Pages公開先の選定・デプロイ準備（2026-10-15）
+
+公開先を**Cloudflare Pages（無料枠）**に決定。GitHubは引き続きソース管理・PR/CIを担当します。初回のCloudflare GitHub連携は`pages.dev`にサイトを**実際に公開する操作**のため、現在は接続・公開しません。
+
+- [Cloudflare Pages設定手順](planning/cloudflare-pages.md) を参照してください。Framework preset=None、ルートはリポジトリ直下、production branch=`main`、Build command=`python3 -m pip install -r requirements.txt && python3 -m scripts.cloudflare_build`、出力=`docs`。
+- `.python-version` でPython 3.12を指定し、CIと本番ビルドの差を小さくします。
+- `python -m scripts.cloudflare_build` は**承認済みのリポジトリ内のJSONだけ**で再ビルドし、サイト検証を実行します。ネットからの取得、メール送信、課金、Git push、Pagesデプロイはしません。
+- Cloudflare用の `_headers` はサイト生成時に自動生成します。まだインデックス可能なHTMLがない間は`X-Robots-Tag: noindex`、同時にクリックジャッキング・MIME推測への標準的なヘッダーを付与します。公開条件を満たすようになったら`noindex`ヘッダーは自動で外れ、各HTMLの個別SEO判定が適用されます。
+- CloudflareのプレビューURLは初期状態で一般閲覧可能（検索エンジン向け`noindex`は付与）。正式公開まで自動プレビュー展開も有効にしません。
+- 現時点でイベント0件・明石市の確認済み施設4件。正式公開、URL確定、楽天アフィリエイト媒体登録、Oracle cron、Search Consoleは未実施です。
+
