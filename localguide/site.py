@@ -246,10 +246,10 @@ def create_files(root, now):
             content += '<h2>確認済みの施設</h2><div class="cards">' + place_cards + '</div>'
         if travel_guides:
             content += ('<h2>加古川発・家族旅行のモデルコース</h2>'
-                        ('<p>観光の立ち寄り先をまとめています。個別宿泊施設の比較は準備中です。'
-                         + ('旅行記事には広告・PRリンクが含まれます。</p>' if any(g.get("affiliate") for g in travel_guides)
-                            else '広告リンクは準備中です。</p>'))
-                        '<div class="cards">' + "".join(guide_card(g) for g in travel_guides) + '</div>')
+                        + '<p>観光の立ち寄り先をまとめています。個別宿泊施設の比較は準備中です。'
+                        + ('旅行記事には広告・PRリンクが含まれます。</p>' if any(g.get("affiliate") for g in travel_guides)
+                           else '広告リンクは準備中です。</p>')
+                        + '<div class="cards">' + "".join(guide_card(g) for g in travel_guides) + '</div>')
     content = intro + content
     travel_indexable = any(search_eligible(g, now) for g in travel_guides)
     add("index.html", "家族で出かける地域ガイド", "加古川・明石・姫路周辺の確認済み開催情報と施設案内、播磨からの家族旅行モデルコース。公式情報と確認日時を表示します。", content, qualified(events, rules) or places_ready or travel_indexable)
