@@ -47,7 +47,7 @@ class FamilyTravelEditorialTests(unittest.TestCase):
         self.assertIn("広告・PR", content)
         self.assertLess(content.index("広告・PR：この記事には"), content.index("2日間の回り方案"))
         self.assertIn("家族4〜6人", content)
-        self.assertIn("淡路島の宿泊施設一覧", content)
+        self.assertIn("淡路島エリア宿泊施設一覧", content)
         self.assertIn("記事確認中", guide_card(self.guide))
         self.assertIn("広告・PRリンク", guide_card(self.guide))
 
