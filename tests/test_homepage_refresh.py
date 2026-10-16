@@ -25,6 +25,7 @@ class HomepageRefreshTests(unittest.TestCase):
         # natural growth when text wraps at narrow widths or zoom levels.
         self.assertIn("min-height: clamp(300px, 28vw, 355px)", STYLE)
         self.assertIn("min-height: 360px", STYLE)
+        self.assertIn(".home-hero { min-height: 340px; }", STYLE)
         self.assertIn("min-height: clamp(215px, 23vw, 300px)", STYLE)
         self.assertIn(".article-main .article-cover { min-height: 270px", STYLE)
         self.assertNotIn("min-height: 515px", STYLE)
