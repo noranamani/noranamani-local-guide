@@ -63,7 +63,7 @@ p { margin: .65rem 0; }
 .source-details ul { padding-left: 1.15rem; overflow-wrap: anywhere; }
 .source-details li + li { margin-top: .65rem; }
 .ad-notice { font-weight: 800; padding: .45rem .75rem; margin: .65rem 0; background: #fff9e8; border: 1px solid #dfc995; border-radius: 8px; }
-.affiliate-link { margin: 1.1rem 0; padding: .65rem; overflow-wrap: anywhere; border: 1px solid var(--border); border-radius: 8px; }
+.travel-booking-reference { margin: 1.1rem 0; padding: .65rem; overflow-wrap: anywhere; border: 1px solid var(--border); border-radius: 8px; }
 .tag { display: inline-block; padding: .1rem .55rem; background: #edf4e9; border-radius: 999px; color: #315642; font-size: .85rem; }
 ul { padding-left: 1.3rem; }
 .site-footer { border-top: 1px solid var(--border); background: #eef2ec; color: var(--muted); font-size: .88rem; }
