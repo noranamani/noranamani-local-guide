@@ -35,13 +35,21 @@
           ]
         }
       ],
-      "lodging_note": "宿泊エリアやホテル・コテージは比較準備中です。現時点で紹介料が発生する予約リンクや、特定施設の宿泊可否を示すリンクは掲載していません。",
+      "lodging_note": "ホテルやコテージの定員・宿泊総額・空室状況は確認中です。下記には楽天トラベルの淡路島エリア宿泊施設一覧への広告リンクがあります。人数・子どもの年齢・旅行日を指定して、最新の条件を確認してください。",
       "planning_notes": [
         "家族4〜6人で宿を探すときは、全員の年齢、部屋数、食事の有無を設定して宿泊総額を確認してください。検索結果の「最安料金」が家族全員分とは限りません。",
         "1日目の各施設は訪問順を入れ替えても構いません。旅行日の営業時間、休園日、天候、所要時間に合わせて調整してください。",
         "高速道路料金、駐車場料金、入園料、食費はこのモデルコースの金額に含めていません。障害者手帳等の割引条件も対象施設の公式窓口で個別にご確認ください。",
         "掲載内容は取材・実訪問を保証するものではありません。施設ごとの公式案内を確認しながら、自分たちに合う旅程を組み立てるための提案です。"
-      ]
+      ],
+      "affiliate": {
+        "provider": "rakuten_travel",
+        "type": "manually_generated_html",
+        "site_registered": true,
+        "registered_site_url": "https://harima-yorimichi.pages.dev/",
+        "destination_url": "https://travel.rakuten.co.jp/yado/hyogo/awaji.html",
+        "source_html": "<a href=\"https://hb.afl.rakuten.co.jp/hgc/588985ea.8619e683.588985eb.c075811a/?pc=https%3A%2F%2Ftravel.rakuten.co.jp%2Fyado%2Fhyogo%2Fawaji.html&link_type=text&ut=eyJwYWdlIjoidXJsIiwidHlwZSI6InRleHQiLCJjb2wiOjF9\" target=\"_blank\" rel=\"nofollow sponsored noopener\" style=\"word-wrap:break-word;\">https://travel.rakuten.co.jp/yado/hyogo/awaji.html</a>"
+      }
     }
   ]
 }
