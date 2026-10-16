@@ -1,0 +1,42 @@
+{
+  "browser": "155.0.4283.45",
+  "mode": "headless Edge; local preview; external requests blocked",
+  "checks": [
+    {
+      "width": 1440,
+      "viewport": 1440,
+      "document": 1440,
+      "privacyLinks": 2,
+      "noManualTracking": true,
+      "keyboard": "passed",
+      "footer": "passed"
+    },
+    {
+      "width": 768,
+      "viewport": 768,
+      "document": 768,
+      "privacyLinks": 2,
+      "noManualTracking": true,
+      "keyboard": "passed",
+      "footer": "passed"
+    },
+    {
+      "width": 390,
+      "viewport": 390,
+      "document": 390,
+      "privacyLinks": 2,
+      "noManualTracking": true,
+      "keyboard": "passed",
+      "footer": "passed"
+    },
+    {
+      "width": 320,
+      "viewport": 320,
+      "document": 320,
+      "privacyLinks": 2,
+      "noManualTracking": true,
+      "keyboard": "passed",
+      "footer": "passed"
+    }
+  ]
+}
