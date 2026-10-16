@@ -122,6 +122,45 @@
               "minLength": 15,
               "maxLength": 320
             }
+          },
+          "affiliate": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "provider",
+              "type",
+              "site_registered",
+              "registered_site_url",
+              "destination_url",
+              "source_html"
+            ],
+            "properties": {
+              "provider": {
+                "const": "rakuten_travel"
+              },
+              "type": {
+                "const": "manually_generated_html"
+              },
+              "site_registered": {
+                "const": true
+              },
+              "registered_site_url": {
+                "type": "string",
+                "format": "uri",
+                "const": "https://harima-yorimichi.pages.dev/"
+              },
+              "destination_url": {
+                "type": "string",
+                "format": "uri",
+                "pattern": "^https://travel\\.rakuten\\.co\\.jp/yado/"
+              },
+              "source_html": {
+                "type": "string",
+                "minLength": 130,
+                "maxLength": 2000,
+                "pattern": "^<a href="
+              }
+            }
           }
         }
       }
