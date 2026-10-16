@@ -9,7 +9,8 @@ from jsonschema import Draft202012Validator, FormatChecker
 
 from localguide.core import GuideError, parse_time
 from localguide.travel_guides import (reviewed_guides, guide_body,
-                                      guide_card, travel_filename, search_eligible)
+                                      guide_card, travel_filename, search_eligible,
+                                      approved_affiliate_html)
 
 ROOT = Path(__file__).resolve().parents[1]
 NOW = parse_time("2026-10-16T11:00:00+09:00")
@@ -30,19 +31,70 @@ class FamilyTravelEditorialTests(unittest.TestCase):
         urls = [stop["official_url"] for day in self.guide["days"] for stop in day["stops"]]
         self.assertEqual(len(set(urls)), 3)
 
-    def test_preview_content_is_genuinely_useful_without_ads(self):
+    def test_preview_content_has_unmodified_rakuten_link_with_prominent_pr_notice(self):
         self.assertEqual(travel_filename(self.guide), "trip-awaji-family-one-night.html")
         self.assertFalse(search_eligible(self.guide, NOW))
+        original = self.guide["affiliate"]["source_html"]
         content = guide_body(self.guide)
         self.assertIn("イングランドの丘", content)
         self.assertIn("あわじ花さじき", content)
         self.assertIn("国営明石海峡公園", content)
-        self.assertIn("楽天トラベル広告は準備中", content)
-        self.assertNotIn("hb.afl.rakuten.co.jp", content)
-        self.assertNotIn("afl.rakuten.co.jp", content)
-        self.assertIn("宿泊施設の紹介", content)
         self.assertIn('href="https://www.england-hill.com/"', content)
+        self.assertEqual(approved_affiliate_html(self.guide), original)
+        self.assertEqual(content.count(original), 1)
+        self.assertIn('target="_blank" rel="nofollow sponsored noopener"', content)
+        self.assertIn('style="word-wrap:break-word;"', content)
+        self.assertIn("広告・PR", content)
+        self.assertLess(content.index("広告・PR：この記事には"), content.index("2日間の回り方案"))
+        self.assertIn("家族4〜6人", content)
+        self.assertIn("淡路島の宿泊施設一覧", content)
         self.assertIn("記事確認中", guide_card(self.guide))
+        self.assertIn("広告・PRリンク", guide_card(self.guide))
+
+    def test_disabling_link_falls_back_to_preparation_only(self):
+        guide = copy.deepcopy(self.guide)
+        guide.pop("affiliate")
+        guide["lodging_note"] = "宿泊候補と人数条件を整理しています。広告・予約リンクは未掲載です。"
+        content = guide_body(guide)
+        self.assertNotIn("hb.afl.rakuten.co.jp", content)
+        self.assertIn("楽天トラベル広告は準備中", content)
+        self.assertNotIn("広告・PR：この記事には", content)
+        self.assertIn("広告リンクは準備中", guide_card(guide))
+
+    def test_manual_link_rejects_rewritten_markup_and_bad_registration(self):
+        unsafe = copy.deepcopy(self.guide)
+        unsafe["affiliate"]["source_html"] = unsafe["affiliate"]["source_html"].replace(
+            'target="_blank"', 'target="_self"')
+        with self.assertRaises(GuideError):
+            approved_affiliate_html(unsafe)
+        unsafe = copy.deepcopy(self.guide)
+        unsafe["affiliate"]["source_html"] += "<script>alert(1)</script>"
+        with self.assertRaises(GuideError):
+            approved_affiliate_html(unsafe)
+        unsafe = copy.deepcopy(self.guide)
+        unsafe["affiliate"]["site_registered"] = False
+        with self.assertRaises(GuideError):
+            approved_affiliate_html(unsafe)
+        unsafe = copy.deepcopy(self.guide)
+        unsafe["affiliate"]["registered_site_url"] = "https://unregistered.example.net/"
+        with self.assertRaises(GuideError):
+            approved_affiliate_html(unsafe)
+
+    def test_manual_link_rejects_mismatched_destination_and_tracking(self):
+        unsafe = copy.deepcopy(self.guide)
+        unsafe["affiliate"]["destination_url"] = "https://travel.rakuten.co.jp/yado/other.html"
+        with self.assertRaises(GuideError):
+            approved_affiliate_html(unsafe)
+        unsafe = copy.deepcopy(self.guide)
+        unsafe["affiliate"]["source_html"] = unsafe["affiliate"]["source_html"].replace(
+            "hb.afl.rakuten.co.jp", "evil.example.net")
+        with self.assertRaises(GuideError):
+            approved_affiliate_html(unsafe)
+        unsafe = copy.deepcopy(self.guide)
+        unsafe["affiliate"]["source_html"] = unsafe["affiliate"]["source_html"].replace(
+            "link_type=text", "link_type=image")
+        with self.assertRaises(GuideError):
+            approved_affiliate_html(unsafe)
 
     def test_historical_build_cannot_show_future_review(self):
         old = parse_time("2026-10-14T10:00:00+09:00")
