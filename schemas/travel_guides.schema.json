@@ -139,7 +139,10 @@
                 "const": "rakuten_travel"
               },
               "type": {
-                "const": "manually_generated_html"
+                "enum": [
+                  "manually_generated_html",
+                  "manually_generated_picttext_html"
+                ]
               },
               "site_registered": {
                 "const": true
@@ -152,15 +155,34 @@
               "destination_url": {
                 "type": "string",
                 "format": "uri",
-                "pattern": "^https://travel\\.rakuten\\.co\\.jp/yado/"
+                "anyOf": [
+                  {
+                    "pattern": "^https://travel\\.rakuten\\.co\\.jp/yado/"
+                  },
+                  {
+                    "pattern": "^https://travel\\.rakuten\\.co\\.jp/HOTEL/[0-9]+/[0-9]+\\.html"
+                  }
+                ]
               },
               "source_html": {
                 "type": "string",
                 "minLength": 130,
-                "maxLength": 2000,
-                "pattern": "^<a href="
+                "maxLength": 4500,
+                "pattern": "^(<a href=|<table border=)"
               }
             }
+          },
+          "trip_basis": {
+            "type": "string",
+            "enum": [
+              "proposed",
+              "actual_trip"
+            ]
+          },
+          "lodging_name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100
           }
         }
       }

@@ -26,7 +26,7 @@ class FamilyTravelEditorialTests(unittest.TestCase):
         Draft202012Validator.check_schema(schema)
         Draft202012Validator(schema, format_checker=FormatChecker()).validate(self.data)
         guides = reviewed_guides(self.data, NOW)
-        self.assertEqual(len(guides), 1)
+        self.assertEqual(len(guides), 2)
         self.assertEqual(guides[0]["review_status"], "preview")
         urls = [stop["official_url"] for day in self.guide["days"] for stop in day["stops"]]
         self.assertEqual(len(set(urls)), 3)
@@ -108,6 +108,49 @@ class FamilyTravelEditorialTests(unittest.TestCase):
             "link_type=text", "link_type=image")
         with self.assertRaises(GuideError):
             approved_affiliate_html(unsafe)
+
+    def test_sanin_actual_trip_route_and_original_picttext_ad(self):
+        sanin = next(g for g in self.data["items"] if g["id"] == "sanin-family-one-night")
+        self.assertEqual(sanin["trip_basis"], "actual_trip")
+        self.assertEqual(sanin["review_status"], "preview")
+        self.assertFalse(search_eligible(sanin, NOW))
+        names = [stop["name"] for day in sanin["days"] for stop in day["stops"]]
+        self.assertEqual(names, [
+            "水木しげるロード", "松江市宍道ふるさと森林公園（立ち寄り）",
+            "出雲大社・出雲方面の観光", "松江市宍道ふるさと森林公園（宿泊）",
+            "青山剛昌ふるさと館", "鳥取砂丘"])
+        original = sanin["affiliate"]["source_html"]
+        self.assertEqual(approved_affiliate_html(sanin), original)
+        content = guide_body(sanin)
+        self.assertEqual(content.count(original), 1)
+        self.assertIn('<h1>' + sanin["title"] + '</h1>', content)
+        self.assertIn('class="travel-booking-reference travel-booking-reference--picttext"', content)
+        self.assertLess(content.index("広告・PR：この記事には"), content.index("1泊2日の訪問ルート"))
+        self.assertIn("2026年の家族旅行", content)
+        self.assertIn("旅行記（記事確認中）", guide_card(sanin))
+
+    def test_sanin_picttext_ad_rejects_rewrites_and_cross_property_tracking(self):
+        sanin = next(g for g in self.data["items"] if g["id"] == "sanin-family-one-night")
+        changes = [
+            ("target=\"_blank\"", "target=\"_self\""),
+            ('item_id=84942', 'item_id=11111'),
+            ('img.travel.rakuten.co.jp', 'evil.example.com'),
+            ("link_type=picttext", "link_type=text"),
+            ("松江市宍道ふるさと森林公園</a>", "不正な宿泊先</a>"),
+        ]
+        for original, replacement in changes:
+            with self.subTest(original=original):
+                changed = copy.deepcopy(sanin)
+                changed["affiliate"]["source_html"] = sanin["affiliate"]["source_html"].replace(
+                    original, replacement)
+                self.assertNotEqual(changed["affiliate"]["source_html"],
+                                    sanin["affiliate"]["source_html"])
+                with self.assertRaises(GuideError):
+                    approved_affiliate_html(changed)
+        appended = copy.deepcopy(sanin)
+        appended["affiliate"]["source_html"] += '<script>alert(1)</script>'
+        with self.assertRaises(GuideError):
+            approved_affiliate_html(appended)
 
     def test_historical_build_cannot_show_future_review(self):
         old = parse_time("2026-10-14T10:00:00+09:00")
