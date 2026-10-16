@@ -15,6 +15,29 @@ from .page_places import qualified_places, sustained_listing
 from .validation import inspect_text, publishable, validate_data, validate_config
 from .travel_guides import reviewed_guides, travel_filename, guide_card, guide_body, search_eligible
 
+
+PHOTO_ASSETS = ("harima-hero-photo.webp", "awaji-photo.webp")
+PHOTO_ASSET_ROOT = Path(__file__).resolve().parent / "assets"
+
+
+def valid_webp(data):
+    return (20 <= len(data) <= 2_000_000 and data[:4] == b"RIFF"
+            and data[8:12] == b"WEBP"
+            and int.from_bytes(data[4:8], "little") + 8 == len(data))
+
+
+def load_photo_asset(filename):
+    if filename not in PHOTO_ASSETS:
+        raise GuideError("未登録の写真素材です")
+    path = PHOTO_ASSET_ROOT / filename
+    if path.is_symlink() or not path.is_file():
+        raise GuideError("画像素材が見つからないか、不正なパスです")
+    data = path.read_bytes()
+    if not valid_webp(data):
+        raise GuideError("写真素材のWebP形式が不正です")
+    return data
+
+
 STYLE = """:root {
   color-scheme: light;
   --ink: #203a34;
@@ -149,6 +172,119 @@ ul { padding-left: 1.3rem; }
 }
 @media (prefers-reduced-motion: reduce) { .action-link { transition: none; } }
 
+/* Text-free illustrative photos + semantic HTML/CSS heading overlays. */
+.home-hero {
+  position: relative;
+  isolation: isolate;
+  display: block;
+  min-height: clamp(400px, 46vw, 535px);
+  background-color: #315a62;
+  background-image: linear-gradient(100deg, rgb(5 32 37 / 88%) 0%, rgb(4 35 37 / 67%) 42%, rgb(5 33 40 / 10%) 100%), url("harima-hero-photo.webp");
+  background-position: center, center 55%;
+  background-size: cover, cover;
+  background-repeat: no-repeat;
+  color: #fff;
+}
+.home-hero__copy {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  max-width: 740px;
+  min-height: inherit;
+  padding: clamp(2rem, 6vw, 5.2rem);
+}
+.home-hero__copy h1 {
+  margin: .4rem 0 .35rem;
+  font-size: clamp(2.65rem, 7vw, 5.4rem);
+  line-height: 1.18;
+  letter-spacing: .045em;
+  color: #fff;
+  text-shadow: 0 3px 15px rgb(0 0 0 / 42%);
+}
+.home-hero__copy .eyebrow { color: #e8f7e7; text-shadow: 0 2px 8px #153a39; }
+.home-hero__subtitle {
+  margin: .55rem 0 .6rem;
+  font-size: clamp(1.28rem, 2.5vw, 1.8rem);
+  font-weight: 750;
+  text-shadow: 0 2px 12px rgb(0 0 0 / 45%);
+}
+.home-hero__copy .home-hero__description {
+  max-width: 40rem;
+  font-size: clamp(.95rem, 1.6vw, 1.05rem);
+  line-height: 1.7;
+  text-shadow: 0 1px 6px rgb(0 0 0 / 50%);
+}
+.home-hero__scene { display: none; }
+.home-hero__actions { margin-top: 1.2rem; }
+.home-hero__footnote {
+  position: absolute;
+  z-index: 1;
+  right: 20px;
+  bottom: 14px;
+  color: #fff;
+  font-size: .73rem;
+  opacity: .91;
+  text-shadow: 0 1px 5px #1b3632;
+}
+.article-cover {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: clamp(270px, 34vw, 435px);
+  height: auto;
+  overflow: hidden;
+  padding: clamp(1.2rem, 4.5vw, 3.2rem);
+  color: #fff;
+}
+.article-cover--awaji {
+  background-color: #426d73;
+  background-image: linear-gradient(0deg, rgb(5 33 39 / 80%), rgb(12 47 45 / 23%) 75%, rgb(13 43 42 / 15%)), url("awaji-photo.webp");
+  background-position: center, center 52%;
+  background-size: cover, cover;
+  background-repeat: no-repeat;
+}
+.article-cover h1 {
+  max-width: 850px;
+  margin: 0 0 .75rem;
+  color: #fff;
+  font-size: clamp(1.55rem, 4vw, 3rem);
+  line-height: 1.4;
+  text-shadow: 0 2px 13px rgb(0 0 0 / 60%);
+  overflow-wrap: anywhere;
+}
+.article-cover__note {
+  position: absolute;
+  top: .4rem;
+  right: 1.1rem;
+  color: #fff;
+  font-size: .74rem;
+  text-shadow: 0 1px 5px #234;
+}
+.trip-card__visual--awaji { background: #d3ece9 url("awaji-photo.webp") center 55% / cover no-repeat; }
+@media (max-width: 600px) {
+  .home-hero {
+    min-height: 515px;
+    background-image: linear-gradient(0deg, rgb(3 31 35 / 84%), rgb(5 35 40 / 32%) 85%), url("harima-hero-photo.webp");
+    background-position: 59% center;
+  }
+  .home-hero__copy {
+    justify-content: flex-end;
+    min-height: 515px;
+    padding: 2rem 1.45rem 3.3rem;
+  }
+  .home-hero__copy h1 { font-size: clamp(2.2rem, 9.7vw, 3.7rem); }
+  .home-hero__subtitle { font-size: 1.23rem; }
+  .home-hero__actions { width: 100%; }
+  .home-hero__footnote { right: 1.4rem; bottom: .75rem; }
+  .article-cover { min-height: 340px; padding: 1.5rem 1.1rem; }
+  .article-cover h1 { font-size: clamp(1.55rem, 7vw, 2.1rem); }
+}
+
 """
 
 
@@ -189,10 +325,10 @@ def date_label(value):
     return value.replace("T", " ").replace("+09:00", "（日本時間）")
 
 
-def page(title, description, body, filename, site_url, indexable, nav, home=False):
+def page(title, description, body, filename, site_url, indexable, nav, home=False, heading_in_body=False):
     canonical = f'<link rel="canonical" href="{escaped(site_url.rstrip("/") + "/" + filename)}">' if site_url and indexable else ""
     robots = "index,follow" if site_url and indexable else "noindex,follow"
-    heading = "" if home else f"<h1>{escaped(title)}</h1>"
+    heading = "" if home or heading_in_body else f"<h1>{escaped(title)}</h1>"
     main_class = ' class="home-main"' if home else ""
     return f'''<!doctype html>
 <html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
@@ -298,11 +434,14 @@ def create_files(root, now):
            + ('<a href="events.html">開催情報一覧</a>' if events else '')
            + ('<a href="places.html">施設一覧</a>' if places else '')
            + ('<a href="travel.html">家族旅行</a>' if travel_guides else ''))
-    files, indexable_files = {"styles.css": STYLE, "harima-hero.svg": HERO_SCENE, "awaji-card.svg": AWAJI_SCENE}, []
+    files, indexable_files = {"styles.css": STYLE, "harima-hero.svg": HERO_SCENE,
+                              "awaji-card.svg": AWAJI_SCENE,
+                              **{name: load_photo_asset(name) for name in PHOTO_ASSETS}}, []
     url = rules["site_url"]
 
-    def add(filename, title, description, body, indexable):
-        files[filename] = page(title, description, body, filename, url, indexable, nav, home=(filename == "index.html"))
+    def add(filename, title, description, body, indexable, *, heading_in_body=False):
+        files[filename] = page(title, description, body, filename, url, indexable, nav,
+                               home=(filename == "index.html"), heading_in_body=heading_in_body)
         if indexable and url:
             indexable_files.append(filename)
 
@@ -318,12 +457,13 @@ def create_files(root, now):
     hero = ('<section class="home-hero" aria-labelledby="home-headline">'
             '<div class="home-hero__copy">'
             '<p class="eyebrow">播磨のおでかけを、確かな情報から。</p>'
-            '<h1 id="home-headline">週末、ちょっと<br>よりみちしよう。</h1>'
-            '<p>近場の公園から、少し遠くの家族旅行まで。'
+            '<h1 id="home-headline">はりまよりみち</h1>'
+            '<p class="home-hero__subtitle">週末、ちょっとよりみちしよう。</p>'
+            '<p class="home-hero__description">近場の公園から、少し遠くの家族旅行まで。'
             '加古川・明石・姫路とその周辺の立ち寄り先を、公式情報と一緒に紹介します。</p>'
             + ('<div class="home-hero__actions">' + "".join(hero_actions) + '</div>' if hero_actions else '')
-            + '</div><div class="home-hero__scene" role="img" '
-            'aria-label="播磨の海と山、よりみちドライブをイメージしたオリジナルイラスト"></div></section>')
+            + '</div><div class="home-hero__scene" aria-hidden="true"></div>'
+            '<small class="home-hero__footnote">※画像はイメージです</small></section>')
     browse = []
     if places:
         browse.append('<a class="browse-card" href="places.html">'
@@ -390,7 +530,8 @@ def create_files(root, now):
                    '<div class="cards">' + "".join(guide_card(g) for g in travel_guides) + '</div>')
         add("travel.html", "加古川発・家族旅行プラン", "加古川から車で行ける1泊2日旅行のモデルコースと、宿泊予約前に確認したい条件のまとめです。", listing, travel_indexable)
         for guide in travel_guides:
-            add(travel_filename(guide), guide["title"], guide["summary"], guide_body(guide), search_eligible(guide, now))
+            add(travel_filename(guide), guide["title"], guide["summary"], guide_body(guide),
+                search_eligible(guide, now), heading_in_body=(guide["id"] == "awaji-family-one-night"))
     if places:
         add("places.html", "確認済みの施設一覧", "加古川・明石・姫路周辺の施設名称、所在地と公式リンクを出典付きでまとめています。料金など不明な項目は推測しません。", '<div class="cards">' + place_cards + '</div>', places_ready)
     if events:
@@ -478,6 +619,10 @@ def validate_site(output, site_url=None):
         path = output / filename
         if path.is_symlink() or not path.is_file() or Path(filename).name != filename:
             raise GuideError("生成物のパスが不正です")
+        if filename.endswith(".webp"):
+            if not valid_webp(path.read_bytes()):
+                raise GuideError("生成写真素材のWebP形式が不正です")
+            continue
         content = path.read_text(encoding="utf-8")
         inspect_text(content)
         if not content.strip():
@@ -544,7 +689,10 @@ def build(root, now, output=None):
     backup = None
     try:
         for filename, content in files.items():
-            (staging / filename).write_text(content, encoding="utf-8")
+            if isinstance(content, bytes):
+                (staging / filename).write_bytes(content)
+            else:
+                (staging / filename).write_text(content, encoding="utf-8")
         if (output / ".gitkeep").exists():
             shutil.copy2(output / ".gitkeep", staging / ".gitkeep")
         rules = read_json(root / "config/page_rules.json")

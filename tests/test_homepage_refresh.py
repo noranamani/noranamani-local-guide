@@ -4,7 +4,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 from localguide.core import parse_time
-from localguide.site import HERO_SCENE, AWAJI_SCENE, STYLE, create_files
+from localguide.site import HERO_SCENE, AWAJI_SCENE, STYLE, PHOTO_ASSETS, create_files, page, valid_webp
 
 
 NOW = parse_time("2026-10-16T13:00:00+09:00")
@@ -47,7 +47,33 @@ class HomepageRefreshTests(unittest.TestCase):
             self.assertIn('X-Robots-Tag: noindex', files["_headers"])
             self.assertIn("harima-hero.svg", files)
             self.assertIn("awaji-card.svg", files)
+            for filename in PHOTO_ASSETS:
+                self.assertIn(filename, files)
+                self.assertIsInstance(files[filename], bytes)
+                self.assertTrue(valid_webp(files[filename]))
+                self.assertIn(f'url("{filename}")', files["styles.css"])
+            self.assertIn('<h1 id="home-headline">はりまよりみち</h1>', files["index.html"])
+            self.assertEqual(files["index.html"].count("<h1"), 1)
+            self.assertIn("※画像はイメージです", files["index.html"])
             self.assertNotIn("sitemap.xml", files)
+
+
+    def test_awaji_article_title_is_real_html_and_only_one_heading(self):
+        import json
+        from localguide.travel_guides import guide_body
+        path = Path(__file__).resolve().parents[1] / "data" / "travel_guides.json"
+        guide = next(g for g in json.loads(path.read_text(encoding="utf-8"))["items"]
+                     if g["id"] == "awaji-family-one-night")
+        body = guide_body(guide)
+        document = page(guide["title"], guide["summary"], body,
+                        "trip-awaji-family-one-night.html", None, False, "",
+                        heading_in_body=True)
+        self.assertIn('<div class="article-cover article-cover--awaji"><h1>', document)
+        self.assertIn("※画像はイメージです", document)
+        self.assertEqual(document.count("<h1"), 1)
+        self.assertIn("広告・PR", document)
+        self.assertNotIn("<img", document)
+        self.assertIn("awaji-photo.webp", STYLE)
 
 
 if __name__ == "__main__":

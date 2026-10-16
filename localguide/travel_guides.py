@@ -127,10 +127,14 @@ def guide_body(guide):
               else "訪問先の最新の営業日・料金・参加条件は各施設の公式案内で確認してください。")
     ad_notice = ('<p class="ad-notice">広告・PR：この記事には楽天トラベルの'
                  'アフィリエイトリンクを掲載しています。</p>' if affiliate_markup else '')
-    article_cover = ('<div class="article-cover article-cover--awaji" role="img" '
-                     'aria-label="淡路島への小旅行をイメージしたオリジナルイラスト"></div>'
-                     if guide["id"] == "awaji-family-one-night"
-                     else '<div class="article-cover" aria-hidden="true"></div>')
+    if guide["id"] == "awaji-family-one-night":
+        article_cover = (
+            '<div class="article-cover article-cover--awaji">'
+            '<h1>' + escape(guide["title"]) + '</h1>'
+            '<span class="article-cover__note">※画像はイメージです</span></div>'
+        )
+    else:
+        article_cover = '<div class="article-cover" aria-hidden="true"></div>'
     parts = [
         article_cover,
         '<section class="intro"><p class="eyebrow">播磨から出かける、家族旅行のアイデア</p>',
