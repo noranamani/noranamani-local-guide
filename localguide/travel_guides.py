@@ -6,10 +6,8 @@ deliberately unavailable until site registration and compliance review.
 """
 from datetime import timedelta
 from html import escape
-from pathlib import Path
 
-from .core import GuideError, parse_time, read_json, safe_url
-from .validation import schema_check
+from .core import GuideError, parse_time, safe_url
 
 MAX_SEO_REVIEW_AGE = timedelta(days=90)
 
@@ -18,19 +16,19 @@ def travel_filename(guide):
     return "trip-" + guide["id"] + ".html"
 
 
-def load_guides(root, now):
-    raw = read_json(Path(root) / "data/travel_guides.json")
-    schema_check(Path(root), "travel_guides", raw)
+def reviewed_guides(raw, now):
+    """Historical preview dates omit later editorials rather than inventing them."""
     if raw.get("schema_version") != 1:
         raise GuideError("旅行ガイドの版が不正です")
     ids = set()
+    visible = []
     for guide in raw["items"]:
         if guide["id"] in ids:
             raise GuideError("旅行ガイドIDが重複しています")
         ids.add(guide["id"])
         reviewed = parse_time(guide["last_reviewed_at"])
         if reviewed > now:
-            raise GuideError("旅行ガイドの確認日時が未来です")
+            continue
         urls = set()
         for day in guide["days"]:
             for stop in day["stops"]:
@@ -42,7 +40,8 @@ def load_guides(root, now):
                       *guide["planning_notes"]):
             if any(ch in value for ch in "<>\r\n"):
                 raise GuideError("旅行ガイドにHTML・改行を含めないでください")
-    return raw["items"]
+        visible.append(guide)
+    return visible
 
 
 def search_eligible(guide, now):
