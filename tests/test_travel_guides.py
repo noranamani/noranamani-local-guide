@@ -50,6 +50,17 @@ class FamilyTravelEditorialTests(unittest.TestCase):
         self.assertIn("淡路島エリア宿泊施設一覧", content)
         self.assertIn("記事確認中", guide_card(self.guide))
         self.assertIn("広告・PRリンク", guide_card(self.guide))
+        self.assertIn('class="travel-booking-reference"', content)
+        self.assertNotIn('class="affiliate-link"', content)
+        destination = self.guide["affiliate"]["destination_url"]
+        self.assertEqual(content.count(f'href="{destination}"'), 1)
+        self.assertIn('楽天トラベルの淡路島エリア宿泊施設一覧（通常リンク）', content)
+        self.assertIn("この通常リンクにはアフィリエイト報酬は発生しません", content)
+        # Visitors whose ad blocker hides affiliate markup can still open the official listing.
+        self.assertGreater(content.index(f'href="{destination}"'), content.index(original))
+        from localguide.site import STYLE
+        self.assertIn(".travel-booking-reference", STYLE)
+        self.assertNotIn(".affiliate-link", STYLE)
 
     def test_disabling_link_falls_back_to_preparation_only(self):
         guide = copy.deepcopy(self.guide)
@@ -60,6 +71,8 @@ class FamilyTravelEditorialTests(unittest.TestCase):
         self.assertIn("楽天トラベル広告は準備中", content)
         self.assertNotIn("広告・PR：この記事には", content)
         self.assertIn("広告リンクは準備中", guide_card(guide))
+        self.assertNotIn("通常リンク", content)
+        self.assertNotIn("travel-booking-reference", content)
 
     def test_manual_link_rejects_rewritten_markup_and_bad_registration(self):
         unsafe = copy.deepcopy(self.guide)
