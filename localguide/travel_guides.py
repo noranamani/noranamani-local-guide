@@ -106,10 +106,16 @@ def guide_card(guide):
     promo = bool(approved_affiliate_html(guide))
     notice = ("公式施設情報をもとに作成。個別宿泊施設の比較は準備中で、記事には広告・PRリンクを含みます。"
               if promo else "公式施設情報をもとに作成。宿泊比較・広告リンクは準備中です。")
-    return ('<article class="card"><span class="tag">' + escape(status) + '</span>'
+    artwork_class = ("trip-card__visual trip-card__visual--awaji"
+                     if guide["id"] == "awaji-family-one-night" else "trip-card__visual")
+    return ('<article class="card trip-card">'
+            '<div class="' + artwork_class + '" aria-hidden="true"></div>'
+            '<div class="trip-card__content"><span class="tag">' + escape(status) + '</span>'
             '<h3><a href="' + travel_filename(guide) + '">' + heading + '</a></h3>'
             '<p>' + escape(guide["summary"]) + '</p>'
-            '<p class="muted">' + escape(notice) + '</p></article>')
+            '<p class="muted">' + escape(notice) + '</p>'
+            '<span class="trip-card__foot" aria-hidden="true">プランを読む →</span>'
+            '</div></article>')
 
 
 def guide_body(guide):
@@ -121,7 +127,16 @@ def guide_body(guide):
               else "訪問先の最新の営業日・料金・参加条件は各施設の公式案内で確認してください。")
     ad_notice = ('<p class="ad-notice">広告・PR：この記事には楽天トラベルの'
                  'アフィリエイトリンクを掲載しています。</p>' if affiliate_markup else '')
+    if guide["id"] == "awaji-family-one-night":
+        article_cover = (
+            '<div class="article-cover article-cover--awaji">'
+            '<h1>' + escape(guide["title"]) + '</h1>'
+            '<span class="article-cover__note">※画像はイメージです</span></div>'
+        )
+    else:
+        article_cover = '<div class="article-cover" aria-hidden="true"></div>'
     parts = [
+        article_cover,
         '<section class="intro"><p class="eyebrow">播磨から出かける、家族旅行のアイデア</p>',
         ad_notice,
         '<p>' + escape(guide["summary"]) + '</p>',
