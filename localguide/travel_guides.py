@@ -148,7 +148,11 @@ def guide_body(guide):
             '<p>' + escape(guide["lodging_note"]) + '</p>',
             '<p>次のリンクは楽天トラベルの淡路島エリア宿泊施設一覧へ移動します。'
             '特定の宿泊先の空室・料金・定員を保証するものではありません。</p>',
-            '<p class="affiliate-link">' + affiliate_markup + '</p>',
+            '<p class="travel-booking-reference">' + affiliate_markup + '</p>',
+            '<p class="muted">広告リンクが表示されない場合は、'
+            '<a href="' + escape(guide["affiliate"]["destination_url"], quote=True) +
+            '" rel="noopener noreferrer">楽天トラベルの淡路島エリア宿泊施設一覧（通常リンク）</a>'
+            'をご利用ください。この通常リンクにはアフィリエイト報酬は発生しません。</p>',
             '<p class="muted">広告リンク経由の予約等により、サイト運営者に'
             '成果報酬が発生する場合があります。</p></section>',
         ])
