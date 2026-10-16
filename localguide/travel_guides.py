@@ -177,13 +177,14 @@ def guide_card(guide):
                      else "trip-card__visual trip-card__visual--sanin"
                      if guide["id"] == "sanin-family-one-night" else "trip-card__visual")
     return ('<article class="card trip-card">'
+            '<a class="trip-card__link" href="' + travel_filename(guide) + '">'
             '<div class="' + artwork_class + '" aria-hidden="true"></div>'
             '<div class="trip-card__content"><span class="tag">' + escape(status) + '</span>'
-            '<h3><a href="' + travel_filename(guide) + '">' + heading + '</a></h3>'
+            '<h3>' + heading + '</h3>'
             '<p>' + escape(guide["summary"]) + '</p>'
             '<p class="muted">' + escape(notice) + '</p>'
             '<span class="trip-card__foot" aria-hidden="true">プランを読む →</span>'
-            '</div></article>')
+            '</div></a></article>')
 
 
 def guide_body(guide):
@@ -213,7 +214,14 @@ def guide_body(guide):
         )
     else:
         article_cover = '<div class="article-cover" aria-hidden="true"></div>'
+    jumps = ('<nav class="article-jump" aria-label="日程別に移動">' +
+             "".join('<a href="#day-' + str(i) + '">' + str(i) + '日目の行程を見る →</a>'
+                     for i in range(1, len(guide["days"]) + 1)) + '</nav>')
     parts = [
+        '<nav class="breadcrumbs" aria-label="現在位置">'
+        '<a href="index.html">ホーム</a><span aria-hidden="true">›</span>'
+        '<a href="travel.html">家族旅行</a><span aria-hidden="true">›</span>'
+        '<span>旅行記事</span></nav>',
         article_cover,
         '<section class="intro"><p class="eyebrow">' +
         ("実際に訪れた家族旅行の記録" if is_actual
@@ -228,15 +236,22 @@ def guide_body(guide):
          if is_actual else
          '<p>移動時間・滞在時間は旅行日によって変わるため固定していません。'
          '公園や施設の利用条件を確認し、無理のない順番に入れ替えてください。</p>'),
+        jumps,
     ]
-    for day in guide["days"]:
-        parts.append('<section><h2>' + escape(day["title"]) + '</h2><div class="cards">')
-        for stop in day["stops"]:
+    for day_index, day in enumerate(guide["days"], start=1):
+        parts.append('<section class="route-day" id="day-' + str(day_index) + '">'
+                     '<div class="route-day__heading">'
+                     '<span class="route-day__badge">DAY ' + str(day_index).zfill(2) + '</span>'
+                     '<h2>' + escape(day["title"]) + '</h2></div>'
+                     '<div class="route-steps">')
+        for stop_index, stop in enumerate(day["stops"], start=1):
             parts.extend([
-                '<article class="card"><h3>' + escape(stop["name"]) + '</h3>',
+                '<article class="route-step">'
+                '<span class="route-step__pin" aria-hidden="true">' + str(stop_index) + '</span>'
+                '<h3>' + escape(stop["name"]) + '</h3>',
                 '<p>' + escape(stop["description"]) + '</p>',
-                '<p><a href="' + escape(stop["official_url"], quote=True) +
-                '" rel="noopener noreferrer">公式サイトで最新情報を見る</a></p></article>',
+                '<a class="route-step__official" href="' + escape(stop["official_url"], quote=True) +
+                '" rel="noopener noreferrer">公式サイトで最新情報を見る ↗</a></article>',
             ])
         parts.append('</div></section>')
     if affiliate_markup:
@@ -284,4 +299,5 @@ def guide_body(guide):
          if is_actual else
          '。写真・レビュー・第三者記事本文は転載していません。</p>'),
     ])
+    parts.append('<p class="article-back"><a href="travel.html">← 家族旅行の一覧に戻る</a></p>')
     return "".join(parts)
