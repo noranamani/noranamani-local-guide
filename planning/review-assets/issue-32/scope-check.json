@@ -1,0 +1,19 @@
+{
+  "baseline": "e3570b4e3203737ecec4eaa80f8c1876c0791bb9",
+  "unchanged_generated_files": [
+    "styles.css",
+    "harima-hero.svg",
+    "awaji-card.svg",
+    "harima-hero-photo.webp",
+    "awaji-photo.webp",
+    "index.html",
+    "travel.html",
+    "trip-awaji-family-one-night.html",
+    "trip-sanin-family-one-night.html",
+    "places.html",
+    "_headers",
+    ".guide-manifest.json"
+  ],
+  "about_only_changed_section": "about-privacy",
+  "source_html_and_article_output": "unchanged"
+}

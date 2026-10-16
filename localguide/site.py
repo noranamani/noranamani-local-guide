@@ -697,7 +697,7 @@ def qualified(events, rules):
 
 
 def about_content():
-    """Explain current operation without claiming unverified hosting settings."""
+    """Explain current services without claiming verified live measurement."""
     return (
         '<section class="intro" aria-label="サイトの紹介">'
         '<p class="eyebrow">はりまよりみち</p>'
@@ -724,8 +724,12 @@ def about_content():
         '<section class="notice" aria-labelledby="about-privacy">'
         '<h2 id="about-privacy">プライバシーと外部サービス</h2>'
         '<p>当サイトには、会員登録やお問い合わせの入力フォームは設けていません。</p>'
-        '<p>当サイトはCloudflare Pagesを利用して公開しています。ページの閲覧時には、'
-        '配信やセキュリティのために通信情報が取り扱われる場合があります。</p>'
+        '<p>当サイトはCloudflare Pagesを利用して公開しています。閲覧状況やページの表示性能を把握し、'
+        'サイトの改善に役立てるため、Cloudflare Web Analyticsを利用しています。'
+        'ページの閲覧情報や読み込み速度などがCloudflareへ送信・集計されます。</p>'
+        '<p>Cloudflare Web Analyticsは、Cookieを利用せず、個々の訪問者を特定するための'
+        '個人情報を収集しない仕組みとして提供されています。'
+        'なお、サイト配信・セキュリティのための通信情報の取扱いは、この解析とは別に行われる場合があります。</p>'
         '<p>一部の記事には外部の広告画像やリンクが含まれます。画像の表示やリンクの利用に伴い、'
         '外部サービスへの通信が発生する場合があります。各事業者による情報の取扱いは、'
         'それぞれの方針をご確認ください。</p>'

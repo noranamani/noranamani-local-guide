@@ -502,6 +502,21 @@ class SiteTests(Workspace):
         self.assertNotIn("beacon", about)
         validate_site(self.root / "docs", "https://example.com")
 
+    def test_about_discloses_analytics_without_embedding_a_beacon(self):
+        build(self.root, NOW)
+        about = (self.root / "docs/about.html").read_text(encoding="utf-8")
+        for explanation in ("Cloudflare Web Analyticsを利用しています",
+                            "閲覧情報や読み込み速度", "Cloudflareへ送信・集計",
+                            "Cloudflare Web Analyticsは、Cookieを利用せず",
+                            "この解析とは別に", "外部の広告画像やリンク"):
+            self.assertIn(explanation, about)
+        self.assertIn('href="https://www.cloudflare.com/privacypolicy/"', about)
+        self.assertIn('href="https://privacy.rakuten.co.jp/"', about)
+        for manual_embed in ("<script", "<iframe", "<form", "<input", "<img",
+                             "cloudflareinsights.com", "cdn-cgi/rum"):
+            self.assertNotIn(manual_embed, about.lower())
+        validate_site(self.root / "docs")
+
     def test_nonempty_generation_provenance_and_unknown_price(self):
         result = build(self.root, NOW)
         self.assertEqual(result["events"], 1)
