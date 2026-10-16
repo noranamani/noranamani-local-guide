@@ -121,7 +121,9 @@ class FamilyTravelEditorialTests(unittest.TestCase):
         affiliate = json.loads((ROOT / "config/travel_affiliate.json").read_text(encoding="utf-8"))
         self.assertFalse(affiliate["enabled"])
         self.assertFalse(affiliate["affiliate_publication_enabled"])
-        self.assertFalse(any(affiliate["approvals"].values()))
+        self.assertTrue(affiliate["approvals"]["local_guide_registered_as_affiliate_site"])
+        self.assertFalse(any(value for key, value in affiliate["approvals"].items()
+                             if key != "local_guide_registered_as_affiliate_site"))
 
 
 if __name__ == "__main__":
