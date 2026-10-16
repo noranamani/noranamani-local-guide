@@ -13,6 +13,7 @@ from .core import GuideError, active_occurrences, atomic_json, read_json, safe_u
 from .normalize import identifier
 from .page_places import qualified_places, sustained_listing
 from .validation import inspect_text, publishable, validate_data, validate_config
+from .travel_guides import reviewed_guides, travel_filename, guide_card, guide_body, search_eligible
 
 STYLE = """:root {
   color-scheme: light;
@@ -191,6 +192,7 @@ def create_files(root, now):
     events = [e for e in data["events"]["items"] if active_occurrences(e, now) and publishable(e, sources, now, stale)]
     events.sort(key=lambda e: (active_occurrences(e, now)[0]["start_at"], e["event_id"]))
     places = [p for p in data["places"]["items"] if publishable(p, sources, now, stale)]
+    travel_guides = reviewed_guides(data.get("travel_guides", {"schema_version": 1, "items": []}), now)
     state_path = root / "cache/page_state.json"
     page_state = read_json(state_path) if state_path.exists() else {}
     groups = {}
@@ -209,7 +211,10 @@ def create_files(root, now):
     places_ready = sustained_listing("places.html",
                                     qualified_places(places, rules["place_pages"]),
                                     page_state, now, rules["place_pages"]["activate_after_days"])
-    nav = '<a href="index.html">ホーム</a>' + ('<a href="events.html">開催情報一覧</a>' if events else '') + ('<a href="places.html">施設一覧</a>' if places else '')
+    nav = ('<a href="index.html">ホーム</a>'
+           + ('<a href="events.html">開催情報一覧</a>' if events else '')
+           + ('<a href="places.html">施設一覧</a>' if places else '')
+           + ('<a href="travel.html">家族旅行</a>' if travel_guides else ''))
     files, indexable_files = {"styles.css": STYLE}, []
     url = rules["site_url"]
 
@@ -229,7 +234,7 @@ def create_files(root, now):
                     '<h2>イベント情報は準備中です</h2>'
                     '<p>現在、開催日時や会場を確認できるイベントは掲載していません。確認が取れたものから案内します。</p>'
                     '</section>')
-    if not events and not places:
+    if not events and not places and not travel_guides:
         content = ('<section class="notice"><h2>掲載準備中です</h2>'
                    '<p>現在、公開できる確認済みの情報はありません。情報源の利用条件と掲載内容を確認してから掲載します。</p>'
                    '</section>')
@@ -237,8 +242,20 @@ def create_files(root, now):
         content = ('<h2>開催情報</h2><div class="cards">' + cards + '</div>') if events else cards_notice
         if places:
             content += '<h2>確認済みの施設</h2><div class="cards">' + place_cards + '</div>'
+        if travel_guides:
+            content += ('<h2>加古川発・家族旅行のモデルコース</h2>'
+                        '<p>観光の立ち寄り先をまとめています。宿泊・広告リンクは準備中です。</p>'
+                        '<div class="cards">' + "".join(guide_card(g) for g in travel_guides) + '</div>')
     content = intro + content
-    add("index.html", "家族で出かける地域ガイド", "加古川・明石・姫路周辺の確認済み開催情報と施設案内。公式情報と確認日時を表示します。", content, qualified(events, rules) or places_ready)
+    travel_indexable = any(search_eligible(g, now) for g in travel_guides)
+    add("index.html", "家族で出かける地域ガイド", "加古川・明石・姫路周辺の確認済み開催情報と施設案内、播磨からの家族旅行モデルコース。公式情報と確認日時を表示します。", content, qualified(events, rules) or places_ready or travel_indexable)
+    if travel_guides:
+        listing = ('<p>加古川方面から車で出かける、家族旅行の立ち寄り先を紹介します。'
+                   '訪問順序は例示であり、営業時間・料金は各施設で確認してください。</p>'
+                   '<div class="cards">' + "".join(guide_card(g) for g in travel_guides) + '</div>')
+        add("travel.html", "加古川発・家族旅行プラン", "加古川から車で行ける1泊2日旅行のモデルコースと、宿泊予約前に確認したい条件のまとめです。", listing, travel_indexable)
+        for guide in travel_guides:
+            add(travel_filename(guide), guide["title"], guide["summary"], guide_body(guide), search_eligible(guide, now))
     if places:
         add("places.html", "確認済みの施設一覧", "加古川・明石・姫路周辺の施設名称、所在地と公式リンクを出典付きでまとめています。料金など不明な項目は推測しません。", '<div class="cards">' + place_cards + '</div>', places_ready)
     if events:
@@ -260,7 +277,8 @@ def create_files(root, now):
             files["robots.txt"] += "Sitemap: " + url.rstrip("/") + "/sitemap.xml\n"
     files["_headers"] = cloudflare_headers(not bool(indexable_files))
     files[".guide-manifest.json"] = json.dumps({"schema_version": 1, "generated_at": now.isoformat(),
-                                               "files": sorted(files), "events": len(events), "places": len(places)}, ensure_ascii=False, indent=2) + "\n"
+                                               "files": sorted(files), "events": len(events), "places": len(places),
+                                               "travel_guides": len(travel_guides)}, ensure_ascii=False, indent=2) + "\n"
     return files, page_state
 
 
