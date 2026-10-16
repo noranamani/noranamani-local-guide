@@ -499,6 +499,62 @@ body { background: #f7f8f5; }
   .home-hero { min-height: 340px; }
 }
 
+
+/* Travel stories first: fewer repeated choices, faster reading on mobile. */
+.home-main .home-hero { margin-bottom: 1.25rem; }
+.home-main .home-section { margin-top: 1.55rem; margin-bottom: 2.45rem; }
+.home-main #family-trip { margin-top: .85rem; }
+.home-main #family-trip .home-section__heading { margin-bottom: .9rem; }
+.home-main #family-trip .home-section__heading p { max-width: 44rem; font-size: .93rem; }
+.trip-card__visual { position: relative; isolation: isolate; overflow: hidden; }
+.trip-card__visual::after {
+  content: ""; position: absolute; z-index: 0; inset: 0;
+  background: linear-gradient(0deg, rgb(4 31 38 / 71%) 0%, rgb(9 40 43 / 14%) 54%, transparent 100%);
+  pointer-events: none;
+}
+.trip-card__visual-label {
+  position: absolute; left: 1.2rem; bottom: 1rem; z-index: 1; color: #fff;
+  font-size: clamp(1.4rem, 2.7vw, 2.05rem); font-weight: 850;
+  letter-spacing: .055em; line-height: 1.3; text-shadow: 0 2px 12px rgb(0 0 0 / 50%);
+}
+.trip-card__visual-note {
+  position: absolute; z-index: 1; right: .75rem; top: .55rem;
+  color: #fff; font-size: .71rem; font-weight: 650;
+  text-shadow: 0 1px 7px rgb(0 0 0 / 90%);
+}
+.trip-card__badges { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem .55rem; }
+.trip-card__badges .tag { font-size: .76rem; }
+.trip-card__kind { color: #406457; font-size: .78rem; font-weight: 800; }
+.trip-card__summary { color: #314f44; }
+.trip-card__notice { color: #567064; }
+.trip-card__content h3 { margin-top: .48rem; }
+.trip-card--compact .trip-card__content { padding: 1.05rem 1.25rem 1.12rem; }
+.trip-card--compact .trip-card__summary {
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2;
+  line-clamp: 2; overflow: hidden; line-height: 1.55; font-size: .93rem;
+}
+.trip-card--compact .trip-card__notice { margin-top: .3rem; font-size: .8rem; }
+.trip-card--compact .trip-card__foot { margin-top: .35rem; }
+@media (max-width: 650px) {
+  .home-main #family-trip { margin-top: .65rem; }
+  .home-trip-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; }
+  .trip-card--compact .trip-card__visual { height: clamp(115px, 32vw, 150px); }
+  .trip-card--compact .trip-card__visual-label { left: .7rem; bottom: .7rem; font-size: 1.12rem; }
+  .trip-card--compact .trip-card__visual-note { right: .55rem; top: .4rem; font-size: .62rem; }
+  .trip-card--compact .trip-card__content { padding: .82rem .85rem 1rem; gap: .15rem; }
+  .trip-card--compact .trip-card__content h3 { font-size: 1rem; line-height: 1.4; margin: .35rem 0 .1rem; }
+  .trip-card--compact .trip-card__badges { gap: .25rem; }
+  .trip-card--compact .trip-card__badges .tag { font-size: .69rem; padding: .08rem .42rem; }
+  .trip-card--compact .trip-card__kind { font-size: .71rem; }
+  .trip-card--compact .trip-card__summary { font-size: .81rem; line-height: 1.48; }
+  .trip-card--compact .trip-card__notice { font-size: .72rem; line-height: 1.45; }
+  .trip-card--compact .trip-card__foot { min-height: 36px; font-size: .84rem; }
+  .home-main .home-section { margin-bottom: 2rem; }
+}
+@media (max-width: 340px) {
+  .home-trip-cards { grid-template-columns: minmax(0, 1fr); }
+  .trip-card--compact .trip-card__visual { height: 165px; }
+}
 """
 
 
@@ -697,35 +753,17 @@ def create_files(root, now):
             + ('<div class="home-hero__actions">' + "".join(hero_actions) + '</div>' if hero_actions else '')
             + '</div><div class="home-hero__scene" aria-hidden="true"></div>'
             '<small class="home-hero__footnote">※画像はイメージです</small></section>')
-    browse = []
-    if places:
-        browse.append('<a class="browse-card" href="places.html">'
-                      '<span class="browse-card__icon" aria-hidden="true">🌿</span>'
-                      '<span><strong>近場のスポット</strong><small>施設情報と公式リンクから探す</small></span></a>')
-    if travel_guides:
-        browse.append('<a class="browse-card browse-card--trip" href="travel.html">'
-                      '<span class="browse-card__icon" aria-hidden="true">🚙</span>'
-                      '<span><strong>家族で小旅行</strong><small>加古川発のモデルコースを読む</small></span></a>')
-    if events:
-        browse.append('<a class="browse-card" href="events.html">'
-                      '<span class="browse-card__icon" aria-hidden="true">📅</span>'
-                      '<span><strong>イベントを探す</strong><small>確認済みの開催情報をチェック</small></span></a>')
-    else:
-        browse.append('<div class="browse-card browse-card--pending">'
-                      '<span class="browse-card__icon" aria-hidden="true">📅</span>'
-                      '<span><strong>イベント情報</strong><small>公式情報の確認ができ次第ご案内</small></span></div>')
-    content = hero + ('<section class="home-section" aria-label="おでかけの探し方">'
-                      '<div class="home-section__heading"><div><span class="section-kicker">DISCOVER</span>'
-                      '<h2>気分にあわせて探す</h2></div></div>'
-                      '<div class="browse-grid">' + "".join(browse) + '</div></section>')
+    # Navigation and hero actions already provide the page shortcuts.
+    # Put featured travel stories directly after the scenic hero.
+    content = hero
     if travel_guides:
         content += ('<section id="family-trip" class="home-section">'
                     '<div class="home-section__heading"><div><span class="section-kicker">FAMILY TRIP</span>'
-                    '<h2>家族旅行のプランを探す</h2>'
-                    '<p>実際に訪れたルートと、公式情報をもとにした旅のアイデアを紹介します。</p>'
+                    '<h2>家族で行きたい旅</h2>'
+                    '<p>実際に出かけた旅行記と、家族で楽しむモデルコースを紹介します。</p>'
                     '</div><a class="home-section__more" href="travel.html">旅行プラン一覧 →</a></div>'
                     '<div class="cards home-trip-cards">'
-                    + "".join(guide_card(g) for g in travel_guides) + '</div></section>')
+                    + "".join(guide_card(g, compact=True) for g in travel_guides) + '</div></section>')
     if places:
         content += ('<section id="local-spots" class="home-section">'
                     '<div class="home-section__heading"><div><span class="section-kicker">LOCAL SPOTS</span>'

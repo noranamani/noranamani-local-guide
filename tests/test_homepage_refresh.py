@@ -75,6 +75,37 @@ class HomepageRefreshTests(unittest.TestCase):
             self.assertNotIn("sitemap.xml", files)
 
 
+    def test_featured_travel_follows_hero_without_duplicate_browse(self):
+        import json
+        import tempfile
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            rules = {"site_url": None,
+                     "review": {"stale_event_after_hours": 72},
+                     "list_pages": {"min_active_items": 5, "min_official_items": 3,
+                                    "min_distinct_organizers": 2, "activate_after_days": 7},
+                     "place_pages": {"min_places": 5, "min_official_places": 3,
+                                     "min_distinct_official_hosts": 2, "activate_after_days": 7}}
+            guide_data = json.loads(
+                (Path(__file__).resolve().parents[1] / "data/travel_guides.json")
+                .read_text(encoding="utf-8"))
+            with patch("localguide.site.validate_data", return_value={
+                "events": {"items": []}, "places": {"items": []},
+                "travel_guides": guide_data
+            }), patch("localguide.site.validate_config", return_value=(
+                {"areas": []}, {"primary": []}, rules, {"sources": []}
+            )):
+                files, _ = create_files(root, NOW)
+            home = files["index.html"]
+            self.assertLess(home.index('class="home-hero"'), home.index('id="family-trip"'))
+            self.assertNotIn("気分にあわせて探す", home)
+            self.assertNotIn('class="browse-grid"', home)
+            self.assertEqual(home.count('class="card trip-card trip-card--compact"'), 2)
+            self.assertIn("淡路島1泊2日", home)
+            self.assertIn("山陰1泊2日", home)
+            self.assertEqual(home.count("<h1"), 1)
+            self.assertIn('content="noindex,follow"', home)
+
     def test_awaji_article_title_is_real_html_and_only_one_heading(self):
         import json
         from localguide.travel_guides import guide_body
