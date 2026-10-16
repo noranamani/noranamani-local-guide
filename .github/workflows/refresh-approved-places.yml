@@ -1,0 +1,68 @@
+name: Refresh approved Akashi facility CSV
+
+on:
+  # UTC 23:25 = 08:25 JST; avoids the other sites' early morning jobs.
+  schedule:
+    - cron: '25 23 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: harima-official-facility-refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    # A fork must never inherit this repository's automatic publication.
+    if: github.repository == 'noranamani/noranamani-local-guide' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      PYTHONUNBUFFERED: '1'
+    steps:
+      - name: Checkout main, restricted to this repository
+        id: checkout
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: true
+      - name: Configure Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install pinned project dependencies
+        run: python -m pip install -r requirements.txt
+      - name: Run offline regression tests before collecting
+        run: python -m unittest discover -s tests -q
+      - name: Refresh one authorized CSV and validate preview in isolation
+        id: refresh
+        run: python -m scripts.refresh_approved_places
+      - name: Persist only validated facility data, or failed-request state
+        if: always() && steps.checkout.outcome == 'success'
+        env:
+          REFRESH_OUTCOME: ${{ steps.refresh.outcome }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          # A failed run may only persist its request count and halt flag.
+          # Never publish an unvalidated CSV or changed website/affiliate file.
+          git add -- data/source_state.json
+          if [ "$REFRESH_OUTCOME" = "success" ]; then
+            git add -- data/places.json
+          fi
+          if git diff --cached --quiet; then
+            echo 'No persisted changes needed'
+          else
+            if [ "$REFRESH_OUTCOME" = "success" ]; then
+              message='chore(data): refresh verified Akashi facility snapshot'
+            else
+              message='chore(data): record failed Akashi source request safely'
+            fi
+            git commit -m "$message"
+            # No forced push; conflicts stop safely for operator review.
+            git push origin HEAD:main
+          fi
