@@ -247,7 +247,7 @@ class NormalizationTests(unittest.TestCase):
 
 class ValidationTests(Workspace):
     def test_valid_fixture(self):
-        self.assertEqual(len(validate_data(self.root, NOW)), 7)
+        self.assertEqual(len(validate_data(self.root, NOW)), 8)
 
     def test_unknown_source_rejected(self):
         self.event["sources"][0]["source_id"] = "unknown"
