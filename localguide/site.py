@@ -192,7 +192,7 @@ ul { padding-left: 1.3rem; }
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
-  max-width: 740px;
+  max-width: 950px;
   min-height: inherit;
   padding: clamp(2rem, 6vw, 5.2rem);
 }
@@ -283,6 +283,9 @@ ul { padding-left: 1.3rem; }
   .home-hero__footnote { right: 1.4rem; bottom: .75rem; }
   .article-cover { min-height: 340px; padding: 1.5rem 1.1rem; }
   .article-cover h1 { font-size: clamp(1.55rem, 7vw, 2.1rem); }
+}
+@media (max-width: 360px) {
+  .home-hero__copy h1 { font-size: 1.9rem; }
 }
 
 """
