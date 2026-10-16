@@ -535,7 +535,7 @@ body { background: #f7f8f5; }
 }
 .trip-card--compact .trip-card__notice { margin-top: .3rem; font-size: .8rem; }
 .trip-card--compact .trip-card__foot { margin-top: .35rem; }
-@media (max-width: 650px) {
+@media (max-width: 720px) {
   .home-main #family-trip { margin-top: .65rem; }
   .home-trip-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; }
   .trip-card--compact .trip-card__visual { height: clamp(115px, 32vw, 150px); }
