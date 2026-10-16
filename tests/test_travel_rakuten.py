@@ -176,7 +176,9 @@ class RepoTravelPolicyTests(unittest.TestCase):
         self.assertFalse(config["enabled"])
         self.assertFalse(config["api_fetch_enabled"])
         self.assertFalse(config["affiliate_publication_enabled"])
-        self.assertFalse(any(config["approvals"].values()))
+        self.assertTrue(config["approvals"]["local_guide_registered_as_affiliate_site"])
+        self.assertFalse(any(value for key, value in config["approvals"].items()
+                             if key != "local_guide_registered_as_affiliate_site"))
         self.assertFalse(publication_ready(config, "https://example.org/localguide"))
         self.assertFalse(api_fetch_ready(config))
 
