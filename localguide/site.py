@@ -75,7 +75,86 @@ ul { padding-left: 1.3rem; }
   .card dd { margin-bottom: .45rem; }
 }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+/* Original illustration-led homepage; SVG artwork is generated locally. */
+.home-main { max-width: 1160px; padding-top: 1.3rem; }
+.home-hero { display: grid; grid-template-columns: minmax(0,1.08fr) minmax(0,.92fr); align-items: stretch; margin: 0 0 2.35rem; background: #e9f2e9; border: 1px solid #d3e3d4; border-radius: 28px; overflow: hidden; box-shadow: 0 14px 42px rgb(22 62 43 / 8%); }
+.home-hero__copy { padding: clamp(1.45rem,4.2vw,3.45rem); align-self: center; }
+.home-hero__copy h1 { margin: .65rem 0 1rem; font-size: clamp(2.15rem,4.8vw,3.65rem); line-height: 1.28; letter-spacing: .025em; }
+.home-hero__copy p:not(.eyebrow) { max-width: 36rem; }
+.home-hero__scene { min-height: 370px; background: #d9efe9 url("harima-hero.svg") center center / cover no-repeat; }
+.home-hero__actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 1.5rem; }
+.action-link { display: inline-flex; align-items: center; justify-content: center; min-height: 46px; gap: .45rem; padding: .6rem 1.1rem; border-radius: 999px; font-size: .94rem; font-weight: 800; text-decoration: none; transition: transform .15s ease, background-color .15s ease; }
+.action-link--primary { background: #106c5a; color: #fff; box-shadow: 0 4px 11px rgb(4 73 54 / 14%); }
+.action-link--primary:hover { color: #fff; background: #095745; transform: translateY(-1px); }
+.action-link--secondary { background: #fffefb; border: 1px solid #b6d2c1; color: #125b4c; }
+.action-link--secondary:hover { background: #f3fcf5; transform: translateY(-1px); }
+.section-kicker { display: block; margin: 0 0 .2rem; color: #66816b; font-size: .81rem; font-weight: 850; letter-spacing: .13em; }
+.home-section { margin: 2.2rem 0 3.2rem; }
+.home-section__heading { display: flex; align-items: end; justify-content: space-between; flex-wrap: wrap; gap: .5rem 1rem; margin-bottom: 1.05rem; }
+.home-section__heading h2 { margin: 0; font-size: clamp(1.4rem,3.5vw,1.85rem); }
+.home-section__heading p { margin: .2rem 0 0; color: var(--muted); }
+.home-section__more { font-weight: 800; white-space: nowrap; }
+.browse-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 1rem; }
+.browse-card { display: grid; grid-template-columns: auto 1fr; gap: .8rem; align-items: start; min-height: 119px; padding: 1.25rem; border: 1px solid var(--border); border-radius: 18px; background: #fff; text-decoration: none; color: var(--ink); box-shadow: 0 3px 18px rgb(18 50 35 / 4%); }
+.browse-card:hover { background: #eff8f1; }
+.browse-card strong { display: block; font-size: 1.08rem; line-height: 1.4; }
+.browse-card small { display: block; margin-top: .25rem; color: var(--muted); line-height: 1.5; font-size: .84rem; }
+.browse-card__icon { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 13px; background: #e5f1e7; font-size: 1.38rem; }
+.browse-card--trip .browse-card__icon { background: #f9edce; }
+.browse-card--pending { background: #f0f2ef; border-style: dashed; color: #64756e; }
+.browse-card--pending .browse-card__icon { background: #e1e5e2; }
+.browse-card--pending:hover { background: #f0f2ef; }
+.home-trip-cards { grid-template-columns: repeat(auto-fit,minmax(min(100%,320px),1fr)); }
+.trip-card { padding: 0; overflow: hidden; border: 1px solid var(--border); }
+.trip-card__visual { height: 206px; background: linear-gradient(115deg,#d9ece8 5%,#e3e9d1 70%,#f1ddab); }
+.trip-card__visual--awaji { background: #d3ece9 url("awaji-card.svg") center center / cover no-repeat; }
+.trip-card__content { padding: 1.2rem 1.35rem 1.35rem; }
+.trip-card__content h3 { margin: .75rem 0; font-size: clamp(1.16rem,2.5vw,1.38rem); }
+.trip-card__content h3 a { text-decoration-thickness: 1px; }
+.trip-card__content p { line-height: 1.66; }
+.trip-card__foot { display: inline-block; margin-top: .65rem; color: #096858; font-size: .92rem; font-weight: 800; }
+.place-card { position: relative; border-top: 5px solid #8db5a5; }
+.place-card__category { margin: 0 0 .45rem; color: #48745c; font-size: .82rem; font-weight: 800; }
+.place-card__heading { line-height: 1.45; }
+.place-card__primary-link { font-weight: 800; }
+.home-status { padding: 1.3rem 1.6rem; border-left: 4px solid #b9a66a; background: #fff9e9; border-radius: 15px; }
+.home-status h2 { margin-top: 0; }
+.home-trust { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 1rem; margin: 2.8rem 0 1rem; }
+.home-trust__item { padding: 1.1rem 1.25rem; border: 1px solid #dce8df; border-radius: 15px; background: #f2f7f1; }
+.home-trust__item strong { display: block; font-size: 1.02rem; margin-bottom: .3rem; }
+.home-trust__item p { margin: 0; font-size: .9rem; color: var(--muted); }
+.article-cover { height: clamp(190px,31vw,360px); margin-bottom: 1.45rem; border-radius: 19px; background: linear-gradient(100deg,#d3ece9,#f4e2ae); }
+.article-cover--awaji { background: #d3ece9 url("awaji-card.svg") center center / cover no-repeat; }
+.travel-booking-reference a { display: block; padding: .9rem 1rem; border-radius: 10px; border: 1px solid #a5d3c2; background: #e9f7ef; color: #075d49; font-weight: 800; overflow-wrap: anywhere; }
+.travel-booking-reference a:hover { background: #d9f1e4; }
+@media (max-width: 850px) {
+  .home-hero { grid-template-columns: minmax(0,1fr); }
+  .home-hero__scene { min-height: 260px; max-height: 380px; }
+  .browse-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .home-trust { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .home-main { padding-top: .8rem; }
+  .home-hero { border-radius: 20px; }
+  .home-hero__copy { padding: 1.5rem; }
+  .home-hero__copy h1 { font-size: clamp(1.95rem,8vw,2.55rem); }
+  .home-hero__scene { min-height: 215px; }
+  .home-hero__actions { display: grid; }
+  .action-link { width: 100%; }
+  .browse-grid { grid-template-columns: minmax(0,1fr); gap: .7rem; }
+  .browse-card { min-height: unset; padding: 1rem; }
+  .home-section { margin: 2rem 0 2.4rem; }
+  .trip-card__visual { height: 190px; }
+}
+@media (prefers-reduced-motion: reduce) { .action-link { transition: none; } }
+
 """
+
+
+# Original, self-contained artwork. No external photos or third-party assets.
+HERO_SCENE = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"800\" height=\"600\" viewBox=\"0 0 800 600\">\n  <defs>\n    <linearGradient id=\"sky\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\"><stop offset=\"0\" stop-color=\"#d0ece5\"/><stop offset=\"1\" stop-color=\"#eef9e6\"/></linearGradient>\n    <linearGradient id=\"sea\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\"><stop offset=\"0\" stop-color=\"#8bccc3\"/><stop offset=\"1\" stop-color=\"#3d9f9c\"/></linearGradient>\n    <clipPath id=\"rounded\"><rect width=\"800\" height=\"600\"/></clipPath>\n  </defs>\n  <g clip-path=\"url(#rounded)\">\n    <rect width=\"800\" height=\"600\" fill=\"url(#sky)\"/>\n    <circle cx=\"628\" cy=\"131\" r=\"66\" fill=\"#f6cb83\"/>\n    <g opacity=\".64\" fill=\"#ffffff\"><ellipse cx=\"154\" cy=\"106\" rx=\"97\" ry=\"25\"/><ellipse cx=\"108\" cy=\"86\" rx=\"42\" ry=\"30\"/><ellipse cx=\"200\" cy=\"86\" rx=\"55\" ry=\"28\"/><ellipse cx=\"403\" cy=\"142\" rx=\"72\" ry=\"18\"/></g>\n    <path d=\"M0 321Q102 229 217 287T431 268T800 298V600H0Z\" fill=\"#a2cbbb\"/>\n    <path d=\"M0 366Q121 283 237 335T462 303T800 350V600H0Z\" fill=\"#6fa894\"/>\n    <path d=\"M397 360Q548 313 800 365V600H423Z\" fill=\"url(#sea)\"/>\n    <path d=\"M435 409Q590 379 800 418\" stroke=\"#c2e9df\" stroke-width=\"7\" opacity=\".58\" fill=\"none\"/>\n    <path d=\"M470 463Q610 438 800 463\" stroke=\"#c2e9df\" stroke-width=\"5\" opacity=\".4\" fill=\"none\"/>\n    <path d=\"M0 436Q179 359 325 425T800 503V600H0Z\" fill=\"#c4d7a9\"/>\n    <path d=\"M0 525Q201 445 370 505T800 550V600H0Z\" fill=\"#8fac86\"/>\n    <path d=\"M130 600Q250 483 358 473Q451 464 511 498Q566 532 603 600Z\" fill=\"#f8f2db\"/>\n    <path d=\"M208 600Q295 522 371 511Q446 503 505 544Q541 567 552 600Z\" fill=\"#d5ad75\"/>\n    <path d=\"M352 600Q371 555 405 522\" stroke=\"#fff3d7\" stroke-width=\"6\" stroke-dasharray=\"20 24\" fill=\"none\"/>\n    <g transform=\"translate(241 461)\">\n      <ellipse cx=\"120\" cy=\"95\" rx=\"147\" ry=\"22\" fill=\"#47675b\" opacity=\".22\"/>\n      <rect x=\"13\" y=\"41\" width=\"222\" height=\"59\" rx=\"19\" fill=\"#f8f8ef\" stroke=\"#28584e\" stroke-width=\"7\"/>\n      <path d=\"M59 41L90 4H168L208 41Z\" fill=\"#f8f8ef\" stroke=\"#28584e\" stroke-width=\"7\"/>\n      <path d=\"M99 13H164L188 39H80Z\" fill=\"#83beba\"/>\n      <circle cx=\"63\" cy=\"101\" r=\"23\" fill=\"#254a45\"/><circle cx=\"188\" cy=\"101\" r=\"23\" fill=\"#254a45\"/>\n      <circle cx=\"63\" cy=\"101\" r=\"10\" fill=\"#e3e8db\"/><circle cx=\"188\" cy=\"101\" r=\"10\" fill=\"#e3e8db\"/>\n      <rect x=\"20\" y=\"60\" width=\"26\" height=\"11\" rx=\"5\" fill=\"#efbf76\"/>\n    </g>\n    <g transform=\"translate(65 330)\"><path d=\"M38 117V0\" stroke=\"#476d57\" stroke-width=\"14\" stroke-linecap=\"round\"/><circle cx=\"36\" cy=\"-4\" r=\"43\" fill=\"#5b9e73\"/><circle cx=\"5\" cy=\"28\" r=\"32\" fill=\"#82b68a\"/><circle cx=\"73\" cy=\"30\" r=\"36\" fill=\"#6ba979\"/></g>\n    <g transform=\"translate(706 374)\"><path d=\"M14 77V0\" stroke=\"#476d57\" stroke-width=\"9\"/><circle cx=\"13\" cy=\"-6\" r=\"31\" fill=\"#4f9277\"/><circle cx=\"38\" cy=\"17\" r=\"22\" fill=\"#78b18c\"/></g>\n    <g fill=\"none\" stroke=\"#285e55\" stroke-width=\"5\" stroke-linecap=\"round\"><path d=\"M465 138q11 -9 22 0q10 -9 21 0\"/><path d=\"M507 169q9 -7 18 0q8 -7 18 0\"/></g>\n  </g>\n</svg>"
+AWAJI_SCENE = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"880\" height=\"500\" viewBox=\"0 0 880 500\">\n  <defs><linearGradient id=\"air\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\"><stop stop-color=\"#cfe8e6\"/><stop offset=\"1\" stop-color=\"#f4e9ce\"/></linearGradient><linearGradient id=\"water\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\"><stop stop-color=\"#7ec4bf\"/><stop offset=\"1\" stop-color=\"#418d92\"/></linearGradient></defs>\n  <rect width=\"880\" height=\"500\" fill=\"url(#air)\"/>\n  <circle cx=\"690\" cy=\"109\" r=\"62\" fill=\"#f6cc85\"/>\n  <g fill=\"#fffefa\" opacity=\".8\"><ellipse cx=\"175\" cy=\"111\" rx=\"90\" ry=\"23\"/><ellipse cx=\"146\" cy=\"92\" rx=\"44\" ry=\"28\"/><ellipse cx=\"222\" cy=\"99\" rx=\"45\" ry=\"29\"/></g>\n  <path d=\"M0 260Q150 218 300 244T600 240T880 251V500H0Z\" fill=\"url(#water)\"/>\n  <path d=\"M0 346Q169 307 316 335T648 325T880 337\" stroke=\"#a4e2d7\" stroke-width=\"8\" fill=\"none\" opacity=\".7\"/>\n  <path d=\"M0 438Q220 408 420 438T880 432\" stroke=\"#a4e2d7\" stroke-width=\"6\" fill=\"none\" opacity=\".4\"/>\n  <path d=\"M0 340Q152 250 337 306T661 320T880 311V500H0Z\" fill=\"#8cb994\"/>\n  <path d=\"M0 401Q185 319 362 372T694 398T880 375V500H0Z\" fill=\"#75a883\"/>\n  <path d=\"M0 442Q169 391 333 429T660 451T880 424V500H0Z\" fill=\"#558a6e\"/>\n  <path d=\"M25 400Q197 349 350 406T675 438\" fill=\"none\" stroke=\"#e8d9ae\" stroke-width=\"23\"/>\n  <path d=\"M26 397Q193 346 349 403T675 435\" fill=\"none\" stroke=\"#fff1c9\" stroke-width=\"3\" stroke-dasharray=\"24 17\"/>\n  <g transform=\"translate(585 225)\"><rect x=\"0\" y=\"28\" width=\"150\" height=\"12\" rx=\"6\" fill=\"#f1ecdd\"/><path d=\"M14 27L38 -55L64 27M83 27L109 -55L136 27\" fill=\"none\" stroke=\"#f1ecdd\" stroke-width=\"7\" stroke-linecap=\"round\"/><path d=\"M38 -55L38 29M109 -55V29\" stroke=\"#f1ecdd\" stroke-width=\"4\"/></g>\n  <g transform=\"translate(162 330)\"><path d=\"M30 77V0\" stroke=\"#365c45\" stroke-width=\"10\"/><circle cx=\"30\" cy=\"0\" r=\"35\" fill=\"#f5ce91\"/><circle cx=\"5\" cy=\"17\" r=\"22\" fill=\"#f2bf78\"/><circle cx=\"58\" cy=\"19\" r=\"25\" fill=\"#fadba1\"/></g>\n  <g fill=\"#e9b4ac\" opacity=\".94\"><circle cx=\"250\" cy=\"398\" r=\"12\"/><circle cx=\"279\" cy=\"410\" r=\"10\"/><circle cx=\"310\" cy=\"423\" r=\"8\"/><circle cx=\"419\" cy=\"429\" r=\"11\"/><circle cx=\"449\" cy=\"432\" r=\"8\"/></g>\n</svg>"
 
 
 # Cloudflare Pages uses docs/_headers when serving static assets. Defense in
@@ -110,9 +189,11 @@ def date_label(value):
     return value.replace("T", " ").replace("+09:00", "（日本時間）")
 
 
-def page(title, description, body, filename, site_url, indexable, nav):
+def page(title, description, body, filename, site_url, indexable, nav, home=False):
     canonical = f'<link rel="canonical" href="{escaped(site_url.rstrip("/") + "/" + filename)}">' if site_url and indexable else ""
     robots = "index,follow" if site_url and indexable else "noindex,follow"
+    heading = "" if home else f"<h1>{escaped(title)}</h1>"
+    main_class = ' class="home-main"' if home else ""
     return f'''<!doctype html>
 <html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{escaped(title)} | {escaped(SITE_NAME)}</title><meta name="description" content="{escaped(description)}">
@@ -121,7 +202,7 @@ def page(title, description, body, filename, site_url, indexable, nav):
 <header class="site-header"><div class="site-header__inner">
 <a class="brand" href="index.html">{escaped(SITE_NAME)}</a><p class="tagline">{escaped(SITE_TAGLINE)}</p>
 <nav aria-label="主なページ">{nav}</nav></div></header>
-<main id="main-content"><h1>{escaped(title)}</h1>{body}</main>
+<main id="main-content"{main_class}>{heading}{body}</main>
 <footer class="site-footer"><div class="site-footer__inner">
 <p>日程・料金・参加条件は変更される場合があります。お出かけ前に公式情報をご確認ください。</p>
 <p>確認できない情報は「不明」と表示します。掲載内容は確認済みの事実情報から構成しています。</p>
@@ -217,40 +298,90 @@ def create_files(root, now):
            + ('<a href="events.html">開催情報一覧</a>' if events else '')
            + ('<a href="places.html">施設一覧</a>' if places else '')
            + ('<a href="travel.html">家族旅行</a>' if travel_guides else ''))
-    files, indexable_files = {"styles.css": STYLE}, []
+    files, indexable_files = {"styles.css": STYLE, "harima-hero.svg": HERO_SCENE, "awaji-card.svg": AWAJI_SCENE}, []
     url = rules["site_url"]
 
     def add(filename, title, description, body, indexable):
-        files[filename] = page(title, description, body, filename, url, indexable, nav)
+        files[filename] = page(title, description, body, filename, url, indexable, nav, home=(filename == "index.html"))
         if indexable and url:
             indexable_files.append(filename)
 
     cards = "".join(event_content(e, sources, now) for e in events)
     place_cards = "".join(place_content(p, sources) for p in places)
-    intro = ('<section class="intro" aria-label="サイト案内">'
-             '<p class="eyebrow">播磨のおでかけを、確かな情報から。</p>'
-             '<p>加古川・明石・姫路と周辺の施設やイベントを、公式情報と出典に基づいて整理する地域ガイドです。</p>'
-             '<p class="muted">料金や開催条件が確認できない場合、推測して掲載することはありません。</p>'
-             '</section>')
-    cards_notice = ('<section class="notice" aria-label="開催情報の準備状況">'
-                    '<h2>イベント情報は準備中です</h2>'
-                    '<p>現在、開催日時や会場を確認できるイベントは掲載していません。確認が取れたものから案内します。</p>'
-                    '</section>')
-    if not events and not places and not travel_guides:
-        content = ('<section class="notice"><h2>掲載準備中です</h2>'
-                   '<p>現在、公開できる確認済みの情報はありません。情報源の利用条件と掲載内容を確認してから掲載します。</p>'
-                   '</section>')
+    hero_actions = []
+    if travel_guides:
+        hero_actions.append('<a class="action-link action-link--primary" href="travel.html">家族旅行プランを見る →</a>')
+    if places:
+        hero_actions.append('<a class="action-link action-link--secondary" href="places.html">近場の施設を探す →</a>')
+    if events:
+        hero_actions.append('<a class="action-link action-link--secondary" href="events.html">イベントを探す →</a>')
+    hero = ('<section class="home-hero" aria-labelledby="home-headline">'
+            '<div class="home-hero__copy">'
+            '<p class="eyebrow">播磨のおでかけを、確かな情報から。</p>'
+            '<h1 id="home-headline">週末、ちょっと<br>よりみちしよう。</h1>'
+            '<p>近場の公園から、少し遠くの家族旅行まで。'
+            '加古川・明石・姫路とその周辺の立ち寄り先を、公式情報と一緒に紹介します。</p>'
+            + ('<div class="home-hero__actions">' + "".join(hero_actions) + '</div>' if hero_actions else '')
+            + '</div><div class="home-hero__scene" role="img" '
+            'aria-label="播磨の海と山、よりみちドライブをイメージしたオリジナルイラスト"></div></section>')
+    browse = []
+    if places:
+        browse.append('<a class="browse-card" href="places.html">'
+                      '<span class="browse-card__icon" aria-hidden="true">🌿</span>'
+                      '<span><strong>近場のスポット</strong><small>施設情報と公式リンクから探す</small></span></a>')
+    if travel_guides:
+        browse.append('<a class="browse-card browse-card--trip" href="travel.html">'
+                      '<span class="browse-card__icon" aria-hidden="true">🚙</span>'
+                      '<span><strong>家族で小旅行</strong><small>加古川発のモデルコースを読む</small></span></a>')
+    if events:
+        browse.append('<a class="browse-card" href="events.html">'
+                      '<span class="browse-card__icon" aria-hidden="true">📅</span>'
+                      '<span><strong>イベントを探す</strong><small>確認済みの開催情報をチェック</small></span></a>')
     else:
-        content = ('<h2>開催情報</h2><div class="cards">' + cards + '</div>') if events else cards_notice
-        if places:
-            content += '<h2>確認済みの施設</h2><div class="cards">' + place_cards + '</div>'
-        if travel_guides:
-            content += ('<h2>加古川発・家族旅行のモデルコース</h2>'
-                        + '<p>観光の立ち寄り先をまとめています。個別宿泊施設の比較は準備中です。'
-                        + ('旅行記事には広告・PRリンクが含まれます。</p>' if any(g.get("affiliate") for g in travel_guides)
-                           else '広告リンクは準備中です。</p>')
-                        + '<div class="cards">' + "".join(guide_card(g) for g in travel_guides) + '</div>')
-    content = intro + content
+        browse.append('<div class="browse-card browse-card--pending">'
+                      '<span class="browse-card__icon" aria-hidden="true">📅</span>'
+                      '<span><strong>イベント情報</strong><small>公式情報の確認ができ次第ご案内</small></span></div>')
+    content = hero + ('<section class="home-section" aria-label="おでかけの探し方">'
+                      '<div class="home-section__heading"><div><span class="section-kicker">DISCOVER</span>'
+                      '<h2>気分にあわせて探す</h2></div></div>'
+                      '<div class="browse-grid">' + "".join(browse) + '</div></section>')
+    if travel_guides:
+        content += ('<section id="family-trip" class="home-section">'
+                    '<div class="home-section__heading"><div><span class="section-kicker">FAMILY TRIP</span>'
+                    '<h2>ちょっと遠くまで、家族でよりみち</h2>'
+                    '<p>実在する施設の公式情報をもとに考えた、旅のヒントです。宿泊料金などは確認中です。</p>'
+                    '</div><a class="home-section__more" href="travel.html">旅行プラン一覧 →</a></div>'
+                    '<div class="cards home-trip-cards">'
+                    + "".join(guide_card(g) for g in travel_guides) + '</div></section>')
+    if places:
+        content += ('<section id="local-spots" class="home-section">'
+                    '<div class="home-section__heading"><div><span class="section-kicker">LOCAL SPOTS</span>'
+                    '<h2>近場のよりみち候補</h2>'
+                    '<p>施設の基本情報、公式サイト、出典を確認できます。</p>'
+                    '</div><a class="home-section__more" href="places.html">施設一覧を見る →</a></div>'
+                    '<div class="cards">' + place_cards + '</div></section>')
+    if events:
+        content += ('<section id="local-events" class="home-section">'
+                    '<div class="home-section__heading"><div><span class="section-kicker">EVENTS</span>'
+                    '<h2>開催情報</h2></div><a class="home-section__more" href="events.html">一覧を見る →</a></div>'
+                    '<div class="cards">' + cards + '</div></section>')
+    else:
+        content += ('<section id="local-events" class="home-section">'
+                    '<div class="home-status"><h2>イベント情報は準備中です</h2>'
+                    '<p>現在、開催日時や会場を確認できるイベントは掲載していません。'
+                    '公式情報と利用条件が確認できたものからご案内します。</p></div></section>')
+    if not events and not places and not travel_guides:
+        content += ('<section class="notice"><h2>掲載準備中です</h2>'
+                    '<p>現在、公開できる確認済みの情報はありません。'
+                    '情報源の利用条件と掲載内容を確認してから掲載します。</p></section>')
+    content += ('<section class="home-trust" aria-label="掲載情報について">'
+                '<div class="home-trust__item"><strong>公式情報へのリンク</strong>'
+                '<p>現地に行く前に、施設や主催者の最新案内を確認できます。</p></div>'
+                '<div class="home-trust__item"><strong>確認できないことは「不明」</strong>'
+                '<p>料金・日時・利用条件を推測して断定しません。</p></div>'
+                '<div class="home-trust__item"><strong>出典を明示</strong>'
+                '<p>データの取得元と確認状況を表示します。旅行コースは提案であり、実訪問を保証しません。</p></div>'
+                '</section>')
     travel_indexable = any(search_eligible(g, now) for g in travel_guides)
     add("index.html", "家族で出かける地域ガイド", "加古川・明石・姫路周辺の確認済み開催情報と施設案内、播磨からの家族旅行モデルコース。公式情報と確認日時を表示します。", content, qualified(events, rules) or places_ready or travel_indexable)
     if travel_guides:
