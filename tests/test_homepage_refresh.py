@@ -55,6 +55,7 @@ class HomepageRefreshTests(unittest.TestCase):
             self.assertIn('<h1 id="home-headline">はりまよりみち</h1>', files["index.html"])
             self.assertIn('class="site-header site-header--compact"', files["index.html"])
             self.assertIn('<nav aria-label="主なページ">', files["index.html"])
+            self.assertIn('href="index.html" aria-current="page"', files["index.html"])
             self.assertNotIn('class="brand"', files["index.html"])
             self.assertNotIn('class="tagline"', files["index.html"])
             self.assertEqual(files["index.html"].count("<h1"), 1)

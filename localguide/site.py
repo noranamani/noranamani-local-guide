@@ -311,6 +311,187 @@ ul { padding-left: 1.3rem; }
   .home-hero__copy h1 { font-size: 1.9rem; }
 }
 
+
+/* Editorial layout refinement: visual navigation, trip cards, and route readability. */
+:root { --soft-green: #eaf3eb; --deep-green: #155c4d; --warm-paper: #fbfaf6; }
+body { background: #f7f8f5; }
+.site-header__inner {
+  max-width: 1160px; display: flex; align-items: center; justify-content: space-between;
+  gap: 1rem 2rem; padding-top: .9rem; padding-bottom: .9rem;
+}
+.header-identity { min-width: 0; display: grid; gap: .05rem; }
+.header-identity .brand { font-size: clamp(1.22rem, 2.2vw, 1.65rem); line-height: 1.3; }
+.header-identity .tagline { margin: 0; font-size: .78rem; line-height: 1.5; }
+.site-header nav { justify-content: flex-end; flex-shrink: 0; }
+.site-header nav a { min-height: 44px; align-items: center; padding: .45rem .92rem; }
+.site-header nav a[aria-current="page"] { background: #116e5b; color: #fff; border-color: #116e5b; }
+.site-header nav a:hover { background: #e0f0e8; color: #0a594a; }
+.site-header nav a[aria-current="page"]:hover { background: #0c5e4d; color: #fff; }
+.site-header--compact .site-header__inner {
+  min-height: 66px; padding-block: .6rem; justify-content: flex-end;
+}
+.site-footer__inner { max-width: 1160px; }
+.site-footer__top {
+  display: flex; gap: 1rem 2rem; align-items: center;
+  justify-content: space-between; margin-bottom: 1rem;
+}
+.site-footer__brand { font-size: 1.12rem; font-weight: 850; color: var(--ink); text-decoration: none; }
+.site-footer nav { display: flex; flex-wrap: wrap; gap: .55rem 1.25rem; }
+.site-footer nav a { color: #23685b; font-size: .85rem; font-weight: 700; text-decoration: none; }
+.site-footer nav a:hover { text-decoration: underline; }
+.home-main, .listing-main { max-width: 1160px; }
+.home-main { padding-bottom: 2.2rem; }
+.home-section__all { text-align: center; margin-top: 1rem; }
+.home-section__all a {
+  display: inline-flex; align-items: center; justify-content: center; min-height: 44px;
+  padding: .55rem 1.25rem; border-radius: 999px; border: 1px solid #b7d1c3;
+  background: #fff; font-weight: 800; text-decoration: none;
+}
+.home-section__all a:hover { background: #eaf6ee; }
+.home-trip-cards, .trip-list-grid { align-items: stretch; gap: 1.25rem; }
+.trip-list-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 335px), 1fr)); }
+.trip-card {
+  position: relative; margin: 0; overflow: hidden;
+  background: #fff; border: 1px solid #d9e8df;
+  box-shadow: 0 7px 22px rgb(20 60 47 / 6%);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.trip-card:hover, .trip-card:focus-within {
+  transform: translateY(-3px); box-shadow: 0 14px 32px rgb(20 60 47 / 12%);
+}
+.trip-card__link {
+  display: flex; flex-direction: column; height: 100%; color: var(--ink);
+  text-decoration: none;
+}
+.trip-card__link:focus-visible { outline: 3px solid #a35f0b; outline-offset: -4px; }
+.trip-card__visual { height: clamp(175px, 21vw, 236px); width: 100%; flex: none; }
+.trip-card__content { display: flex; flex-direction: column; flex: 1; gap: .28rem; padding: 1.3rem 1.45rem 1.4rem; }
+.trip-card__content .tag { align-self: flex-start; }
+.trip-card__content h3 { margin: .65rem 0 .25rem; font-size: clamp(1.12rem, 1.9vw, 1.38rem); line-height: 1.55; color: #145e50; }
+.trip-card__content p { margin: .15rem 0; line-height: 1.75; }
+.trip-card__content .muted { font-size: .85rem; }
+.trip-card__foot {
+  display: flex; align-items: center; align-self: flex-start; min-height: 44px;
+  margin-top: auto; padding-top: .6rem; font-weight: 850; font-size: .94rem;
+  color: #086c58; text-decoration: underline; text-underline-offset: .2em;
+}
+.trip-card:hover .trip-card__foot { color: #034d3c; }
+.listing-main > h1 { margin: .45rem 0 .9rem; font-size: clamp(1.7rem, 4vw, 2.6rem); }
+.listing-lead {
+  padding: clamp(1.25rem, 3vw, 2rem);
+  margin: 0 0 1.5rem; border: 1px solid #d8e8de;
+  border-radius: 20px; background: linear-gradient(115deg, #e6f2e9, #fdf8ed);
+}
+.listing-lead > p { max-width: 68ch; margin: .55rem 0; }
+.listing-lead__notes { display: flex; flex-wrap: wrap; gap: .55rem; margin-top: 1rem; }
+.listing-lead__notes span {
+  display: inline-flex; align-items: center; background: #fff;
+  border: 1px solid #d7e6dd; border-radius: 999px; padding: .35rem .8rem;
+  font-size: .85rem; font-weight: 750;
+}
+.listing-lead .listing-lead__disclaimer { font-size: .85rem; color: #486b60; margin-top: .85rem; }
+.place-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 265px), 1fr)); align-items: stretch; gap: 1rem; }
+.place-card {
+  display: flex; flex-direction: column; margin: 0;
+  border: 1px solid #dae8df; border-top: 4px solid #88b6a4;
+  padding: 1.35rem; min-width: 0;
+}
+.place-card__area {
+  width: fit-content; padding: .2rem .65rem; margin: 0 0 .75rem;
+  color: #276752; background: #edf6ea; border-radius: 999px;
+  font-size: .81rem; font-weight: 800;
+}
+.place-card h3 { font-size: 1.14rem; line-height: 1.55; margin: 0 0 .7rem; }
+.place-card__address { margin: 0 0 .35rem; font-size: .92rem; }
+.place-card__price { margin: 0 0 .8rem; font-size: .9rem; font-weight: 650; color: #3d5c52; }
+.place-card__official {
+  display: inline-flex; width: fit-content; align-items: center; min-height: 44px;
+  gap: .25rem; padding: .42rem .9rem; border-radius: 10px;
+  border: 1px solid #b5d9c6; background: #e9f6ed;
+  font-size: .88rem; font-weight: 800; text-decoration: none;
+}
+.place-card__official:hover { background: #d9f0e3; }
+.place-card .source-credit { margin-top: auto; font-size: .8rem; }
+.place-card .source-details { font-size: .84rem; }
+.article-main { max-width: 1040px; padding-top: 1.2rem; padding-bottom: 3.5rem; }
+.breadcrumbs {
+  display: flex; align-items: center; flex-wrap: wrap; gap: .4rem .65rem;
+  margin: .1rem 0 1.2rem; font-size: .87rem; font-weight: 700; color: #506e62;
+}
+.breadcrumbs a { color: #1b7660; text-decoration: none; }
+.breadcrumbs a:hover { text-decoration: underline; }
+.article-main .article-cover { margin-bottom: 2rem; box-shadow: 0 12px 32px rgb(22 62 43 / 9%); }
+.article-main > .intro, .article-main > .notice, .article-main > h2,
+.article-main > p, .article-main > .article-jump, .article-main > .route-day,
+.article-main > .article-back { max-width: 890px; margin-left: auto; margin-right: auto; }
+.article-main > .intro { padding: clamp(1.1rem, 3vw, 1.85rem); background: #eff6ef; margin-bottom: 1.6rem; }
+.article-main > h2 { margin-top: 2.1rem; font-size: clamp(1.35rem, 2.9vw, 1.75rem); }
+.article-main > .notice { margin-top: 1.5rem; margin-bottom: 1.5rem; }
+.article-jump {
+  display: flex; flex-wrap: wrap; gap: .7rem; margin: 1.25rem auto 1.7rem;
+}
+.article-jump a {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 46px; min-width: 140px; padding: .5rem 1.15rem;
+  border: 1px solid #b9daca; border-radius: 11px;
+  background: #fff; font-weight: 800; text-decoration: none;
+}
+.article-jump a:hover { background: #e9f5ee; }
+.route-day { margin-top: 2.1rem; margin-bottom: 2.65rem; scroll-margin-top: 1.2rem; }
+.route-day__heading { display: flex; flex-wrap: wrap; gap: .4rem 1rem; align-items: center; margin-bottom: 1.1rem; }
+.route-day__heading h2 { margin: 0; font-size: clamp(1.22rem, 2.7vw, 1.55rem); }
+.route-day__badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: .32rem .7rem; border-radius: 8px;
+  background: #125e50; color: white; font-weight: 850;
+  font-size: .86rem; letter-spacing: .08em; white-space: nowrap;
+}
+.route-steps { display: grid; gap: 1rem; margin-left: 16px; padding-left: 23px; border-left: 2px solid #b9d9c7; }
+.route-step { position: relative; min-width: 0; padding: 1.2rem 1.4rem; border: 1px solid #dce9df; background: #fff; border-radius: 16px; box-shadow: 0 4px 16px rgb(20 60 47 / 5%); }
+.route-step__pin {
+  position: absolute; top: 1.15rem; left: -40px; display: grid; place-items: center;
+  width: 32px; height: 32px; border-radius: 50%; background: #0e705c;
+  color: #fff; font-weight: 850; font-size: .88rem; border: 3px solid #f7f8f5;
+}
+.route-step h3 { margin: 0 0 .45rem; font-size: 1.13rem; }
+.route-step p { margin: .4rem 0 .75rem; }
+.route-step__official { display: inline-flex; align-items: center; min-height: 44px; font-size: .91rem; font-weight: 800; }
+.article-back { margin-top: 2.2rem; font-weight: 800; }
+.article-back a { display: inline-flex; min-height: 44px; align-items: center; }
+@media (max-width: 720px) {
+  .site-header__inner { flex-direction: column; align-items: stretch; gap: .7rem; }
+  .site-header nav { justify-content: flex-start; }
+  .site-header--compact .site-header__inner { flex-direction: row; justify-content: center; }
+  .site-header--compact nav { justify-content: center; }
+  .site-header nav a { font-size: .91rem; }
+  .site-footer__top { align-items: flex-start; flex-direction: column; }
+  .home-trip-cards, .trip-list-grid { grid-template-columns: minmax(0,1fr); }
+}
+@media (max-width: 600px) {
+  .header-identity .tagline { font-size: .73rem; }
+  .listing-main > h1 { margin-top: .1rem; }
+  .trip-card__visual { height: 205px; }
+  .trip-card__content { padding: 1.15rem 1.2rem 1.3rem; }
+  .home-section__heading { align-items: flex-start; }
+  .place-grid, .place-grid--home { grid-template-columns: minmax(0,1fr); }
+  .place-card { padding: 1.15rem; }
+  .article-main { padding-top: 1rem; }
+  .article-main .article-cover { min-height: 345px; margin-bottom: 1.4rem; }
+  .article-jump a { flex: 1; min-width: 128px; }
+  .route-day__heading { align-items: flex-start; flex-direction: column; }
+  .route-step { padding: 1.05rem 1.05rem 1.1rem; }
+  .route-step h3 { font-size: 1.04rem; }
+}
+@media (max-width: 360px) {
+  .site-header nav { gap: .25rem; }
+  .site-header nav a { padding: .4rem .65rem; font-size: .86rem; }
+  .route-step { padding: .9rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .trip-card { transition: none; }
+  .trip-card:hover, .trip-card:focus-within { transform: none; }
+}
+
 """
 
 
@@ -355,10 +536,21 @@ def page(title, description, body, filename, site_url, indexable, nav, home=Fals
     canonical = f'<link rel="canonical" href="{escaped(site_url.rstrip("/") + "/" + filename)}">' if site_url and indexable else ""
     robots = "index,follow" if site_url and indexable else "noindex,follow"
     heading = "" if home or heading_in_body else f"<h1>{escaped(title)}</h1>"
-    main_class = ' class="home-main"' if home else ""
+    main_class = (' class="home-main"' if home else
+                  ' class="article-main"' if filename.startswith("trip-") else
+                  ' class="listing-main"' if filename in {"travel.html", "places.html"} else "")
     header_class = "site-header site-header--compact" if home else "site-header"
-    header_identity = (f'<a class="brand" href="index.html">{escaped(SITE_NAME)}</a>'
-                       f'<p class="tagline">{escaped(SITE_TAGLINE)}</p>') if not home else ""
+    header_identity = ('<div class="header-identity">'
+                       f'<a class="brand" href="index.html">{escaped(SITE_NAME)}</a>'
+                       f'<p class="tagline">{escaped(SITE_TAGLINE)}</p></div>') if not home else ""
+    active_file = ("index.html" if home else
+                   "travel.html" if filename == "travel.html" or filename.startswith("trip-") else
+                   "places.html" if filename == "places.html" else
+                   "events.html" if filename == "events.html" or filename.startswith(("event-", "area-", "category-")) else
+                   None)
+    if active_file:
+        nav = nav.replace(f'href="{active_file}"',
+                          f'href="{active_file}" aria-current="page"', 1)
     return f'''<!doctype html>
 <html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{escaped(title)} | {escaped(SITE_NAME)}</title><meta name="description" content="{escaped(description)}">
@@ -369,6 +561,8 @@ def page(title, description, body, filename, site_url, indexable, nav, home=Fals
 <nav aria-label="主なページ">{nav}</nav></div></header>
 <main id="main-content"{main_class}>{heading}{body}</main>
 <footer class="site-footer"><div class="site-footer__inner">
+<div class="site-footer__top"><a class="site-footer__brand" href="index.html">{escaped(SITE_NAME)}</a>
+<nav aria-label="フッターの案内">{nav}</nav></div>
 <p>日程・料金・参加条件は変更される場合があります。お出かけ前に公式情報をご確認ください。</p>
 <p>確認できない情報は「不明」と表示します。掲載内容は確認済みの事実情報から構成しています。</p>
 </div></footer></body></html>'''
@@ -418,10 +612,12 @@ def place_content(place, sources):
     """Render public facility facts and source attribution; no inferred ratings."""
     address = escaped(place["address"] or "住所不明")
     admission = escaped(place["admission"] or "不明")
-    return (f'<article class="card"><h3>{escaped(place["name"])}</h3>'
-            f'<p>{escaped(place["municipality"])} / {address}</p>'
-            f'<p>料金：{admission}</p>'
-            f'<a href="{escaped(place["official_url"])}" rel="noopener noreferrer">公式情報</a>'
+    return (f'<article class="card place-card"><p class="place-card__area">{escaped(place["municipality"])}</p>'
+            f'<h3>{escaped(place["name"])}</h3>'
+            f'<p class="place-card__address">{address}</p>'
+            f'<p class="place-card__price">料金：{admission}</p>'
+            f'<a class="place-card__official" href="{escaped(place["official_url"])}" rel="noopener noreferrer">'
+            '公式サイトを確認 <span aria-hidden="true">↗</span></a>'
             + source_links(place, sources) + '</article>')
 
 
@@ -476,6 +672,7 @@ def create_files(root, now):
 
     cards = "".join(event_content(e, sources, now) for e in events)
     place_cards = "".join(place_content(p, sources) for p in places)
+    home_place_cards = "".join(place_content(p, sources) for p in places[:3])
     hero_actions = []
     if travel_guides:
         hero_actions.append('<a class="action-link action-link--primary" href="travel.html">家族旅行プランを見る →</a>')
@@ -528,7 +725,9 @@ def create_files(root, now):
                     '<h2>近場のよりみち候補</h2>'
                     '<p>施設の基本情報、公式サイト、出典を確認できます。</p>'
                     '</div><a class="home-section__more" href="places.html">施設一覧を見る →</a></div>'
-                    '<div class="cards">' + place_cards + '</div></section>')
+                    '<div class="cards place-grid place-grid--home">' + home_place_cards + '</div>'
+                    + ('<p class="home-section__all"><a href="places.html">すべての施設を見る →</a></p>'
+                       if len(places) > 3 else '') + '</section>')
     if events:
         content += ('<section id="local-events" class="home-section">'
                     '<div class="home-section__heading"><div><span class="section-kicker">EVENTS</span>'
@@ -549,20 +748,34 @@ def create_files(root, now):
                 '<div class="home-trust__item"><strong>確認できないことは「不明」</strong>'
                 '<p>料金・日時・利用条件を推測して断定しません。</p></div>'
                 '<div class="home-trust__item"><strong>出典を明示</strong>'
-                '<p>データの取得元と確認状況を表示します。旅行コースは提案であり、実訪問を保証しません。</p></div>'
+                '<p>出典と確認状況を表示します。旅行記事は実際の記録と提案プランを区別して紹介します。</p></div>'
                 '</section>')
     travel_indexable = any(search_eligible(g, now) for g in travel_guides)
     add("index.html", "家族で出かける地域ガイド", "加古川・明石・姫路周辺の確認済み開催情報と施設案内、播磨からの家族旅行モデルコース。公式情報と確認日時を表示します。", content, qualified(events, rules) or places_ready or travel_indexable)
     if travel_guides:
-        listing = ('<p>加古川発の家族旅行の記録とモデルコースを紹介します。'
-                   '訪問記録と提案コースを区別して掲載しています。営業時間・料金は各公式サイトでご確認ください。</p>'
-                   '<div class="cards">' + "".join(guide_card(g) for g in travel_guides) + '</div>')
+        listing = ('<section class="listing-lead" aria-label="旅行記事について">'
+                   '<span class="section-kicker">FAMILY TRIP</span>'
+                   '<p>実際に出かけた家族旅行の記録と、これからの旅に役立つモデルコース。'
+                   '行き先を写真やルートから選べます。</p>'
+                   '<div class="listing-lead__notes"><span>🚗 加古川から車でおでかけ</span>'
+                   '<span>旅の記録と提案を区別して掲載</span></div>'
+                   '<p class="listing-lead__disclaimer">営業時間・料金・宿泊条件は、'
+                   '必ず各施設の公式サイトでご確認ください。</p></section>'
+                   '<div class="cards trip-list-grid">' +
+                   "".join(guide_card(g) for g in travel_guides) + '</div>')
         add("travel.html", "加古川発・家族旅行プラン", "加古川から車で行ける1泊2日旅行のモデルコースと、宿泊予約前に確認したい条件のまとめです。", listing, travel_indexable)
         for guide in travel_guides:
             add(travel_filename(guide), guide["title"], guide["summary"], guide_body(guide),
                 search_eligible(guide, now), heading_in_body=(guide["id"] in {"awaji-family-one-night", "sanin-family-one-night"}))
     if places:
-        add("places.html", "確認済みの施設一覧", "加古川・明石・姫路周辺の施設名称、所在地と公式リンクを出典付きでまとめています。料金など不明な項目は推測しません。", '<div class="cards">' + place_cards + '</div>', places_ready)
+        places_listing = ('<section class="listing-lead" aria-label="施設の探し方">'
+                          '<span class="section-kicker">LOCAL SPOTS</span>'
+                          '<p>公式情報で確認できる、近場のおでかけ候補を集めました。'
+                          '気になる施設の所在地・料金の確認状況・出典を確かめられます。</p>'
+                          '<p class="listing-lead__disclaimer">未確認の料金は「不明」と表示します。'
+                          'お出かけ前には公式案内をご確認ください。</p></section>'
+                          '<div class="cards place-grid">' + place_cards + '</div>')
+        add("places.html", "確認済みの施設一覧", "加古川・明石・姫路周辺の施設名称、所在地と公式リンクを出典付きでまとめています。料金など不明な項目は推測しません。", places_listing, places_ready)
     if events:
         add("events.html", "開催情報一覧", "確認済みの将来・開催中の開催回を掲載しています。終了・中止・未確認のイベントは掲載しません。", '<div class="cards">' + cards + '</div>', qualified(events, rules))
         for event in events:
