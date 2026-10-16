@@ -471,6 +471,37 @@ class CollectionTests(Workspace):
 
 
 class SiteTests(Workspace):
+    def test_about_is_reachable_from_every_generated_page(self):
+        manifest = build(self.root, NOW)
+        self.assertIn("about.html", manifest["files"])
+        self.assertIn(event_file(self.event), manifest["files"])
+        for name in manifest["files"]:
+            if not name.endswith(".html"):
+                continue
+            with self.subTest(page=name):
+                content = (self.root / "docs" / name).read_text(encoding="utf-8")
+                header, footer = content.split('<footer class="site-footer">')
+                self.assertNotIn('href="about.html"', header)
+                self.assertIn('href="about.html"', footer)
+                self.assertIn("このサイトについて</a>", footer)
+        about = (self.root / "docs/about.html").read_text(encoding="utf-8")
+        self.assertIn('href="about.html" aria-current="page"', about)
+        self.assertIn('href="#main-content"', about)
+        self.assertNotIn("mailto:", about)
+        self.assertFalse(any(f"<{tag}" in about for tag in ("form", "script", "iframe")))
+        self.assertEqual(validate_site(self.root / "docs"), manifest)
+
+    def test_about_does_not_add_indexable_policy_or_tracking(self):
+        self.update_rules(site_url="https://example.com")
+        build(self.root, NOW)
+        about = (self.root / "docs/about.html").read_text(encoding="utf-8")
+        self.assertIn('content="noindex,follow"', about)
+        self.assertNotIn('rel="canonical"', about)
+        sitemap = (self.root / "docs/sitemap.xml").read_text(encoding="utf-8")
+        self.assertNotIn("about.html", sitemap)
+        self.assertNotIn("beacon", about)
+        validate_site(self.root / "docs", "https://example.com")
+
     def test_nonempty_generation_provenance_and_unknown_price(self):
         result = build(self.root, NOW)
         self.assertEqual(result["events"], 1)
