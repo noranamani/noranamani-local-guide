@@ -13,8 +13,67 @@ from .core import GuideError, active_occurrences, atomic_json, read_json, safe_u
 from .normalize import identifier
 from .page_places import qualified_places, sustained_listing
 from .validation import inspect_text, publishable, validate_data, validate_config
+from .travel_guides import reviewed_guides, travel_filename, guide_card, guide_body, search_eligible
 
-STYLE = """*{box-sizing:border-box}body{margin:0;background:#faf8f3;color:#233d38;font:16px/1.8 system-ui,sans-serif}header,main,footer{max-width:960px;margin:auto;padding:24px}header{border-bottom:3px solid #ddaf54}a{color:#00695c;text-underline-offset:3px}nav{display:flex;gap:20px;flex-wrap:wrap}.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:20px}.card,.notice{background:white;border:1px solid #d9e0d7;border-radius:12px;padding:20px;margin:16px 0}h1{font-size:clamp(1.6rem,5vw,2.4rem);line-height:1.4}h2{font-size:1.25rem}dt{font-weight:bold}dd{margin:0 0 8px}.muted,footer{font-size:.9rem;color:#53655e}.tag{display:inline-block;background:#eef2df;padding:2px 10px;border-radius:20px}ul{padding-left:1.3em}a:focus-visible{outline:3px solid #c36f16;outline-offset:3px}"""
+STYLE = """:root {
+  color-scheme: light;
+  --ink: #203a34;
+  --muted: #526a61;
+  --bg: #f7f8f4;
+  --paper: #ffffff;
+  --brand: #096858;
+  --border: #dce7df;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; min-height: 100vh; background: var(--bg); color: var(--ink); font: 16px/1.75 system-ui, -apple-system, "Noto Sans JP", sans-serif; }
+a { color: var(--brand); text-underline-offset: .2em; }
+a:hover { text-decoration-thickness: .13em; }
+a:focus-visible, summary:focus-visible { outline: 3px solid #a35f0b; outline-offset: 4px; }
+.skip-link { position: absolute; top: -6rem; left: 1rem; z-index: 20; padding: .6rem 1rem; background: var(--paper); }
+.skip-link:focus { top: .6rem; }
+.site-header { background: linear-gradient(110deg, #e9f3ec, #fff9ec); border-bottom: 1px solid var(--border); }
+.site-header__inner, main, .site-footer__inner { max-width: 1040px; margin: 0 auto; padding: 1.5rem clamp(1rem, 4vw, 2.5rem); }
+.brand { display: inline-block; color: var(--ink); font-size: clamp(1.4rem, 4vw, 1.9rem); font-weight: 800; letter-spacing: .02em; text-decoration: none; }
+.brand:hover { text-decoration: underline; }
+.tagline { margin: .2rem 0 1rem; color: var(--muted); font-size: .96rem; }
+nav { display: flex; flex-wrap: wrap; gap: .5rem; }
+nav a { display: inline-flex; padding: .35rem .8rem; border: 1px solid #c9ded1; border-radius: 999px; background: #fffdf9; font-weight: 650; text-decoration: none; }
+nav a:hover { background: #f0f9f3; }
+main { padding-top: 2rem; padding-bottom: 3rem; }
+h1 { margin: 0 0 1.3rem; font-size: clamp(1.7rem, 4.8vw, 2.45rem); line-height: 1.45; letter-spacing: .01em; }
+h2 { margin: 1.7rem 0 .7rem; font-size: 1.3rem; line-height: 1.5; }
+h3 { margin: .2rem 0 .6rem; font-size: 1.12rem; line-height: 1.5; }
+p { margin: .65rem 0; }
+.intro { padding: clamp(1rem, 3vw, 1.6rem); margin-bottom: 1.6rem; background: #eaf3ee; border: 1px solid #d6e9df; border-radius: 18px; }
+.intro p { max-width: 68ch; }
+.eyebrow { margin: 0; color: #2c6855; font-size: .88rem; font-weight: 800; letter-spacing: .08em; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 1rem; align-items: start; }
+.card, .notice { background: var(--paper); border: 1px solid var(--border); border-radius: 16px; padding: clamp(1rem, 2.5vw, 1.45rem); margin: .65rem 0; box-shadow: 0 2px 10px rgb(16 54 39 / 4%); }
+.card h2, .card h3 { margin-top: 0; }
+.card dl { display: grid; grid-template-columns: minmax(5em, 7em) 1fr; column-gap: .6rem; row-gap: .25rem; margin: .8rem 0; }
+.card dt { font-weight: 750; }
+.card dd { min-width: 0; margin: 0; overflow-wrap: anywhere; }
+.notice { border-left: 4px solid #80a994; }
+.notice h2 { margin-top: 0; }
+.muted, .source-credit { color: var(--muted); font-size: .88rem; }
+.source-credit { border-top: 1px solid var(--border); margin-top: 1rem; padding-top: .7rem; }
+.source-details { margin-top: .6rem; font-size: .88rem; }
+.source-details summary { color: var(--brand); cursor: pointer; font-weight: 700; }
+.source-details ul { padding-left: 1.15rem; overflow-wrap: anywhere; }
+.source-details li + li { margin-top: .65rem; }
+.tag { display: inline-block; padding: .1rem .55rem; background: #edf4e9; border-radius: 999px; color: #315642; font-size: .85rem; }
+ul { padding-left: 1.3rem; }
+.site-footer { border-top: 1px solid var(--border); background: #eef2ec; color: var(--muted); font-size: .88rem; }
+.site-footer__inner { padding-top: 1.15rem; padding-bottom: 1.15rem; }
+@media (max-width: 600px) {
+  main { padding-top: 1.5rem; }
+  nav a { font-size: .94rem; }
+  .card dl { grid-template-columns: 1fr; row-gap: 0; }
+  .card dd { margin-bottom: .45rem; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+"""
 
 
 # Cloudflare Pages uses docs/_headers when serving static assets. Defense in
@@ -56,9 +115,16 @@ def page(title, description, body, filename, site_url, indexable, nav):
 <html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{escaped(title)} | {escaped(SITE_NAME)}</title><meta name="description" content="{escaped(description)}">
 <meta name="robots" content="{robots}">{canonical}<link rel="stylesheet" href="styles.css"></head>
-<body><header><a href="index.html">{escaped(SITE_NAME)}</a><p>{escaped(SITE_TAGLINE)}</p>
-<nav aria-label="主なページ">{nav}</nav></header><main><h1>{escaped(title)}</h1>{body}</main>
-<footer>料金・日程の変更や中止は公式情報をご確認ください。確認できない情報は「不明」と表示します。</footer></body></html>'''
+<body><a class="skip-link" href="#main-content">本文へ移動</a>
+<header class="site-header"><div class="site-header__inner">
+<a class="brand" href="index.html">{escaped(SITE_NAME)}</a><p class="tagline">{escaped(SITE_TAGLINE)}</p>
+<nav aria-label="主なページ">{nav}</nav></div></header>
+<main id="main-content"><h1>{escaped(title)}</h1>{body}</main>
+<footer class="site-footer"><div class="site-footer__inner">
+<p>日程・料金・参加条件は変更される場合があります。お出かけ前に公式情報をご確認ください。</p>
+<p>確認できない情報は「不明」と表示します。掲載内容は確認済みの事実情報から構成しています。</p>
+</div></footer></body></html>'''
+
 
 
 def source_links(record, sources):
@@ -73,7 +139,14 @@ def source_links(record, sources):
         if source.get("attribution_url"):
             entries.append(f'<li><a href="{escaped(source["attribution_url"])}" rel="noopener noreferrer">出典：{escaped(source["label"])} 配布ページ</a>'
                            f'<br>{escaped(source.get("adaptation_notice", "出典の事実情報を整理して作成しました。"))}</li>')
-    return '<ul class="muted">' + "".join(entries) + "</ul>"
+    credits = []
+    for provenance in ranked:
+        source = sources[provenance["source_id"]]
+        credit_url = source.get("attribution_url") or provenance["url"]
+        credits.append(f'<a href="{escaped(credit_url)}" rel="noopener noreferrer">{escaped(source["label"])}</a>')
+    return ('<p class="source-credit">出典：' + "、".join(credits) + '</p>'
+            + '<details class="source-details"><summary>出典・確認履歴の詳細</summary>'
+            + '<ul class="muted">' + "".join(entries) + '</ul></details>')
 
 
 def event_content(event, sources, now, detail=False):
@@ -119,6 +192,7 @@ def create_files(root, now):
     events = [e for e in data["events"]["items"] if active_occurrences(e, now) and publishable(e, sources, now, stale)]
     events.sort(key=lambda e: (active_occurrences(e, now)[0]["start_at"], e["event_id"]))
     places = [p for p in data["places"]["items"] if publishable(p, sources, now, stale)]
+    travel_guides = reviewed_guides(data.get("travel_guides", {"schema_version": 1, "items": []}), now)
     state_path = root / "cache/page_state.json"
     page_state = read_json(state_path) if state_path.exists() else {}
     groups = {}
@@ -137,7 +211,10 @@ def create_files(root, now):
     places_ready = sustained_listing("places.html",
                                     qualified_places(places, rules["place_pages"]),
                                     page_state, now, rules["place_pages"]["activate_after_days"])
-    nav = '<a href="index.html">ホーム</a>' + ('<a href="events.html">開催情報一覧</a>' if events else '') + ('<a href="places.html">施設一覧</a>' if places else '')
+    nav = ('<a href="index.html">ホーム</a>'
+           + ('<a href="events.html">開催情報一覧</a>' if events else '')
+           + ('<a href="places.html">施設一覧</a>' if places else '')
+           + ('<a href="travel.html">家族旅行</a>' if travel_guides else ''))
     files, indexable_files = {"styles.css": STYLE}, []
     url = rules["site_url"]
 
@@ -148,13 +225,37 @@ def create_files(root, now):
 
     cards = "".join(event_content(e, sources, now) for e in events)
     place_cards = "".join(place_content(p, sources) for p in places)
-    if not events and not places:
-        content = '<section class="notice"><h2>掲載準備中です</h2><p>現在、公開できる確認済みの情報はありません。情報源の利用条件と掲載内容を確認してから掲載します。</p></section>'
+    intro = ('<section class="intro" aria-label="サイト案内">'
+             '<p class="eyebrow">播磨のおでかけを、確かな情報から。</p>'
+             '<p>加古川・明石・姫路と周辺の施設やイベントを、公式情報と出典に基づいて整理する地域ガイドです。</p>'
+             '<p class="muted">料金や開催条件が確認できない場合、推測して掲載することはありません。</p>'
+             '</section>')
+    cards_notice = ('<section class="notice" aria-label="開催情報の準備状況">'
+                    '<h2>イベント情報は準備中です</h2>'
+                    '<p>現在、開催日時や会場を確認できるイベントは掲載していません。確認が取れたものから案内します。</p>'
+                    '</section>')
+    if not events and not places and not travel_guides:
+        content = ('<section class="notice"><h2>掲載準備中です</h2>'
+                   '<p>現在、公開できる確認済みの情報はありません。情報源の利用条件と掲載内容を確認してから掲載します。</p>'
+                   '</section>')
     else:
-        content = ('<h2>開催情報</h2><div class="cards">' + cards + '</div>') if events else ''
+        content = ('<h2>開催情報</h2><div class="cards">' + cards + '</div>') if events else cards_notice
         if places:
             content += '<h2>確認済みの施設</h2><div class="cards">' + place_cards + '</div>'
-    add("index.html", "家族で出かける地域ガイド", "加古川・明石・姫路周辺の確認済み開催情報と施設案内。公式情報と確認日時を表示します。", content, qualified(events, rules) or places_ready)
+        if travel_guides:
+            content += ('<h2>加古川発・家族旅行のモデルコース</h2>'
+                        '<p>観光の立ち寄り先をまとめています。宿泊・広告リンクは準備中です。</p>'
+                        '<div class="cards">' + "".join(guide_card(g) for g in travel_guides) + '</div>')
+    content = intro + content
+    travel_indexable = any(search_eligible(g, now) for g in travel_guides)
+    add("index.html", "家族で出かける地域ガイド", "加古川・明石・姫路周辺の確認済み開催情報と施設案内、播磨からの家族旅行モデルコース。公式情報と確認日時を表示します。", content, qualified(events, rules) or places_ready or travel_indexable)
+    if travel_guides:
+        listing = ('<p>加古川方面から車で出かける、家族旅行の立ち寄り先を紹介します。'
+                   '訪問順序は例示であり、営業時間・料金は各施設で確認してください。</p>'
+                   '<div class="cards">' + "".join(guide_card(g) for g in travel_guides) + '</div>')
+        add("travel.html", "加古川発・家族旅行プラン", "加古川から車で行ける1泊2日旅行のモデルコースと、宿泊予約前に確認したい条件のまとめです。", listing, travel_indexable)
+        for guide in travel_guides:
+            add(travel_filename(guide), guide["title"], guide["summary"], guide_body(guide), search_eligible(guide, now))
     if places:
         add("places.html", "確認済みの施設一覧", "加古川・明石・姫路周辺の施設名称、所在地と公式リンクを出典付きでまとめています。料金など不明な項目は推測しません。", '<div class="cards">' + place_cards + '</div>', places_ready)
     if events:
@@ -176,7 +277,8 @@ def create_files(root, now):
             files["robots.txt"] += "Sitemap: " + url.rstrip("/") + "/sitemap.xml\n"
     files["_headers"] = cloudflare_headers(not bool(indexable_files))
     files[".guide-manifest.json"] = json.dumps({"schema_version": 1, "generated_at": now.isoformat(),
-                                               "files": sorted(files), "events": len(events), "places": len(places)}, ensure_ascii=False, indent=2) + "\n"
+                                               "files": sorted(files), "events": len(events), "places": len(places),
+                                               "travel_guides": len(travel_guides)}, ensure_ascii=False, indent=2) + "\n"
     return files, page_state
 
 

@@ -134,7 +134,7 @@ def validate_dataset(root, name, dataset, now):
 def validate_data(root, now):
     validate_config(root, now)
     datasets = {}
-    for name in ("events", "places", "offers", "store_news", "editorial", "note-weekly", "source_state"):
+    for name in ("events", "places", "offers", "store_news", "editorial", "note-weekly", "travel_guides", "source_state"):
         datasets[name] = read_json(root / f"data/{name}.json")
         validate_dataset(root, name, datasets[name], now)
     events = {e["event_id"] for e in datasets["events"]["items"]}
