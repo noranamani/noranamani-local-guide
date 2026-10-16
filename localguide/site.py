@@ -200,7 +200,7 @@ ul { padding-left: 1.3rem; }
   position: relative;
   isolation: isolate;
   display: block;
-  min-height: clamp(400px, 46vw, 535px);
+  min-height: clamp(300px, 28vw, 355px);
   background-color: #315a62;
   background-image: linear-gradient(100deg, rgb(5 32 37 / 88%) 0%, rgb(4 35 37 / 67%) 42%, rgb(5 33 40 / 10%) 100%), url("harima-hero-photo.webp");
   background-position: center, center 55%;
@@ -215,13 +215,13 @@ ul { padding-left: 1.3rem; }
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
-  max-width: 950px;
+  max-width: 850px;
   min-height: inherit;
-  padding: clamp(2rem, 6vw, 5.2rem);
+  padding: clamp(1.2rem, 2.6vw, 2.2rem);
 }
 .home-hero__copy h1 {
-  margin: .4rem 0 .35rem;
-  font-size: clamp(2.65rem, 7vw, 5.4rem);
+  margin: .22rem 0 .15rem;
+  font-size: clamp(2.25rem, 5vw, 3.8rem);
   line-height: 1.18;
   letter-spacing: .045em;
   color: #fff;
@@ -229,19 +229,19 @@ ul { padding-left: 1.3rem; }
 }
 .home-hero__copy .eyebrow { color: #e8f7e7; text-shadow: 0 2px 8px #153a39; }
 .home-hero__subtitle {
-  margin: .55rem 0 .6rem;
-  font-size: clamp(1.28rem, 2.5vw, 1.8rem);
+  margin: .3rem 0 .4rem;
+  font-size: clamp(1.08rem, 2.2vw, 1.4rem);
   font-weight: 750;
   text-shadow: 0 2px 12px rgb(0 0 0 / 45%);
 }
 .home-hero__copy .home-hero__description {
   max-width: 40rem;
-  font-size: clamp(.95rem, 1.6vw, 1.05rem);
-  line-height: 1.7;
+  font-size: clamp(.88rem, 1.5vw, 1rem);
+  line-height: 1.55;
   text-shadow: 0 1px 6px rgb(0 0 0 / 50%);
 }
 .home-hero__scene { display: none; }
-.home-hero__actions { margin-top: 1.2rem; }
+.home-hero__actions { margin-top: .75rem; }
 .home-hero__footnote {
   position: absolute;
   z-index: 1;
@@ -258,10 +258,10 @@ ul { padding-left: 1.3rem; }
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  min-height: clamp(270px, 34vw, 435px);
+  min-height: clamp(215px, 23vw, 300px);
   height: auto;
   overflow: hidden;
-  padding: clamp(1.2rem, 4.5vw, 3.2rem);
+  padding: clamp(1.2rem, 3.4vw, 2.3rem);
   color: #fff;
 }
 .article-cover--awaji {
@@ -275,7 +275,7 @@ ul { padding-left: 1.3rem; }
   max-width: 850px;
   margin: 0 0 .75rem;
   color: #fff;
-  font-size: clamp(1.55rem, 4vw, 3rem);
+  font-size: clamp(1.45rem, 3.2vw, 2.45rem);
   line-height: 1.4;
   text-shadow: 0 2px 13px rgb(0 0 0 / 60%);
   overflow-wrap: anywhere;
@@ -291,24 +291,24 @@ ul { padding-left: 1.3rem; }
 .trip-card__visual--awaji { background: #d3ece9 url("awaji-photo.webp") center 55% / cover no-repeat; }
 @media (max-width: 600px) {
   .home-hero {
-    min-height: 515px;
+    min-height: 360px;
     background-image: linear-gradient(0deg, rgb(3 31 35 / 84%), rgb(5 35 40 / 32%) 85%), url("harima-hero-photo.webp");
     background-position: 59% center;
   }
   .home-hero__copy {
     justify-content: flex-end;
-    min-height: 515px;
-    padding: 2rem 1.45rem 3.3rem;
+    min-height: 360px;
+    padding: 1.15rem 1.25rem 2.35rem;
   }
-  .home-hero__copy h1 { font-size: clamp(2.2rem, 9.7vw, 3.7rem); }
-  .home-hero__subtitle { font-size: 1.23rem; }
-  .home-hero__actions { width: 100%; }
+  .home-hero__copy h1 { font-size: clamp(1.9rem, 8vw, 2.55rem); }
+  .home-hero__subtitle { font-size: 1.08rem; }
+  .home-hero__actions { width: 100%; gap: .5rem; margin-top: .65rem; }
   .home-hero__footnote { right: 1.4rem; bottom: .75rem; }
-  .article-cover { min-height: 340px; padding: 1.5rem 1.1rem; }
-  .article-cover h1 { font-size: clamp(1.55rem, 7vw, 2.1rem); }
+  .article-cover { min-height: 255px; padding: 1.25rem 1.1rem; }
+  .article-cover h1 { font-size: clamp(1.45rem, 6vw, 1.9rem); }
 }
 @media (max-width: 360px) {
-  .home-hero__copy h1 { font-size: 1.9rem; }
+  .home-hero__copy h1 { font-size: 1.8rem; }
 }
 
 
@@ -478,7 +478,7 @@ body { background: #f7f8f5; }
   .listing-main .place-grid { grid-template-columns: minmax(0,1fr); }
   .place-card { padding: 1.15rem; }
   .article-main { padding-top: 1rem; }
-  .article-main .article-cover { min-height: 345px; margin-bottom: 1.4rem; }
+  .article-main .article-cover { min-height: 270px; margin-bottom: 1.4rem; }
   .article-jump a { flex: 1; min-width: 128px; }
   .route-day__heading { align-items: flex-start; flex-direction: column; }
   .route-step { padding: 1.05rem 1.05rem 1.1rem; }
@@ -492,6 +492,11 @@ body { background: #f7f8f5; }
 @media (prefers-reduced-motion: reduce) {
   .trip-card { transition: none; }
   .trip-card:hover, .trip-card:focus-within { transform: none; }
+}
+
+/* Keep image attribution clear of CTA buttons at tablet widths. */
+@media (min-width: 601px) and (max-width: 1024px) {
+  .home-hero { min-height: 340px; }
 }
 
 """
