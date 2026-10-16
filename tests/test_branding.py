@@ -24,6 +24,36 @@ class PublicBrandingTests(unittest.TestCase):
         self.assertIn(SITE_TAGLINE, html)
         self.assertNotIn("noranamani", html)
 
+    def test_accessible_mobile_layout_and_draft_guidance(self):
+        from localguide.site import STYLE, create_files
+        from localguide.core import parse_time
+        from unittest.mock import patch
+        from tempfile import TemporaryDirectory
+        self.assertIn("@media (max-width: 600px)", STYLE)
+        self.assertIn("prefers-reduced-motion", STYLE)
+        rendered = page("案内", "説明", "<p>本文</p>", "index.html", None, False, "")
+        self.assertIn('href="#main-content"', rendered)
+        self.assertIn('id="main-content"', rendered)
+        self.assertIn('content="noindex,follow"', rendered)
+        self.assertNotIn('rel="canonical"', rendered)
+        with TemporaryDirectory() as temp:
+            root = Path(temp)
+            data = {"events": {"items": []}, "places": {"items": []}}
+            rules = {"site_url": None, "review": {"stale_event_after_hours": 72},
+                     "list_pages": {"min_active_items": 5, "min_official_items": 3,
+                                    "min_distinct_organizers": 2, "activate_after_days": 7},
+                     "place_pages": {"min_places": 5, "min_official_places": 3,
+                                      "min_distinct_official_hosts": 2, "activate_after_days": 7}}
+            config = {"sources": []}
+            with patch("localguide.site.validate_data", return_value=data), patch(
+                "localguide.site.validate_config",
+                return_value=({"areas": []}, {"primary": []}, rules, config)
+            ):
+                files, _ = create_files(root, parse_time("2026-10-16T10:00:00+09:00"))
+            self.assertIn("掲載準備中", files["index.html"])
+            self.assertIn("播磨のおでかけを", files["index.html"])
+            self.assertIn("X-Robots-Tag: noindex", files["_headers"])
+
     def test_attribution_in_source_config_has_public_brand(self):
         config = json.loads((ROOT / "config/sources.json").read_text(encoding="utf-8"))
         official = next(s for s in config["sources"] if s["id"] == "akashi_open_data")
