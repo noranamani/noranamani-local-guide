@@ -91,6 +91,7 @@ p { margin: .65rem 0; }
 ul { padding-left: 1.3rem; }
 .site-footer { border-top: 1px solid var(--border); background: #eef2ec; color: var(--muted); font-size: .88rem; }
 .site-footer__inner { padding-top: 1.15rem; padding-bottom: 1.15rem; }
+.about-main { max-width: 880px; }
 @media (max-width: 600px) {
   main { padding-top: 1.5rem; }
   nav a { font-size: .94rem; }
@@ -601,6 +602,7 @@ def page(title, description, body, filename, site_url, indexable, nav, home=Fals
     heading = "" if home or heading_in_body else f"<h1>{escaped(title)}</h1>"
     main_class = (' class="home-main"' if home else
                   ' class="article-main"' if filename.startswith("trip-") else
+                  ' class="about-main"' if filename == "about.html" else
                   ' class="listing-main"' if filename in {"travel.html", "places.html"} else "")
     header_class = "site-header site-header--compact" if home else "site-header"
     header_identity = ('<div class="header-identity">'
@@ -614,6 +616,9 @@ def page(title, description, body, filename, site_url, indexable, nav, home=Fals
     if active_file:
         nav = nav.replace(f'href="{active_file}"',
                           f'href="{active_file}" aria-current="page"', 1)
+    about_link = ('<a href="about.html"'
+                  + (' aria-current="page"' if filename == "about.html" else '')
+                  + '>このサイトについて</a>')
     return f'''<!doctype html>
 <html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{escaped(title)} | {escaped(SITE_NAME)}</title><meta name="description" content="{escaped(description)}">
@@ -625,7 +630,7 @@ def page(title, description, body, filename, site_url, indexable, nav, home=Fals
 <main id="main-content"{main_class}>{heading}{body}</main>
 <footer class="site-footer"><div class="site-footer__inner">
 <div class="site-footer__top"><a class="site-footer__brand" href="index.html">{escaped(SITE_NAME)}</a>
-<nav aria-label="フッターの案内">{nav}</nav></div>
+<nav aria-label="フッターの案内">{nav}{about_link}</nav></div>
 <p>日程・料金・参加条件は変更される場合があります。お出かけ前に公式情報をご確認ください。</p>
 <p>確認できない情報は「不明」と表示します。掲載内容は確認済みの事実情報から構成しています。</p>
 </div></footer></body></html>'''
@@ -691,6 +696,51 @@ def qualified(events, rules):
             and len({e.get("organizer_label") for e in events if e.get("organizer_label")}) >= minimum["min_distinct_organizers"])
 
 
+def about_content():
+    """Explain current operation without claiming unverified hosting settings."""
+    return (
+        '<section class="intro" aria-label="サイトの紹介">'
+        '<p class="eyebrow">はりまよりみち</p>'
+        '<p>はりまよりみちは、加古川・明石・姫路とその周辺で、'
+        '家族のお出かけ先や旅行のアイデアを探しやすく整理した地域ガイドです。</p>'
+        '<p>運営表示名は「はりまよりみち」です。</p></section>'
+        '<section class="notice" aria-labelledby="about-information">'
+        '<h2 id="about-information">掲載情報とご利用にあたって</h2>'
+        '<p>施設や旅行先の情報は、公的機関や施設の公式資料などを参考に確認・整理し、'
+        '出典や確認日を掲載しています。確認できない事項は推測せず、「不明」として扱います。</p>'
+        '<p>山陰の旅行記事は実際に出かけた家族旅行の記録、淡路島の記事は旅の提案となる'
+        'モデルコースです。実際の体験と提案を区別して紹介しています。</p>'
+        '<p>営業時間・料金・休業日・参加条件・予約方法・イベントの開催状況は変更される場合があります。'
+        '掲載情報の正確性や最新性を保証するものではありません。'
+        'お出かけや予約の前に、リンク先の公式サイトで最新情報をご確認ください。</p></section>'
+        '<section class="notice" aria-labelledby="about-advertising">'
+        '<h2 id="about-advertising">広告・アフィリエイトについて</h2>'
+        '<p>一部の旅行記事には、楽天トラベルのアフィリエイトリンク（広告・PR）を掲載しています。'
+        'リンクから予約等が成立した場合、当サイトが紹介料を受け取ることがあります。</p>'
+        '<p>広告のある記事では、記事内や広告の近くにも「広告・PR」を表示しています。'
+        '施設の公式情報へのリンクと広告リンクは区別してご案内しています。</p>'
+        '<p>予約・契約・決済や個人情報の入力はリンク先の外部サービスで行います。'
+        '掲載内容・料金・取引条件は各リンク先でご確認ください。</p></section>'
+        '<section class="notice" aria-labelledby="about-privacy">'
+        '<h2 id="about-privacy">プライバシーと外部サービス</h2>'
+        '<p>当サイトには、会員登録やお問い合わせの入力フォームは設けていません。</p>'
+        '<p>当サイトはCloudflare Pagesを利用して公開しています。ページの閲覧時には、'
+        '配信やセキュリティのために通信情報が取り扱われる場合があります。</p>'
+        '<p>一部の記事には外部の広告画像やリンクが含まれます。画像の表示やリンクの利用に伴い、'
+        '外部サービスへの通信が発生する場合があります。各事業者による情報の取扱いは、'
+        'それぞれの方針をご確認ください。</p>'
+        '<ul><li><a href="https://www.cloudflare.com/privacypolicy/" rel="noopener noreferrer">'
+        'Cloudflareのプライバシーポリシー</a></li>'
+        '<li><a href="https://privacy.rakuten.co.jp/" rel="noopener noreferrer">'
+        '楽天グループの個人情報保護方針</a></li></ul></section>'
+        '<section class="notice" aria-labelledby="about-contact">'
+        '<h2 id="about-contact">ご連絡について</h2>'
+        '<p>現在、当サイト専用のお問い合わせ窓口は設けていません。'
+        '施設の営業状況や宿泊予約などのお問い合わせは、各公式サイトの案内をご利用ください。</p>'
+        '</section>'
+    )
+
+
 def create_files(root, now):
     data = validate_data(root, now)
     areas, categories, rules, config = validate_config(root, now)
@@ -732,6 +782,10 @@ def create_files(root, now):
                                home=(filename == "index.html"), heading_in_body=heading_in_body)
         if indexable and url:
             indexable_files.append(filename)
+
+    add("about.html", "このサイトについて",
+        "はりまよりみちの運営案内、掲載情報の確認方法、広告・PR、プライバシーと外部サービスについてご案内します。",
+        about_content(), False)
 
     cards = "".join(event_content(e, sources, now) for e in events)
     place_cards = "".join(place_content(p, sources) for p in places)

@@ -1,0 +1,270 @@
+{
+  "browser": "155.0.4283.45",
+  "mode": "headless Chromium; external requests blocked",
+  "checks": [
+    {
+      "page": "about.html",
+      "width": 1440,
+      "viewport": 1440,
+      "document": 1440,
+      "headerHeight": 83.625,
+      "heroHeight": null,
+      "footerNavigation": "passed"
+    },
+    {
+      "page": "index.html",
+      "width": 1440,
+      "viewport": 1440,
+      "document": 1440,
+      "headerHeight": 67,
+      "heroHeight": 357,
+      "footerNavigation": "passed"
+    },
+    {
+      "page": "places.html",
+      "width": 1440,
+      "viewport": 1440,
+      "document": 1440,
+      "headerHeight": 83.625,
+      "heroHeight": null,
+      "footerNavigation": "passed"
+    },
+    {
+      "page": "travel.html",
+      "width": 1440,
+      "viewport": 1440,
+      "document": 1440,
+      "headerHeight": 83.625,
+      "heroHeight": null,
+      "footerNavigation": "passed"
+    },
+    {
+      "page": "trip-awaji-family-one-night.html",
+      "width": 1440,
+      "viewport": 1440,
+      "document": 1440,
+      "headerHeight": 83.625,
+      "heroHeight": null,
+      "adNotice": {
+        "text": "広告・PR：この記事には楽天トラベルのアフィリエイトリンクを掲載しています。",
+        "fontSize": "16px",
+        "color": "rgb(32, 58, 52)",
+        "background": "rgb(255, 249, 232)"
+      },
+      "footerNavigation": "passed"
+    },
+    {
+      "page": "trip-sanin-family-one-night.html",
+      "width": 1440,
+      "viewport": 1440,
+      "document": 1440,
+      "headerHeight": 83.625,
+      "heroHeight": null,
+      "adNotice": {
+        "text": "広告・PR：この記事には楽天トラベルのアフィリエイトリンクを掲載しています。",
+        "fontSize": "16px",
+        "color": "rgb(32, 58, 52)",
+        "background": "rgb(255, 249, 232)"
+      },
+      "footerNavigation": "passed"
+    },
+    {
+      "page": "about.html",
+      "width": 768,
+      "viewport": 768,
+      "document": 768,
+      "headerHeight": 74.65625,
+      "heroHeight": null,
+      "footerNavigation": "passed"
+    },
+    {
+      "page": "index.html",
+      "width": 768,
+      "viewport": 768,
+      "document": 768,
+      "headerHeight": 67,
+      "heroHeight": 342,
+      "footerNavigation": "passed"
+    },
+    {
+      "page": "places.html",
+      "width": 768,
+      "viewport": 768,
+      "document": 768,
+      "headerHeight": 74.65625,
+      "heroHeight": null,
+      "footerNavigation": "passed"
+    },
+    {
+      "page": "travel.html",
+      "width": 768,
+      "viewport": 768,
+      "document": 768,
+      "headerHeight": 74.65625,
+      "heroHeight": null,
+      "footerNavigation": "passed"
+    },
+    {
+      "page": "trip-awaji-family-one-night.html",
+      "width": 768,
+      "viewport": 768,
+      "document": 768,
+      "headerHeight": 74.65625,
+      "heroHeight": null,
+      "adNotice": {
+        "text": "広告・PR：この記事には楽天トラベルのアフィリエイトリンクを掲載しています。",
+        "fontSize": "16px",
+        "color": "rgb(32, 58, 52)",
+        "background": "rgb(255, 249, 232)"
+      },
+      "footerNavigation": "passed"
+    },
+    {
+      "page": "trip-sanin-family-one-night.html",
+      "width": 768,
+      "viewport": 768,
+      "document": 768,
+      "headerHeight": 74.65625,
+      "heroHeight": null,
+      "adNotice": {
+        "text": "広告・PR：この記事には楽天トラベルのアフィリエイトリンクを掲載しています。",
+        "fontSize": "16px",
+        "color": "rgb(32, 58, 52)",
+        "background": "rgb(255, 249, 232)"
+      },
+      "footerNavigation": "passed"
+    },
+    {
+      "page": "about.html",
+      "width": 390,
+      "viewport": 390,
+      "document": 390,
+      "headerHeight": 128.65625,
+      "heroHeight": null,
+      "footerNavigation": "passed"
+    },
+    {
+      "page": "index.html",
+      "width": 390,
+      "viewport": 390,
+      "document": 390,
+      "headerHeight": 67,
+      "heroHeight": 364.875,
+      "footerNavigation": "passed"
+    },
+    {
+      "page": "places.html",
+      "width": 390,
+      "viewport": 390,
+      "document": 390,
+      "headerHeight": 128.65625,
+      "heroHeight": null,
+      "footerNavigation": "passed"
+    },
+    {
+      "page": "travel.html",
+      "width": 390,
+      "viewport": 390,
+      "document": 390,
+      "headerHeight": 128.65625,
+      "heroHeight": null,
+      "footerNavigation": "passed"
+    },
+    {
+      "page": "trip-awaji-family-one-night.html",
+      "width": 390,
+      "viewport": 390,
+      "document": 390,
+      "headerHeight": 128.65625,
+      "heroHeight": null,
+      "adNotice": {
+        "text": "広告・PR：この記事には楽天トラベルのアフィリエイトリンクを掲載しています。",
+        "fontSize": "16px",
+        "color": "rgb(32, 58, 52)",
+        "background": "rgb(255, 249, 232)"
+      },
+      "footerNavigation": "passed"
+    },
+    {
+      "page": "trip-sanin-family-one-night.html",
+      "width": 390,
+      "viewport": 390,
+      "document": 390,
+      "headerHeight": 128.65625,
+      "heroHeight": null,
+      "adNotice": {
+        "text": "広告・PR：この記事には楽天トラベルのアフィリエイトリンクを掲載しています。",
+        "fontSize": "16px",
+        "color": "rgb(32, 58, 52)",
+        "background": "rgb(255, 249, 232)"
+      },
+      "footerNavigation": "passed"
+    },
+    {
+      "page": "about.html",
+      "width": 320,
+      "viewport": 320,
+      "document": 320,
+      "headerHeight": 128.65625,
+      "heroHeight": null,
+      "footerNavigation": "passed"
+    },
+    {
+      "page": "index.html",
+      "width": 320,
+      "viewport": 320,
+      "document": 320,
+      "headerHeight": 67,
+      "heroHeight": 362.03125,
+      "footerNavigation": "passed"
+    },
+    {
+      "page": "places.html",
+      "width": 320,
+      "viewport": 320,
+      "document": 320,
+      "headerHeight": 128.65625,
+      "heroHeight": null,
+      "footerNavigation": "passed"
+    },
+    {
+      "page": "travel.html",
+      "width": 320,
+      "viewport": 320,
+      "document": 320,
+      "headerHeight": 128.65625,
+      "heroHeight": null,
+      "footerNavigation": "passed"
+    },
+    {
+      "page": "trip-awaji-family-one-night.html",
+      "width": 320,
+      "viewport": 320,
+      "document": 320,
+      "headerHeight": 128.65625,
+      "heroHeight": null,
+      "adNotice": {
+        "text": "広告・PR：この記事には楽天トラベルのアフィリエイトリンクを掲載しています。",
+        "fontSize": "16px",
+        "color": "rgb(32, 58, 52)",
+        "background": "rgb(255, 249, 232)"
+      },
+      "footerNavigation": "passed"
+    },
+    {
+      "page": "trip-sanin-family-one-night.html",
+      "width": 320,
+      "viewport": 320,
+      "document": 320,
+      "headerHeight": 128.65625,
+      "heroHeight": null,
+      "adNotice": {
+        "text": "広告・PR：この記事には楽天トラベルのアフィリエイトリンクを掲載しています。",
+        "fontSize": "16px",
+        "color": "rgb(32, 58, 52)",
+        "background": "rgb(255, 249, 232)"
+      },
+      "footerNavigation": "passed"
+    }
+  ]
+}
