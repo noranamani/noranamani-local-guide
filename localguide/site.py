@@ -391,6 +391,7 @@ body { background: #f7f8f5; }
 }
 .listing-lead .listing-lead__disclaimer { font-size: .85rem; color: #486b60; margin-top: .85rem; }
 .place-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 265px), 1fr)); align-items: stretch; gap: 1rem; }
+.listing-main .place-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .place-card {
   display: flex; flex-direction: column; margin: 0;
   border: 1px solid #dae8df; border-top: 4px solid #88b6a4;
@@ -474,6 +475,7 @@ body { background: #f7f8f5; }
   .trip-card__content { padding: 1.15rem 1.2rem 1.3rem; }
   .home-section__heading { align-items: flex-start; }
   .place-grid, .place-grid--home { grid-template-columns: minmax(0,1fr); }
+  .listing-main .place-grid { grid-template-columns: minmax(0,1fr); }
   .place-card { padding: 1.15rem; }
   .article-main { padding-top: 1rem; }
   .article-main .article-cover { min-height: 345px; margin-bottom: 1.4rem; }
