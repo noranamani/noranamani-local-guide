@@ -161,8 +161,9 @@ def search_eligible(guide, now):
     return guide["review_status"] == "approved" and timedelta(0) <= age <= MAX_SEO_REVIEW_AGE
 
 
-def guide_card(guide):
-    heading = escape(guide["title"], quote=True)
+def guide_card(guide, compact=False):
+    """Show concise destinations; preserve full article names for screen readers."""
+    full_title = escape(guide["title"], quote=True)
     is_actual = guide.get("trip_basis") == "actual_trip"
     status = ("旅行記（記事確認中）" if is_actual and guide["review_status"] == "preview"
               else "記事確認中" if guide["review_status"] == "preview"
@@ -172,17 +173,42 @@ def guide_card(guide):
               if is_actual and promo
               else "公式施設情報をもとに作成。個別宿泊施設の比較は準備中で、記事には広告・PRリンクを含みます。"
               if promo else "公式施設情報をもとに作成。宿泊比較・広告リンクは準備中です。")
+    # Card-only copy derived from each existing article, not a change to article data.
+    presets = {
+        "awaji-family-one-night": (
+            "淡路島1泊2日", "淡路島の旅",
+            "花畑や公園・体験施設をめぐる、家族向けモデルコース。"
+        ),
+        "sanin-family-one-night": (
+            "山陰1泊2日", "山陰の旅",
+            "水木しげるロードから出雲・鳥取砂丘へ。実際に巡った家族旅の記録。"
+        ),
+    }
+    label, scenic_label, short_summary = presets.get(
+        guide["id"], (guide["title"], "家族旅行", guide["summary"])
+    )
     artwork_class = ("trip-card__visual trip-card__visual--awaji"
                      if guide["id"] == "awaji-family-one-night"
                      else "trip-card__visual trip-card__visual--sanin"
                      if guide["id"] == "sanin-family-one-night" else "trip-card__visual")
-    return ('<article class="card trip-card">'
-            '<a class="trip-card__link" href="' + travel_filename(guide) + '">'
-            '<div class="' + artwork_class + '" aria-hidden="true"></div>'
-            '<div class="trip-card__content"><span class="tag">' + escape(status) + '</span>'
-            '<h3>' + heading + '</h3>'
-            '<p>' + escape(guide["summary"]) + '</p>'
-            '<p class="muted">' + escape(notice) + '</p>'
+    illustration_note = ("※画像はイメージです" if guide["id"] == "awaji-family-one-night"
+                         else "※背景は装飾イメージです")
+    kind = "実際の旅行記" if is_actual else "モデルコース"
+    summary = short_summary if compact else guide["summary"]
+    notice_on_card = ("広告・PRリンクあり" if promo else "公式情報の確認はこちら") if compact else notice
+    card_class = "card trip-card trip-card--compact" if compact else "card trip-card"
+    return ('<article class="' + card_class + '">'
+            '<a class="trip-card__link" href="' + travel_filename(guide) +
+            '" aria-label="' + full_title + 'を読む">'
+            '<div class="' + artwork_class + '" aria-hidden="true">'
+            '<span class="trip-card__visual-label">' + escape(scenic_label) + '</span>'
+            '<span class="trip-card__visual-note">' + escape(illustration_note) + '</span></div>'
+            '<div class="trip-card__content"><div class="trip-card__badges">'
+            '<span class="tag">' + escape(status) + '</span>'
+            '<span class="trip-card__kind">' + escape(kind) + '</span></div>'
+            '<h3>' + escape(label) + '</h3>'
+            '<p class="trip-card__summary">' + escape(summary) + '</p>'
+            '<p class="muted trip-card__notice">' + escape(notice_on_card) + '</p>'
             '<span class="trip-card__foot" aria-hidden="true">プランを読む →</span>'
             '</div></a></article>')
 
