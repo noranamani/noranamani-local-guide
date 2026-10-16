@@ -50,6 +50,73 @@
         "destination_url": "https://travel.rakuten.co.jp/yado/hyogo/awaji.html",
         "source_html": "<a href=\"https://hb.afl.rakuten.co.jp/hgc/588985ea.8619e683.588985eb.c075811a/?pc=https%3A%2F%2Ftravel.rakuten.co.jp%2Fyado%2Fhyogo%2Fawaji.html&link_type=text&ut=eyJwYWdlIjoidXJsIiwidHlwZSI6InRleHQiLCJjb2wiOjF9\" target=\"_blank\" rel=\"nofollow sponsored noopener\" style=\"word-wrap:break-word;\">https://travel.rakuten.co.jp/yado/hyogo/awaji.html</a>"
       }
+    },
+    {
+      "id": "sanin-family-one-night",
+      "review_status": "preview",
+      "trip_basis": "actual_trip",
+      "lodging_name": "松江市宍道ふるさと森林公園",
+      "title": "加古川発・山陰1泊2日｜水木しげるロード・出雲・鳥取をめぐる家族旅行モデルコース",
+      "summary": "2026年の家族旅行で、加古川から水木しげるロード、宍道ふるさと森林公園、出雲大社、青山剛昌ふるさと館、鳥取砂丘を1泊2日でめぐった訪問順の記録です。",
+      "origin": "加古川発・2026年の実際の家族旅行をもとに構成",
+      "last_reviewed_at": "2026-10-16T10:30:00+09:00",
+      "days": [
+        {
+          "title": "1日目｜境港・宍道・出雲をめぐって宿泊",
+          "stops": [
+            {
+              "name": "水木しげるロード",
+              "description": "加古川から境港の水木しげるロードへ。妖怪のブロンズ像が並ぶ通りの散策を中心に、営業中のお店や休憩先を選びます。最新の案内は公式サイトで確認してください。",
+              "official_url": "https://mizuki.sakaiminato.net/road/"
+            },
+            {
+              "name": "松江市宍道ふるさと森林公園（立ち寄り）",
+              "description": "この旅行では宿泊前に宍道ふるさと森林公園へ一度立ち寄りました。施設や駐車場の利用条件、チェックイン方法は現在の案内を確認してください。",
+              "official_url": "https://www.forestpark.or.jp/"
+            },
+            {
+              "name": "出雲大社・出雲方面の観光",
+              "description": "森林公園から出雲方面へ移動し、出雲大社などを観光。参拝可能時間や周辺駐車場の情報は、訪問前に公式ページで確認してください。",
+              "official_url": "https://izumooyashiro.or.jp/"
+            },
+            {
+              "name": "松江市宍道ふるさと森林公園（宿泊）",
+              "description": "出雲方面の観光後、松江市宍道ふるさと森林公園に戻って一泊。宿泊棟や食事条件などは予約プランで異なるため、最新の予約情報を確認してください。",
+              "official_url": "https://www.forestpark.or.jp/"
+            }
+          ]
+        },
+        {
+          "title": "2日目｜コナンのふるさと・鳥取砂丘を経て帰宅",
+          "stops": [
+            {
+              "name": "青山剛昌ふるさと館",
+              "description": "宿泊先を出発して北栄町の青山剛昌ふるさと館へ。展示内容や入館手続き、休館日、チケットの予約方法は公式情報で確認してください。",
+              "official_url": "https://gamf.jp/"
+            },
+            {
+              "name": "鳥取砂丘",
+              "description": "青山剛昌ふるさと館の後は鳥取砂丘へ立ち寄り、加古川へ帰りました。砂丘は日陰が少なく起伏があるため、天候・足元・水分補給に注意してください。",
+              "official_url": "https://www.torican.jp/spot/detail_1064.html"
+            }
+          ]
+        }
+      ],
+      "lodging_note": "実際に宿泊したのは松江市宍道ふるさと森林公園です。下の楽天トラベル広告は施設の予約案内ページに移動します。今後の宿泊料金・定員・食事・キャンセル条件は、旅行日と人数を指定して最新情報をご確認ください。",
+      "planning_notes": [
+        "1日目は水木しげるロードから宍道の森林公園に一度立ち寄り、その後に出雲方面を観光して森林公園に戻りました。別の日程で再現する場合は移動時間に余裕を持たせてください。",
+        "宿泊予約では大人・子どもの人数と年齢、宿泊棟の定員、食事、駐車場、キャンセル条件を確認してください。料金は予約時期で変わります。",
+        "青山剛昌ふるさと館の展示・休館・事前チケット情報や、鳥取砂丘の天候と安全情報は出発前に公式サイトで確認してください。",
+        "この記事は2026年の実際の訪問順をもとにしています。営業日・宿泊プラン・費用・経路の条件は現在と異なる場合があります。"
+      ],
+      "affiliate": {
+        "provider": "rakuten_travel",
+        "type": "manually_generated_picttext_html",
+        "site_registered": true,
+        "registered_site_url": "https://harima-yorimichi.pages.dev/",
+        "destination_url": "https://travel.rakuten.co.jp/HOTEL/84942/84942.html?cid=tr_af_1632",
+        "source_html": "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr><td><div style=\"border:1px solid #95a5a6;border-radius:.75rem;background-color:#FFFFFF;margin:0px;padding:5px;text-align:center;overflow:hidden;\"><table><tr><td style=\"width:100px\"><a href=\"https://hb.afl.rakuten.co.jp/hgc/588985ea.8619e683.588985eb.c075811a/?pc=https%3A%2F%2Ftravel.rakuten.co.jp%2FHOTEL%2F84942%2F84942.html%3Fcid%3Dtr_af_1632&link_type=picttext&ut=eyJwYWdlIjoiaXRlbSIsInR5cGUiOiJwaWN0dGV4dCIsInNpemUiOiIxMDB4MTAwIiwibmFtIjoxLCJuYW1wIjoicmlnaHQiLCJjb20iOjEsImNvbXAiOiJkb3duIiwicHJpY2UiOjEsImJvciI6MSwiY29sIjoxLCJiYnRuIjoxLCJwcm9kIjowLCJhbXAiOmZhbHNlfQ%3D%3D\" target=\"_blank\" rel=\"nofollow sponsored noopener\" style=\"word-wrap:break-word;\"><img src=\"https://hbb.afl.rakuten.co.jp/hgb/588985ea.8619e683.588985eb.c075811a/?me_id=2100001&item_id=84942&pc=https%3A%2F%2Fimg.travel.rakuten.co.jp%2Fimage%2Fimgr_100%3Fno%3D84942\" border=\"0\" style=\"margin:2px\" alt=\"\" title=\"\"></a></td><td style=\"vertical-align:top;display: block;\"><p style=\"font-size:12px;line-height:1.4em;text-align:left;margin:0px;padding:2px 6px;word-wrap:break-word\"><a href=\"https://hb.afl.rakuten.co.jp/hgc/588985ea.8619e683.588985eb.c075811a/?pc=https%3A%2F%2Ftravel.rakuten.co.jp%2FHOTEL%2F84942%2F84942.html%3Fcid%3Dtr_af_1632&link_type=picttext&ut=eyJwYWdlIjoiaXRlbSIsInR5cGUiOiJwaWN0dGV4dCIsInNpemUiOiIxMDB4MTAwIiwibmFtIjoxLCJuYW1wIjoicmlnaHQiLCJjb20iOjEsImNvbXAiOiJkb3duIiwicHJpY2UiOjEsImJvciI6MSwiY29sIjoxLCJiYnRuIjoxLCJwcm9kIjowLCJhbXAiOmZhbHNlfQ%3D%3D\" target=\"_blank\" rel=\"nofollow sponsored noopener\" style=\"word-wrap:break-word;\">松江市宍道ふるさと森林公園</a></p></td></tr></table></div><br><p style=\"color:#000000;font-size:12px;line-height:1.4em;margin:5px;word-wrap:break-word\"></p></td></tr></table>"
+      }
     }
   ]
 }

@@ -172,6 +172,29 @@ ul { padding-left: 1.3rem; }
 }
 @media (prefers-reduced-motion: reduce) { .action-link { transition: none; } }
 
+.site-header--compact .site-header__inner { padding-top: .72rem; padding-bottom: .72rem; }
+.site-header--compact nav { justify-content: flex-end; }
+@media (max-width: 600px) { .site-header--compact nav { justify-content: center; } }
+.travel-booking-reference--picttext { max-width: 100%; overflow-x: auto; }
+.travel-booking-reference--picttext a,
+.travel-booking-reference--picttext a:hover {
+  display: inline; padding: 0; border: 0; border-radius: 0;
+  background: none; color: var(--brand); font-size: inherit; font-weight: inherit;
+}
+.travel-booking-reference--picttext img { max-width: 100%; height: auto; }
+.trip-card__visual--sanin {
+  background: radial-gradient(ellipse 90% 35% at 15% 115%, #e9d2a2 0 98%, transparent 100%),
+              radial-gradient(ellipse 85% 40% at 76% 110%, #c19762 0 98%, transparent 100%),
+              linear-gradient(180deg, #8eb8cd 0%, #bed8d0 49%, #d9c19b 65%, #b89363 100%);
+}
+.article-cover--sanin {
+  background-color: #b39061;
+  background-image: linear-gradient(0deg, rgb(14 37 41 / 76%), rgb(21 52 55 / 16%) 80%),
+                    radial-gradient(ellipse 90% 33% at 12% 112%, #e9d2a2 0 98%, transparent 100%),
+                    radial-gradient(ellipse 86% 40% at 80% 107%, #c19762 0 98%, transparent 100%),
+                    linear-gradient(180deg, #83b4cb 0%, #c6d7c6 50%, #dec399 67%, #b58a57 100%);
+}
+
 /* Text-free illustrative photos + semantic HTML/CSS heading overlays. */
 .home-hero {
   position: relative;
@@ -333,13 +356,16 @@ def page(title, description, body, filename, site_url, indexable, nav, home=Fals
     robots = "index,follow" if site_url and indexable else "noindex,follow"
     heading = "" if home or heading_in_body else f"<h1>{escaped(title)}</h1>"
     main_class = ' class="home-main"' if home else ""
+    header_class = "site-header site-header--compact" if home else "site-header"
+    header_identity = (f'<a class="brand" href="index.html">{escaped(SITE_NAME)}</a>'
+                       f'<p class="tagline">{escaped(SITE_TAGLINE)}</p>') if not home else ""
     return f'''<!doctype html>
 <html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{escaped(title)} | {escaped(SITE_NAME)}</title><meta name="description" content="{escaped(description)}">
 <meta name="robots" content="{robots}">{canonical}<link rel="stylesheet" href="styles.css"></head>
 <body><a class="skip-link" href="#main-content">本文へ移動</a>
-<header class="site-header"><div class="site-header__inner">
-<a class="brand" href="index.html">{escaped(SITE_NAME)}</a><p class="tagline">{escaped(SITE_TAGLINE)}</p>
+<header class="{header_class}"><div class="site-header__inner">
+{header_identity}
 <nav aria-label="主なページ">{nav}</nav></div></header>
 <main id="main-content"{main_class}>{heading}{body}</main>
 <footer class="site-footer"><div class="site-footer__inner">
@@ -491,8 +517,8 @@ def create_files(root, now):
     if travel_guides:
         content += ('<section id="family-trip" class="home-section">'
                     '<div class="home-section__heading"><div><span class="section-kicker">FAMILY TRIP</span>'
-                    '<h2>ちょっと遠くまで、家族でよりみち</h2>'
-                    '<p>実在する施設の公式情報をもとに考えた、旅のヒントです。宿泊料金などは確認中です。</p>'
+                    '<h2>家族旅行のプランを探す</h2>'
+                    '<p>実際に訪れたルートと、公式情報をもとにした旅のアイデアを紹介します。</p>'
                     '</div><a class="home-section__more" href="travel.html">旅行プラン一覧 →</a></div>'
                     '<div class="cards home-trip-cards">'
                     + "".join(guide_card(g) for g in travel_guides) + '</div></section>')
@@ -528,13 +554,13 @@ def create_files(root, now):
     travel_indexable = any(search_eligible(g, now) for g in travel_guides)
     add("index.html", "家族で出かける地域ガイド", "加古川・明石・姫路周辺の確認済み開催情報と施設案内、播磨からの家族旅行モデルコース。公式情報と確認日時を表示します。", content, qualified(events, rules) or places_ready or travel_indexable)
     if travel_guides:
-        listing = ('<p>加古川方面から車で出かける、家族旅行の立ち寄り先を紹介します。'
-                   '訪問順序は例示であり、営業時間・料金は各施設で確認してください。</p>'
+        listing = ('<p>加古川発の家族旅行の記録とモデルコースを紹介します。'
+                   '訪問記録と提案コースを区別して掲載しています。営業時間・料金は各公式サイトでご確認ください。</p>'
                    '<div class="cards">' + "".join(guide_card(g) for g in travel_guides) + '</div>')
         add("travel.html", "加古川発・家族旅行プラン", "加古川から車で行ける1泊2日旅行のモデルコースと、宿泊予約前に確認したい条件のまとめです。", listing, travel_indexable)
         for guide in travel_guides:
             add(travel_filename(guide), guide["title"], guide["summary"], guide_body(guide),
-                search_eligible(guide, now), heading_in_body=(guide["id"] == "awaji-family-one-night"))
+                search_eligible(guide, now), heading_in_body=(guide["id"] in {"awaji-family-one-night", "sanin-family-one-night"}))
     if places:
         add("places.html", "確認済みの施設一覧", "加古川・明石・姫路周辺の施設名称、所在地と公式リンクを出典付きでまとめています。料金など不明な項目は推測しません。", '<div class="cards">' + place_cards + '</div>', places_ready)
     if events:
@@ -570,13 +596,35 @@ class Document(HTMLParser):
         self.stack = []
         self.errors = []
         self.provenance = []
+        self.heading_count = 0
 
     def handle_starttag(self, tag, attrs):
         values = dict(attrs)
         if "data-source-id" in values:
             self.provenance.append(values)
-        if tag in ("script", "iframe", "img", "form", "object", "embed", "base") or any(k.startswith("on") for k in values):
+        if tag == "img":
+            image_url = values.get("src") or ""
+            image_parts = urlsplit(image_url)
+            approved_ad_image = (image_parts.scheme == "https"
+                                 and image_parts.hostname == "hbb.afl.rakuten.co.jp"
+                                 and image_parts.path.startswith("/hgb/")
+                                 and set(values) == {"src", "border", "style", "alt", "title"}
+                                 and values["border"] == "0"
+                                 and values["style"] == "margin:2px"
+                                 and values["alt"] == ""
+                                 and values["title"] == ""
+                                 and "section" in self.stack)
+            if not approved_ad_image:
+                self.errors.append("許可されていない画像埋め込みがあります")
+            else:
+                try:
+                    safe_url(image_url)
+                except GuideError:
+                    self.errors.append("楽天広告画像のURLが不正です")
+        elif tag in ("script", "iframe", "form", "object", "embed", "base"):
             self.errors.append("許可されない埋め込み要素・動的処理があります")
+        if any(k.startswith("on") for k in values):
+            self.errors.append("イベント属性は禁止です")
         if tag == "html":
             self.lang = values.get("lang")
         if tag == "meta":
@@ -593,6 +641,8 @@ class Document(HTMLParser):
             self.ids.add(values["id"])
         if tag in ("title", "h1"):
             self.capture = tag
+        if tag == "h1":
+            self.heading_count += 1
         if tag not in ("meta", "link", "br", "hr", "input", "img", "source", "wbr", "area", "base", "embed"):
             self.stack.append(tag)
 
@@ -636,7 +686,7 @@ def validate_site(output, site_url=None):
             document.close()
             if (document.errors or document.stack or document.lang != "ja" or not document.charset
                     or not "".join(document.title).strip() or not "".join(document.headings).strip()
-                    or not document.metas.get("description") or not document.metas.get("viewport")):
+                    or document.heading_count != 1 or not document.metas.get("description") or not document.metas.get("viewport")):
                 raise GuideError(f"HTML検証に失敗: {filename}")
             indexable = document.metas.get("robots") == "index,follow"
             canonical = [site_url.rstrip("/") + "/" + filename] if indexable and site_url else []
