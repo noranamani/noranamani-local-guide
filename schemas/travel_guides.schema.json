@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "items"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "items": {
+      "type": "array",
+      "minItems": 0,
+      "maxItems": 12,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "review_status",
+          "title",
+          "summary",
+          "origin",
+          "last_reviewed_at",
+          "days",
+          "lodging_note",
+          "planning_notes"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{2,50}$"
+          },
+          "review_status": {
+            "enum": [
+              "preview",
+              "approved"
+            ]
+          },
+          "title": {
+            "type": "string",
+            "minLength": 15,
+            "maxLength": 120
+          },
+          "summary": {
+            "type": "string",
+            "minLength": 30,
+            "maxLength": 350
+          },
+          "origin": {
+            "type": "string",
+            "minLength": 4,
+            "maxLength": 90
+          },
+          "last_reviewed_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "days": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 3,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "title",
+                "stops"
+              ],
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "minLength": 4,
+                  "maxLength": 100
+                },
+                "stops": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 4,
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "name",
+                      "description",
+                      "official_url"
+                    ],
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "minLength": 3,
+                        "maxLength": 120
+                      },
+                      "description": {
+                        "type": "string",
+                        "minLength": 15,
+                        "maxLength": 330
+                      },
+                      "official_url": {
+                        "type": "string",
+                        "format": "uri"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "lodging_note": {
+            "type": "string",
+            "minLength": 30,
+            "maxLength": 350
+          },
+          "planning_notes": {
+            "type": "array",
+            "minItems": 3,
+            "maxItems": 8,
+            "items": {
+              "type": "string",
+              "minLength": 15,
+              "maxLength": 320
+            }
+          }
+        }
+      }
+    }
+  }
+}
