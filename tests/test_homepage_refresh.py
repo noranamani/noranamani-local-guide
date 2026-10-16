@@ -20,6 +20,17 @@ class HomepageRefreshTests(unittest.TestCase):
         self.assertNotIn("<image", HERO_SCENE)
         self.assertNotIn("<image", AWAJI_SCENE)
 
+    def test_compact_photo_heroes_keep_legible_titles(self):
+        # Avoid the original 500px+ above-the-fold banner, while allowing
+        # natural growth when text wraps at narrow widths or zoom levels.
+        self.assertIn("min-height: clamp(300px, 28vw, 355px)", STYLE)
+        self.assertIn("min-height: 360px", STYLE)
+        self.assertIn("min-height: clamp(215px, 23vw, 300px)", STYLE)
+        self.assertIn(".article-main .article-cover { min-height: 270px", STYLE)
+        self.assertNotIn("min-height: 515px", STYLE)
+        self.assertIn('url("harima-hero-photo.webp")', STYLE)
+        self.assertIn('url("awaji-photo.webp")', STYLE)
+
     def test_empty_home_does_not_invent_events_or_links(self):
         import tempfile
         with tempfile.TemporaryDirectory() as directory:
