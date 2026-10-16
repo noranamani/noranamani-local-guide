@@ -17,8 +17,8 @@ class HomepageRefreshTests(unittest.TestCase):
         self.assertIn(".home-hero", STYLE)
         self.assertIn(".browse-grid", STYLE)
         self.assertIn("@media (max-width: 600px)", STYLE)
-        self.assertNotIn("https://", HERO_SCENE)
-        self.assertNotIn("https://", AWAJI_SCENE)
+        self.assertNotIn("<image", HERO_SCENE)
+        self.assertNotIn("<image", AWAJI_SCENE)
 
     def test_empty_home_does_not_invent_events_or_links(self):
         import tempfile
