@@ -494,6 +494,11 @@ body { background: #f7f8f5; }
   .trip-card:hover, .trip-card:focus-within { transform: none; }
 }
 
+/* Keep image attribution clear of CTA buttons at tablet widths. */
+@media (min-width: 601px) and (max-width: 1024px) {
+  .home-hero { min-height: 340px; }
+}
+
 """
 
 
