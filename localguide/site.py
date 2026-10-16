@@ -80,7 +80,7 @@ ul { padding-left: 1.3rem; }
 .home-main { max-width: 1160px; padding-top: 1.3rem; }
 .home-hero { display: grid; grid-template-columns: minmax(0,1.08fr) minmax(0,.92fr); align-items: stretch; margin: 0 0 2.35rem; background: #e9f2e9; border: 1px solid #d3e3d4; border-radius: 28px; overflow: hidden; box-shadow: 0 14px 42px rgb(22 62 43 / 8%); }
 .home-hero__copy { padding: clamp(1.45rem,4.2vw,3.45rem); align-self: center; }
-.home-hero__copy h1 { margin: .65rem 0 1rem; font-size: clamp(2.15rem,4.8vw,3.65rem); line-height: 1.28; letter-spacing: .025em; }
+.home-hero__copy h1 { margin: .65rem 0 1rem; font-size: clamp(2rem,3.2vw,3.05rem); line-height: 1.28; letter-spacing: .025em; }
 .home-hero__copy p:not(.eyebrow) { max-width: 36rem; }
 .home-hero__scene { min-height: 370px; background: #d9efe9 url("harima-hero.svg") center center / cover no-repeat; }
 .home-hero__actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 1.5rem; }
