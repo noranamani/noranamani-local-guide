@@ -6,7 +6,7 @@
   "affiliate_publication_enabled": false,
   "approvals": {
     "travel_api_access_confirmed": false,
-    "local_guide_registered_as_affiliate_site": false,
+    "local_guide_registered_as_affiliate_site": true,
     "rakuten_webservice_data_terms_reviewed": false,
     "rakuten_official_credit_reviewed": false,
     "hosting_terms_reviewed": false

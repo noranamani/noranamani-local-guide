@@ -6,10 +6,59 @@ deliberately unavailable until site registration and compliance review.
 """
 from datetime import timedelta
 from html import escape
+import re
+from urllib.parse import parse_qs, urlsplit
 
 from .core import GuideError, parse_time, safe_url
 
 MAX_SEO_REVIEW_AGE = timedelta(days=90)
+
+
+def approved_affiliate_html(guide):
+    """Accept only an unaltered manually created Rakuten text-link anchor.
+
+    Text-link attributes remain byte-for-byte as submitted by the site owner.
+    Rakuten prohibits rewriting link attributes or extracting/shortening href.
+    Never execute, interpolate or reserialize arbitrary supplied HTML.
+    """
+    entry = guide.get("affiliate")
+    if entry is None:
+        return ""
+    if (entry.get("provider") != "rakuten_travel"
+            or entry.get("type") != "manually_generated_html"
+            or entry.get("site_registered") is not True
+            or entry.get("registered_site_url") != "https://harima-yorimichi.pages.dev/"):
+        raise GuideError("広告リンクの掲載先登録または発行元を確認できません")
+    original = entry.get("source_html")
+    if not isinstance(original, str):
+        raise GuideError("楽天が発行したHTMLソースがありません")
+    anchor = re.fullmatch(
+        r'<a href="(?P<href>https://[^"<>\s]+)" target="_blank" '
+        r'rel="nofollow sponsored noopener" style="word-wrap:break-word;">'
+        r'(?P<text>https://[^<>"]+)</a>',
+        original,
+    )
+    if anchor is None:
+        raise GuideError("楽天テキストリンクのHTMLソースに変更があります")
+    href, label = anchor.group("href"), anchor.group("text")
+    safe_url(href)
+    parts = urlsplit(href)
+    if parts.hostname != "hb.afl.rakuten.co.jp" or not parts.path.startswith("/hgc/"):
+        raise GuideError("楽天アフィリエイト発行URLを確認できません")
+    query = parse_qs(parts.query, keep_blank_values=True)
+    if set(query) != {"pc", "link_type", "ut"} or query.get("link_type") != ["text"]:
+        raise GuideError("楽天のテキストリンク用パラメータが不正です")
+    destination = entry.get("destination_url")
+    if not isinstance(destination, str):
+        raise GuideError("広告リンクの遷移先情報がありません")
+    safe_url(destination)
+    target = urlsplit(destination)
+    if target.hostname != "travel.rakuten.co.jp" or not target.path.startswith("/yado/"):
+        raise GuideError("楽天トラベルの宿泊施設一覧ではありません")
+    if query["pc"] != [destination] or label != destination or not query["ut"][0]:
+        raise GuideError("楽天が発行したリンク先・テキストと記録が一致しません")
+    return original
+
 
 
 def travel_filename(guide):
@@ -40,6 +89,7 @@ def reviewed_guides(raw, now):
                       *guide["planning_notes"]):
             if any(ch in value for ch in "<>\r\n"):
                 raise GuideError("旅行ガイドにHTML・改行を含めないでください")
+        approved_affiliate_html(guide)
         visible.append(guide)
     return visible
 
@@ -53,18 +103,27 @@ def search_eligible(guide, now):
 def guide_card(guide):
     heading = escape(guide["title"], quote=True)
     status = "記事確認中" if guide["review_status"] == "preview" else "確認済みのモデルコース"
+    promo = bool(approved_affiliate_html(guide))
+    notice = ("公式施設情報をもとに作成。個別宿泊施設の比較は準備中で、記事には広告・PRリンクを含みます。"
+              if promo else "公式施設情報をもとに作成。宿泊比較・広告リンクは準備中です。")
     return ('<article class="card"><span class="tag">' + escape(status) + '</span>'
             '<h3><a href="' + travel_filename(guide) + '">' + heading + '</a></h3>'
             '<p>' + escape(guide["summary"]) + '</p>'
-            '<p class="muted">公式施設情報をもとに作成。宿泊比較・広告リンクは準備中です。</p></article>')
+            '<p class="muted">' + escape(notice) + '</p></article>')
 
 
 def guide_body(guide):
-    status = ("公開前確認中のモデルコースです。宿泊施設の紹介と楽天トラベル広告は準備中です。"
+    affiliate_markup = approved_affiliate_html(guide)
+    status = ("公開前確認中のモデルコースです。個別宿泊施設の料金・定員は未確認です。"
+              if affiliate_markup and guide["review_status"] == "preview"
+              else "公開前確認中のモデルコースです。宿泊施設の紹介と楽天トラベル広告は準備中です。"
               if guide["review_status"] == "preview"
               else "訪問先の最新の営業日・料金・参加条件は各施設の公式案内で確認してください。")
+    ad_notice = ('<p class="ad-notice">広告・PR：この記事には楽天トラベルの'
+                 'アフィリエイトリンクを掲載しています。</p>' if affiliate_markup else '')
     parts = [
         '<section class="intro"><p class="eyebrow">播磨から出かける、家族旅行のアイデア</p>',
+        ad_notice,
         '<p>' + escape(guide["summary"]) + '</p>',
         '<p class="muted">' + escape(guide["origin"]) + '</p></section>',
         '<section class="notice"><h2>掲載状況</h2><p>' + escape(status) + '</p></section>',
@@ -82,11 +141,23 @@ def guide_body(guide):
                 '" rel="noopener noreferrer">公式サイトで最新情報を見る</a></p></article>',
             ])
         parts.append('</div></section>')
-    parts.extend([
-        '<section class="notice"><h2>宿泊・楽天トラベルの比較は準備中</h2>',
-        '<p>' + escape(guide["lodging_note"]) + '</p></section>',
-        '<section><h2>家族旅行の予約前チェック</h2><ul>',
-    ])
+    if affiliate_markup:
+        parts.extend([
+            '<section class="notice" aria-label="楽天トラベルの広告">',
+            '<h2>淡路島の宿泊施設を探す（広告・PR）</h2>',
+            '<p>' + escape(guide["lodging_note"]) + '</p>',
+            '<p>次のリンクは楽天トラベルの淡路島エリア宿泊施設一覧へ移動します。'
+            '特定の宿泊先の空室・料金・定員を保証するものではありません。</p>',
+            '<p class="affiliate-link">' + affiliate_markup + '</p>',
+            '<p class="muted">広告リンク経由の予約等により、サイト運営者に'
+            '成果報酬が発生する場合があります。</p></section>',
+        ])
+    else:
+        parts.extend([
+            '<section class="notice"><h2>宿泊・楽天トラベルの比較は準備中</h2>',
+            '<p>' + escape(guide["lodging_note"]) + '</p></section>',
+        ])
+    parts.append('<section><h2>家族旅行の予約前チェック</h2><ul>')
     for note in guide["planning_notes"]:
         parts.append('<li>' + escape(note) + '</li>')
     parts.extend([
