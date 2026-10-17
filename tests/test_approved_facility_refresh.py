@@ -23,6 +23,32 @@ class SafeScheduledFacilityRefreshTests(unittest.TestCase):
         self.root = Path(self.temp.name)
         for folder in ("config", "data", "schemas"):
             shutil.copytree(PROJECT_ROOT / folder, self.root / folder)
+        # Daily production snapshots advance beyond this test's fixed clock.
+        # Seed only the temporary workspace with a known previous-day success;
+        # never inherit the live daily quota, halt flag, or verification times.
+        previous = NOW - timedelta(days=1)
+        registry = read_json(self.root / "config/sources.json")
+        for source in registry["sources"]:
+            if source["id"] == SOURCE_ID:
+                source["checked_at"] = previous.isoformat()
+        atomic_json(self.root / "config/sources.json", registry)
+        places = read_json(self.root / "data/places.json")
+        for place in places["items"]:
+            place["last_verified_at"] = previous.isoformat()
+            for source in place["sources"]:
+                source["fetched_at"] = previous.isoformat()
+                source["last_checked_at"] = previous.isoformat()
+        atomic_json(self.root / "data/places.json", places)
+        atomic_json(self.root / "data/source_state.json", {
+            "schema_version": 1,
+            "sources": {SOURCE_ID: {
+                "attempt_day": previous.date().isoformat(), "attempts": 1,
+                "last_attempt_at": previous.isoformat(),
+                "last_success_at": previous.isoformat(),
+                "etag": '"fixture-v1"', "last_modified": None,
+                "last_error": None, "halted": False,
+            }},
+        })
         self.before_places = (self.root / "data/places.json").read_bytes()
         self.before_state = read_json(self.root / "data/source_state.json")
         self.calls = []
@@ -72,6 +98,16 @@ class SafeScheduledFacilityRefreshTests(unittest.TestCase):
         self.assertEqual(self.calls, [SOURCE_ID])
         self.assertEqual(state["etag"], '"test-v2"')
         self.assertEqual({p["last_verified_at"] for p in places}, {NOW.isoformat()})
+
+    def test_same_jst_day_skips_but_next_day_allows_one_request(self):
+        self.assertEqual(refresh_once(self.root, NOW, self.unchanged), "updated")
+        self.assertEqual(refresh_once(self.root, NOW + timedelta(minutes=1), self.unchanged), "skipped")
+        midnight = parse_time("2026-10-18T00:00:00+09:00")
+        self.assertEqual(refresh_once(self.root, midnight, self.unchanged), "updated")
+        self.assertEqual(self.calls, [SOURCE_ID, SOURCE_ID])
+        state = read_json(self.root / "data/source_state.json")["sources"][SOURCE_ID]
+        self.assertEqual(state["attempt_day"], "2026-10-18")
+        self.assertEqual(state["attempts"], 1)
 
     def test_failure_never_rewrites_facility_snapshot_but_counts_request(self):
         def unavailable(source, previous):
