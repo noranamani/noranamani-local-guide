@@ -14,6 +14,7 @@ APPROVED_HOSTS = frozenset({
     "kakogawa-mcc.com",
     "www.town.harima.lg.jp",
     "www.city.akashi.lg.jp",
+    "e-akashi.jp",  # Park operator linked from Akashi City's official guidance
 })
 FIELDS = frozenset({
     "id", "name", "municipality", "type",
