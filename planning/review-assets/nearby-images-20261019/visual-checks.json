@@ -1,0 +1,141 @@
+{
+  "browser": "155.0.4283.62",
+  "results": [
+    {
+      "width": 1440,
+      "viewport": 1440,
+      "document": 1440,
+      "columns": "346.656px 346.672px 346.656px",
+      "images": [
+        {
+          "src": "nearby-gongen-park.webp",
+          "loaded": true
+        },
+        {
+          "src": "nearby-hamanomiya-park.webp",
+          "loaded": true
+        },
+        {
+          "src": "nearby-mitoro-hill.webp",
+          "loaded": true
+        },
+        {
+          "src": "nearby-kakogawa-marine-center.webp",
+          "loaded": true
+        },
+        {
+          "src": "nearby-onaka-ruins-park.webp",
+          "loaded": true
+        },
+        {
+          "src": "nearby-kakurinji-park.webp",
+          "loaded": true
+        }
+      ],
+      "links": 6,
+      "keyboard": "passed"
+    },
+    {
+      "width": 768,
+      "viewport": 768,
+      "document": 768,
+      "columns": "343.281px 343.281px",
+      "images": [
+        {
+          "src": "nearby-gongen-park.webp",
+          "loaded": true
+        },
+        {
+          "src": "nearby-hamanomiya-park.webp",
+          "loaded": true
+        },
+        {
+          "src": "nearby-mitoro-hill.webp",
+          "loaded": true
+        },
+        {
+          "src": "nearby-kakogawa-marine-center.webp",
+          "loaded": true
+        },
+        {
+          "src": "nearby-onaka-ruins-park.webp",
+          "loaded": true
+        },
+        {
+          "src": "nearby-kakurinji-park.webp",
+          "loaded": true
+        }
+      ],
+      "links": 6,
+      "keyboard": "passed"
+    },
+    {
+      "width": 390,
+      "viewport": 390,
+      "document": 390,
+      "columns": "358px",
+      "images": [
+        {
+          "src": "nearby-gongen-park.webp",
+          "loaded": true
+        },
+        {
+          "src": "nearby-hamanomiya-park.webp",
+          "loaded": true
+        },
+        {
+          "src": "nearby-mitoro-hill.webp",
+          "loaded": true
+        },
+        {
+          "src": "nearby-kakogawa-marine-center.webp",
+          "loaded": true
+        },
+        {
+          "src": "nearby-onaka-ruins-park.webp",
+          "loaded": true
+        },
+        {
+          "src": "nearby-kakurinji-park.webp",
+          "loaded": true
+        }
+      ],
+      "links": 6,
+      "keyboard": "passed"
+    },
+    {
+      "width": 320,
+      "viewport": 320,
+      "document": 320,
+      "columns": "288px",
+      "images": [
+        {
+          "src": "nearby-gongen-park.webp",
+          "loaded": true
+        },
+        {
+          "src": "nearby-hamanomiya-park.webp",
+          "loaded": true
+        },
+        {
+          "src": "nearby-mitoro-hill.webp",
+          "loaded": true
+        },
+        {
+          "src": "nearby-kakogawa-marine-center.webp",
+          "loaded": true
+        },
+        {
+          "src": "nearby-onaka-ruins-park.webp",
+          "loaded": true
+        },
+        {
+          "src": "nearby-kakurinji-park.webp",
+          "loaded": true
+        }
+      ],
+      "links": 6,
+      "keyboard": "passed"
+    }
+  ]
+}

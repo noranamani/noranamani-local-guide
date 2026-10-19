@@ -1,0 +1,35 @@
+[
+  {
+    "page": "home",
+    "version": "13.5.0",
+    "fetchTime": "2026-10-19T05:54:25.887Z",
+    "mode": "Local HTTP; Lighthouse default mobile throttling; production performance unverified",
+    "performance": 0.8,
+    "accessibility": 1,
+    "bestPractices": 0.96,
+    "seo": 0.63,
+    "lcpMs": 5339.8935,
+    "cls": 0,
+    "remainingAuditIds": [
+      "errors-in-console",
+      "label-content-name-mismatch",
+      "is-crawlable"
+    ]
+  },
+  {
+    "page": "nearby",
+    "version": "13.5.0",
+    "fetchTime": "2026-10-19T05:51:57.923Z",
+    "mode": "Local HTTP; Lighthouse default mobile throttling; production performance unverified",
+    "performance": 0.83,
+    "accessibility": 1,
+    "bestPractices": 0.96,
+    "seo": 0.63,
+    "lcpMs": 4738.456,
+    "cls": 0,
+    "remainingAuditIds": [
+      "errors-in-console",
+      "is-crawlable"
+    ]
+  }
+]

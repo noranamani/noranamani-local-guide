@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "asset_type": "AI-generated conceptual illustration",
+  "notice": "すべてAI生成のイメージ画像で、実際の施設写真ではありません。描かれた建物・展示・遊具・景観の実在や設備内容を保証しません。",
+  "reviewed_on": "2026-10-19",
+  "images": [
+    {
+      "id": "hero",
+      "filename": "nearby-hero.webp",
+      "path": "localguide/assets/nearby-hero.webp",
+      "published_path": "nearby-hero.webp",
+      "alt": "近場のおでかけの雰囲気を表現したAI生成のイメージイラスト（実際の風景ではありません）",
+      "width": 1440,
+      "height": 810,
+      "bytes": 267404,
+      "sha256": "80c169383d6b34820bb1549baf75c072cdf90858563f503d7fdcacf1ca49e8c2"
+    },
+    {
+      "id": "gongen-park",
+      "filename": "nearby-gongen-park.webp",
+      "path": "localguide/assets/nearby-gongen-park.webp",
+      "published_path": "nearby-gongen-park.webp",
+      "alt": "大型遊具のある公園を表現したAI生成のイメージイラスト（実際の権現総合公園の写真ではありません）",
+      "width": 960,
+      "height": 540,
+      "bytes": 158946,
+      "sha256": "fd975e27ebf9e9419b7510acabfab7fb96f54d3b1e80c369b629714ef2bc703c"
+    },
+    {
+      "id": "mitoro-hill",
+      "filename": "nearby-mitoro-hill.webp",
+      "path": "localguide/assets/nearby-mitoro-hill.webp",
+      "published_path": "nearby-mitoro-hill.webp",
+      "alt": "温室と緑の広場を表現したAI生成のイメージイラスト（実際のみとろの丘の写真ではありません）",
+      "width": 960,
+      "height": 540,
+      "bytes": 141606,
+      "sha256": "6a599f0bfe7f0d6698fd33bf73a76b8f8ca1aa008a54813d2b47a32e3b945008"
+    },
+    {
+      "id": "hiokayama-park",
+      "filename": "nearby-hiokayama-park.webp",
+      "path": "localguide/assets/nearby-hiokayama-park.webp",
+      "published_path": "nearby-hiokayama-park.webp",
+      "alt": "緑の広場と散策路を表現したAI生成のイメージイラスト（実際の日岡山公園の写真ではありません）",
+      "width": 960,
+      "height": 540,
+      "bytes": 158626,
+      "sha256": "f710c22a346ac82bfe57fe1a35b9da04267dfc990b50e749ac4a4bfad1b15975"
+    },
+    {
+      "id": "hamanomiya-park",
+      "filename": "nearby-hamanomiya-park.webp",
+      "path": "localguide/assets/nearby-hamanomiya-park.webp",
+      "published_path": "nearby-hamanomiya-park.webp",
+      "alt": "芝生と木々のある公園を表現したAI生成のイメージイラスト（実際の浜の宮公園の写真ではありません）",
+      "width": 960,
+      "height": 540,
+      "bytes": 149902,
+      "sha256": "80b47fd3c320a23a2d0cf294b7c3f7a32a53523f139e27c79b5bbd83bb854378"
+    },
+    {
+      "id": "kakogawa-marine-center",
+      "filename": "nearby-kakogawa-marine-center.webp",
+      "path": "localguide/assets/nearby-kakogawa-marine-center.webp",
+      "published_path": "nearby-kakogawa-marine-center.webp",
+      "alt": "海辺の学びの施設を表現したAI生成のイメージイラスト（実際の加古川海洋文化センターの外観・設備ではありません）",
+      "width": 960,
+      "height": 540,
+      "bytes": 85046,
+      "sha256": "2eb6430db8456119e3312d729572734c130890f2bab88e3255b511d8c6702245"
+    },
+    {
+      "id": "onaka-ruins-park",
+      "filename": "nearby-onaka-ruins-park.webp",
+      "path": "localguide/assets/nearby-onaka-ruins-park.webp",
+      "published_path": "nearby-onaka-ruins-park.webp",
+      "alt": "復元された古代の住居と散策風景を表現したAI生成のイメージイラスト（実際の大中遺跡公園の写真ではありません）",
+      "width": 960,
+      "height": 540,
+      "bytes": 148914,
+      "sha256": "72889b9d53d38241b9d53cf65e8a6116769195611a12f0e03f5bb4e76d612677"
+    },
+    {
+      "id": "ishigatani-park",
+      "filename": "nearby-ishigatani-park.webp",
+      "path": "localguide/assets/nearby-ishigatani-park.webp",
+      "published_path": "nearby-ishigatani-park.webp",
+      "alt": "遊具と緑のある公園を表現したAI生成のイメージイラスト（実際の石ケ谷公園の写真ではありません）",
+      "width": 960,
+      "height": 540,
+      "bytes": 161842,
+      "sha256": "37969763d7a90b2ed311fb20cee88a65c90f36582b6ef4fd9a0ba1b02c469ea1"
+    },
+    {
+      "id": "kakurinji-park",
+      "filename": "nearby-kakurinji-park.webp",
+      "path": "localguide/assets/nearby-kakurinji-park.webp",
+      "published_path": "nearby-kakurinji-park.webp",
+      "alt": "公園の蒸気機関車と散策風景を表現したAI生成のイメージイラスト（実際の鶴林寺公園の写真ではありません）",
+      "width": 960,
+      "height": 540,
+      "bytes": 172516,
+      "sha256": "b3ac0db94d74fd91c207efe46532d4628bd6f07d8b75aaac9b77002028ab651c"
+    },
+    {
+      "id": "shikata-east-park",
+      "filename": "nearby-shikata-east-park.webp",
+      "path": "localguide/assets/nearby-shikata-east-park.webp",
+      "published_path": "nearby-shikata-east-park.webp",
+      "alt": "芝生広場でくつろぐ風景を表現したAI生成のイメージイラスト（実際の志方東公園の写真ではありません）",
+      "width": 960,
+      "height": 540,
+      "bytes": 147214,
+      "sha256": "ea0612e0f2473b676fefc7adf2c3946557b66d9bc508c60b3205f620b8262fd4"
+    }
+  ]
+}

@@ -1,13 +1,15 @@
 """No-network coverage of manually curated outing cards and static publication."""
 import copy
+import hashlib
 import json
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 from localguide.core import GuideError, parse_time
-from localguide.nearby_guides import nearby_cards, nearby_page_body, reviewed_nearby
-from localguide.site import create_files
+from localguide.nearby_guides import HOME_FEATURES, NEARBY_IMAGES, IMAGE_NOTICE, nearby_cards, nearby_image, nearby_page_body, nearby_preview_cards, reviewed_nearby
+from localguide.site import Document, PHOTO_ASSETS, create_files, load_photo_asset, validate_site
 
 ROOT = Path(__file__).resolve().parents[1]
 NOW = parse_time("2026-10-19T18:00:00+09:00")
@@ -87,6 +89,87 @@ class NearbyGuideTests(unittest.TestCase):
         self.assertLess(home.index('id="nearby-guide"'), home.index('id="local-spots"'))
         self.assertNotIn("sitemap.xml", files)
         self.assertEqual(files[".guide-manifest.json"].count('"events": 0'), 1)
+
+    def test_six_preview_links_resolve_to_reviewed_guidance(self):
+        items = reviewed_nearby(ROOT)
+        previews = nearby_preview_cards(items)
+        details = nearby_cards(items)
+        self.assertEqual(previews.count('class="card nearby-preview-card"'), 6)
+        self.assertEqual(previews.count('<img '), 6)
+        self.assertEqual(previews.count(IMAGE_NOTICE), 6)
+        for spot_id in HOME_FEATURES:
+            self.assertIn(f'href="nearby.html#{spot_id}"', previews)
+            self.assertIn(f'id="{spot_id}"', details)
+        malicious = copy.deepcopy(items)
+        malicious[0]["name"] = '<img src=x onerror=alert(1)>'
+        self.assertNotIn('<img src=x', nearby_preview_cards(malicious))
+
+    def test_local_photos_validate_and_missing_image_fails_site_validation(self):
+        files, _ = create_files(ROOT, NOW)
+        home = files['index.html']
+        self.assertEqual(home.count('loading="lazy" decoding="async"'), 6)
+        self.assertIn('画像に描かれた風景・設備の実在を保証するものではありません', home)
+        self.assertEqual(files['nearby.html'].count('<img '), 10)
+        self.assertEqual(files['nearby.html'].count(IMAGE_NOTICE), 10)
+        with tempfile.TemporaryDirectory() as temporary:
+            output = Path(temporary)
+            for name, content in files.items():
+                if isinstance(content, bytes):
+                    (output / name).write_bytes(content)
+                else:
+                    (output / name).write_text(content, encoding='utf-8')
+            validate_site(output)
+            missing = NEARBY_IMAGES['gongen-park'][0]
+            (output / missing).unlink()
+            manifest = json.loads((output / '.guide-manifest.json').read_text(encoding='utf-8'))
+            manifest['files'].remove(missing)
+            (output / '.guide-manifest.json').write_text(json.dumps(manifest), encoding='utf-8')
+            with self.assertRaises(GuideError):
+                validate_site(output)
+
+    def test_external_or_modified_image_markup_is_rejected(self):
+        markup = nearby_preview_cards(reviewed_nearby(ROOT))
+        first_image = markup[markup.index('<img'):markup.index('>', markup.index('<img')) + 1]
+        # A valid local image is accepted inside a figure.
+        document = Document()
+        document.feed('<figure>' + first_image + '</figure>')
+        self.assertFalse(document.errors)
+        for unsafe in (first_image.replace('src="nearby-gongen-park.webp"',
+                                         'src="https://unreviewed.example/photo.webp"'),
+                       first_image.replace('src="nearby-gongen-park.webp"', 'src="../nearby-gongen-park.webp"'),
+                       first_image.replace('width="960"', 'width="1"'),
+                       first_image.replace('alt="', 'alt="unreviewed '),
+                       first_image.replace('loading="lazy"', 'onerror="alert(1)"')):
+            document = Document()
+            document.feed('<figure>' + unsafe + '</figure>')
+            self.assertTrue(document.errors)
+
+    def test_asset_loader_rejects_unlisted_missing_and_invalid_webp(self):
+        with self.assertRaises(GuideError):
+            load_photo_asset('unreviewed.webp')
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            with patch('localguide.site.PHOTO_ASSET_ROOT', root):
+                with self.assertRaises(GuideError):
+                    load_photo_asset('nearby-hero.webp')
+                (root / 'nearby-hero.webp').write_bytes(b'not an image')
+                with self.assertRaises(GuideError):
+                    load_photo_asset('nearby-hero.webp')
+
+    def test_owner_manifest_matches_all_ten_registered_original_webps(self):
+        manifest = json.loads((ROOT / 'localguide/assets/nearby_image_manifest.json').read_text(encoding='utf-8'))
+        self.assertEqual(set(NEARBY_IMAGES), {'hero'} | {item['id'] for item in self.record['items']})
+        self.assertEqual(len(manifest['images']), 10)
+        for image in manifest['images']:
+            spec = NEARBY_IMAGES[image['id']]
+            self.assertEqual(spec, (image['filename'], image['alt'], image['width'], image['height']))
+            self.assertIn(image['filename'], PHOTO_ASSETS)
+            data = load_photo_asset(image['filename'])
+            self.assertEqual(hashlib.sha256(data).hexdigest(), image['sha256'])
+            self.assertEqual(len(data), image['bytes'])
+        hero = nearby_image('hero', hero=True)
+        self.assertIn('loading="eager" fetchpriority="high"', hero)
+        self.assertNotIn('loading="lazy"', hero)
 
 
 if __name__ == "__main__":

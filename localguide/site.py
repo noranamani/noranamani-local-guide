@@ -14,10 +14,10 @@ from .normalize import identifier
 from .page_places import qualified_places, sustained_listing
 from .validation import inspect_text, publishable, validate_data, validate_config
 from .travel_guides import reviewed_guides, travel_filename, guide_card, guide_body, search_eligible
-from .nearby_guides import reviewed_nearby, nearby_cards, nearby_page_body
+from .nearby_guides import NEARBY_IMAGES, reviewed_nearby, nearby_cards, nearby_page_body, nearby_preview_cards
 
 
-PHOTO_ASSETS = ("harima-hero-photo.webp", "awaji-photo.webp")
+PHOTO_ASSETS = ("harima-hero-photo.webp", "awaji-photo.webp", *(image[0] for image in NEARBY_IMAGES.values()))
 PHOTO_ASSET_ROOT = Path(__file__).resolve().parent / "assets"
 
 
@@ -114,7 +114,7 @@ ul { padding-left: 1.3rem; }
 .action-link--primary:hover { color: #fff; background: #095745; transform: translateY(-1px); }
 .action-link--secondary { background: #fffefb; border: 1px solid #b6d2c1; color: #125b4c; }
 .action-link--secondary:hover { background: #f3fcf5; transform: translateY(-1px); }
-.section-kicker { display: block; margin: 0 0 .2rem; color: #66816b; font-size: .81rem; font-weight: 850; letter-spacing: .13em; }
+.section-kicker { display: block; margin: 0 0 .2rem; color: #516e58; font-size: .81rem; font-weight: 850; letter-spacing: .13em; }
 .home-section { margin: 2.2rem 0 3.2rem; }
 .home-section__heading { display: flex; align-items: end; justify-content: space-between; flex-wrap: wrap; gap: .5rem 1rem; margin-bottom: 1.05rem; }
 .home-section__heading h2 { margin: 0; font-size: clamp(1.4rem,3.5vw,1.85rem); }
@@ -465,7 +465,7 @@ body { background: #f7f8f5; }
   .site-header__inner { flex-direction: column; align-items: stretch; gap: .7rem; }
   .site-header nav { justify-content: flex-start; }
   .site-header--compact .site-header__inner { flex-direction: row; justify-content: center; }
-  .site-header--compact nav { justify-content: center; }
+  .site-header--compact nav { justify-content: center; flex-shrink: 1; min-width: 0; }
   .site-header nav a { font-size: .91rem; }
   .site-footer__top { align-items: flex-start; flex-direction: column; }
   .home-trip-cards, .trip-list-grid { grid-template-columns: minmax(0,1fr); }
@@ -563,12 +563,34 @@ body { background: #f7f8f5; }
 .nearby-card h2 { font-size: 1.18rem; margin: 0 0 .45rem; }
 .nearby-card__official { font-weight: 800; overflow-wrap: anywhere; }
 .nearby-card__official:focus-visible { outline: 3px solid #a35f0b; outline-offset: 4px; }
-.nearby-preview-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-.nearby-preview-card { margin: 0; padding: .9rem 1rem; }
-.nearby-preview-card h3 { margin: .3rem 0; font-size: 1.03rem; }
-.nearby-preview-card p { margin: 0; font-size: .9rem; }
-@media (max-width: 680px) {
+.nearby-card { padding: 0; overflow: hidden; }
+.nearby-card__body { padding: 1.2rem; }
+.nearby-image { margin: 0; }
+.nearby-image__img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; background: #e8eee3; }
+.nearby-image figcaption { padding: .5rem .9rem; background: #f0f3eb; color: #465849; font-size: .73rem; line-height: 1.6; }
+.nearby-image--hero { margin: .5rem 0 1.5rem; border: 1px solid var(--border); border-radius: 20px; overflow: hidden; }
+.nearby-image--hero .nearby-image__img { max-height: 390px; }
+.nearby-image--hero figcaption { font-size: .8rem; }
+.nearby-preview-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem; }
+.nearby-preview-card { margin: 0; padding: 0; min-width: 0; border-radius: 18px; background: #fffefa; box-shadow: 0 4px 16px rgb(32 58 52 / 4%); }
+.nearby-preview-card__link { display: flex; flex-direction: column; height: 100%; color: var(--ink); text-decoration: none; border-radius: inherit; }
+.nearby-preview-card__link:hover { color: var(--ink); background: #f3f7ef; }
+.nearby-preview-card__link:focus-visible { outline: 3px solid #815716; outline-offset: 4px; }
+.nearby-preview-card .nearby-image__img { border-radius: 17px 17px 0 0; }
+.nearby-preview-card__body { display: flex; flex-direction: column; flex: 1; padding: 1.1rem 1.15rem 1.2rem; }
+.nearby-preview-card h3 { margin: .45rem 0 .6rem; font-size: 1.12rem; line-height: 1.55; }
+.nearby-preview-card p { margin: 0; }
+.nearby-preview-card__meta { color: #526354; font-size: .77rem; line-height: 1.6; }
+.nearby-preview-card__description { font-size: .9rem; line-height: 1.8; }
+.nearby-preview-card__more { display: block; margin-top: auto; padding-top: 1rem; color: #276348; font-size: .85rem; font-weight: 700; }
+.nearby-preview-note { margin: 1rem 0 0; color: #58685d; font-size: .82rem; }
+.nearby-card[id] { scroll-margin-top: 1.5rem; }
+@media (max-width: 1000px) {
+  .nearby-preview-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 600px) {
   .nearby-preview-grid { grid-template-columns: minmax(0, 1fr); }
+  .nearby-preview-card__body { padding: 1rem; }
 }
 """
 
@@ -634,10 +656,12 @@ def page(title, description, body, filename, site_url, indexable, nav, home=Fals
     about_link = ('<a href="about.html"'
                   + (' aria-current="page"' if filename == "about.html" else '')
                   + '>このサイトについて</a>')
+    hero_preload = ('<link rel="preload" as="image" href="harima-hero-photo.webp" fetchpriority="high">'
+                    if home else '')
     return f'''<!doctype html>
 <html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{escaped(title)} | {escaped(SITE_NAME)}</title><meta name="description" content="{escaped(description)}">
-<meta name="robots" content="{robots}">{canonical}<link rel="stylesheet" href="styles.css"></head>
+<meta name="robots" content="{robots}">{canonical}{hero_preload}<link rel="stylesheet" href="styles.css"></head>
 <body><a class="skip-link" href="#main-content">本文へ移動</a>
 <header class="{header_class}"><div class="site-header__inner">
 {header_identity}
@@ -842,22 +866,17 @@ def create_files(root, now):
                     '<div class="cards home-trip-cards">'
                     + "".join(guide_card(g, compact=True) for g in travel_guides) + '</div></section>')
     if nearby:
-        preview = "".join(
-            '<article class="card nearby-preview-card">'
-            f'<span class="tag">{escaped(item["municipality"])}</span>'
-            f'<h3>{escaped(item["name"])}</h3>'
-            f'<p>{escaped(item["type"])}</p>'
-            '</article>'
-            for item in nearby[:3]
-        )
+        preview = nearby_preview_cards(nearby)
         content += (
             '<section id="nearby-guide" class="home-section">'
             '<div class="home-section__heading"><div>'
             '<span class="section-kicker">NEARBY OUTINGS</span>'
             '<h2>近場のよりみちガイド</h2>'
-            '<p>公園や屋内施設など、公式案内を確認できる定番の行き先です。</p>'
+            '<p>公園でのんびり、親子で学びの時間。気軽なよりみち先を見つけてみませんか。</p>'
             f'</div><a class="home-section__more" href="nearby.html">{len(nearby)}件の候補を見る →</a></div>'
-            '<div class="cards nearby-preview-grid">' + preview + '</div></section>'
+            '<div class="cards nearby-preview-grid">' + preview + '</div>'
+            '<p class="nearby-preview-note">画像に描かれた風景・設備の実在を保証するものではありません。'
+            '営業日や利用条件は、各施設の公式案内をご確認ください。</p></section>'
         )
     if places:
         content += ('<section id="local-spots" class="home-section">'
@@ -970,7 +989,24 @@ class Document(HTMLParser):
                                  and values["alt"] == ""
                                  and values["title"] == ""
                                  and "section" in self.stack)
-            if not approved_ad_image:
+            spec = next((entry for entry in NEARBY_IMAGES.values() if entry[0] == image_url), None)
+            hero_image = image_url == "nearby-hero.webp"
+            image_attributes = {"class", "src", "alt", "width", "height", "loading", "decoding"}
+            if hero_image:
+                image_attributes.add("fetchpriority")
+            approved_nearby_image = (
+                spec is not None and image_url in PHOTO_ASSETS
+                and set(values) == image_attributes
+                and values["class"] == "nearby-image__img"
+                and values["alt"] == spec[1]
+                and values["width"] == str(spec[2]) and values["height"] == str(spec[3])
+                and values["loading"] == ("eager" if hero_image else "lazy")
+                and (not hero_image or values.get("fetchpriority") == "high")
+                and values["decoding"] == "async" and "figure" in self.stack
+            )
+            if approved_nearby_image:
+                self.links.append(image_url)
+            elif not approved_ad_image:
                 self.errors.append("許可されていない画像埋め込みがあります")
             else:
                 try:
