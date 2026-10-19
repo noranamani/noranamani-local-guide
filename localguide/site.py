@@ -14,6 +14,7 @@ from .normalize import identifier
 from .page_places import qualified_places, sustained_listing
 from .validation import inspect_text, publishable, validate_data, validate_config
 from .travel_guides import reviewed_guides, travel_filename, guide_card, guide_body, search_eligible
+from .nearby_guides import reviewed_nearby, nearby_cards, nearby_page_body
 
 
 PHOTO_ASSETS = ("harima-hero-photo.webp", "awaji-photo.webp")
@@ -556,6 +557,19 @@ body { background: #f7f8f5; }
   .home-trip-cards { grid-template-columns: minmax(0, 1fr); }
   .trip-card--compact .trip-card__visual { height: 165px; }
 }
+/* Evergreen local outings: compact cards, keyboard-accessible official links. */
+.nearby-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); }
+.nearby-card__meta { display: flex; flex-wrap: wrap; gap: .45rem; margin: 0 0 .55rem; }
+.nearby-card h2 { font-size: 1.18rem; margin: 0 0 .45rem; }
+.nearby-card__official { font-weight: 800; overflow-wrap: anywhere; }
+.nearby-card__official:focus-visible { outline: 3px solid #a35f0b; outline-offset: 4px; }
+.nearby-preview-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.nearby-preview-card { margin: 0; padding: .9rem 1rem; }
+.nearby-preview-card h3 { margin: .3rem 0; font-size: 1.03rem; }
+.nearby-preview-card p { margin: 0; font-size: .9rem; }
+@media (max-width: 680px) {
+  .nearby-preview-grid { grid-template-columns: minmax(0, 1fr); }
+}
 """
 
 
@@ -603,13 +617,14 @@ def page(title, description, body, filename, site_url, indexable, nav, home=Fals
     main_class = (' class="home-main"' if home else
                   ' class="article-main"' if filename.startswith("trip-") else
                   ' class="about-main"' if filename == "about.html" else
-                  ' class="listing-main"' if filename in {"travel.html", "places.html"} else "")
+                  ' class="listing-main"' if filename in {"travel.html", "places.html", "nearby.html"} else "")
     header_class = "site-header site-header--compact" if home else "site-header"
     header_identity = ('<div class="header-identity">'
                        f'<a class="brand" href="index.html">{escaped(SITE_NAME)}</a>'
                        f'<p class="tagline">{escaped(SITE_TAGLINE)}</p></div>') if not home else ""
     active_file = ("index.html" if home else
                    "travel.html" if filename == "travel.html" or filename.startswith("trip-") else
+                   "nearby.html" if filename == "nearby.html" else
                    "places.html" if filename == "places.html" else
                    "events.html" if filename == "events.html" or filename.startswith(("event-", "area-", "category-")) else
                    None)
@@ -754,6 +769,7 @@ def create_files(root, now):
     events.sort(key=lambda e: (active_occurrences(e, now)[0]["start_at"], e["event_id"]))
     places = [p for p in data["places"]["items"] if publishable(p, sources, now, stale)]
     travel_guides = reviewed_guides(data.get("travel_guides", {"schema_version": 1, "items": []}), now)
+    nearby = reviewed_nearby(root)
     state_path = root / "cache/page_state.json"
     page_state = read_json(state_path) if state_path.exists() else {}
     groups = {}
@@ -774,6 +790,7 @@ def create_files(root, now):
                                     page_state, now, rules["place_pages"]["activate_after_days"])
     nav = ('<a href="index.html">ホーム</a>'
            + ('<a href="events.html">開催情報一覧</a>' if events else '')
+           + ('<a href="nearby.html">近場のよりみち</a>' if nearby else '')
            + ('<a href="places.html">施設一覧</a>' if places else '')
            + ('<a href="travel.html">家族旅行</a>' if travel_guides else ''))
     files, indexable_files = {"styles.css": STYLE, "harima-hero.svg": HERO_SCENE,
@@ -797,7 +814,9 @@ def create_files(root, now):
     hero_actions = []
     if travel_guides:
         hero_actions.append('<a class="action-link action-link--primary" href="travel.html">家族旅行プランを見る →</a>')
-    if places:
+    if nearby:
+        hero_actions.append('<a class="action-link action-link--secondary" href="nearby.html">近場のよりみちを見る →</a>')
+    elif places:
         hero_actions.append('<a class="action-link action-link--secondary" href="places.html">近場の施設を探す →</a>')
     if events:
         hero_actions.append('<a class="action-link action-link--secondary" href="events.html">イベントを探す →</a>')
@@ -822,6 +841,24 @@ def create_files(root, now):
                     '</div><a class="home-section__more" href="travel.html">旅行プラン一覧 →</a></div>'
                     '<div class="cards home-trip-cards">'
                     + "".join(guide_card(g, compact=True) for g in travel_guides) + '</div></section>')
+    if nearby:
+        preview = "".join(
+            '<article class="card nearby-preview-card">'
+            f'<span class="tag">{escaped(item["municipality"])}</span>'
+            f'<h3>{escaped(item["name"])}</h3>'
+            f'<p>{escaped(item["type"])}</p>'
+            '</article>'
+            for item in nearby[:3]
+        )
+        content += (
+            '<section id="nearby-guide" class="home-section">'
+            '<div class="home-section__heading"><div>'
+            '<span class="section-kicker">NEARBY OUTINGS</span>'
+            '<h2>近場のよりみちガイド</h2>'
+            '<p>公園や屋内施設など、公式案内を確認できる定番の行き先です。</p>'
+            '</div><a class="home-section__more" href="nearby.html">5件の候補を見る →</a></div>'
+            '<div class="cards nearby-preview-grid">' + preview + '</div></section>'
+        )
     if places:
         content += ('<section id="local-spots" class="home-section">'
                     '<div class="home-section__heading"><div><span class="section-kicker">LOCAL SPOTS</span>'
@@ -870,6 +907,9 @@ def create_files(root, now):
         for guide in travel_guides:
             add(travel_filename(guide), guide["title"], guide["summary"], guide_body(guide),
                 search_eligible(guide, now), heading_in_body=(guide["id"] in {"awaji-family-one-night", "sanin-family-one-night"}))
+    if nearby:
+        nearby_reviewed_on = read_json(root / "data/nearby_spots.json")["reviewed_on"]
+        add("nearby.html", "近場のよりみちガイド", "加古川・明石・播磨町周辺の公園・屋内施設を独自編集で紹介。公式リンクで最新の利用条件を確認できます。", nearby_page_body(nearby, nearby_reviewed_on), False)
     if places:
         places_listing = ('<section class="listing-lead" aria-label="施設の探し方">'
                           '<span class="section-kicker">LOCAL SPOTS</span>'
