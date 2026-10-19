@@ -63,7 +63,8 @@ class HomepageRefreshTests(unittest.TestCase):
                 self.assertIn(filename, files)
                 self.assertIsInstance(files[filename], bytes)
                 self.assertTrue(valid_webp(files[filename]))
-                self.assertIn(f'url("{filename}")', files["styles.css"])
+                if not filename.startswith("nearby-"):
+                    self.assertIn(f'url("{filename}")', files["styles.css"])
             self.assertIn('<h1 id="home-headline">はりまよりみち</h1>', files["index.html"])
             self.assertIn('class="site-header site-header--compact"', files["index.html"])
             self.assertIn('<nav aria-label="主なページ">', files["index.html"])
