@@ -26,14 +26,15 @@ class NearbyGuideTests(unittest.TestCase):
                 json.dumps(data, ensure_ascii=False), encoding="utf-8")
             return reviewed_nearby(Path(temporary))
 
-    def test_reviewed_official_only_five_unique_candidates(self):
+    def test_reviewed_official_only_unique_curated_candidates(self):
         records = reviewed_nearby(ROOT)
-        self.assertEqual(len(records), 5)
-        self.assertEqual(len({record["id"] for record in records}), 5)
+        self.assertGreaterEqual(len(records), 9)
+        self.assertEqual(len({record["id"] for record in records}), len(records))
+        self.assertTrue({'gongen-park', 'mitoro-hill', 'kakurinji-park', 'shikata-east-park'} <= {record['id'] for record in records})
         self.assertTrue(all(record["official_url"].startswith("https://") for record in records))
         self.assertEqual({record["municipality"] for record in records},
                          {"加古川市", "明石市", "播磨町"})
-        self.assertEqual(len(self._validate(self.record)), 5)
+        self.assertEqual(len(self._validate(self.record)), len(records))
 
     def test_missing_data_is_empty_for_synthetic_workspaces(self):
         with tempfile.TemporaryDirectory() as temporary:
@@ -59,11 +60,13 @@ class NearbyGuideTests(unittest.TestCase):
 
     def test_cards_are_accessible_and_dont_invent_prices_or_visits(self):
         cards = nearby_cards(reviewed_nearby(ROOT))
-        self.assertEqual(cards.count('class="card nearby-card"'), 5)
-        self.assertEqual(cards.count('rel="noopener noreferrer"'), 5)
+        self.assertEqual(cards.count('class="card nearby-card"'), len(self.record['items']))
+        self.assertEqual(cards.count('rel="noopener noreferrer"'), len(self.record['items']))
         self.assertNotIn("<script", cards)
         self.assertIn("料金・営業時間・年齢条件：施設ごとに公式案内で確認", cards)
         self.assertIn("大中遺跡公園", cards)
+        self.assertIn("権現総合公園", cards)
+        self.assertIn("みとろの丘", cards)
         self.assertIn("加古川海洋文化センター", cards)
         self.assertIn("公式リンクの最終編集確認日", nearby_page_body(
             reviewed_nearby(ROOT), self.record["reviewed_on"]))
@@ -78,6 +81,7 @@ class NearbyGuideTests(unittest.TestCase):
         self.assertEqual(nearby_page.count("<h1"), 1)
         self.assertIn('href="nearby.html"', home)
         self.assertIn('id="nearby-guide"', home)
+        self.assertIn(f'{len(self.record["items"])}件の候補を見る', home)
         self.assertIn('href="nearby.html" aria-current="page"', nearby_page)
         self.assertLess(home.index('id="family-trip"'), home.index('id="nearby-guide"'))
         self.assertLess(home.index('id="nearby-guide"'), home.index('id="local-spots"'))
