@@ -51,7 +51,7 @@ def reviewed_nearby(root):
             value = record[field]
             if not isinstance(value, str) or not 1 <= len(value) <= 240:
                 raise GuideError("近場ガイドに不正な本文があります")
-            if any(ch in value for ch in "<>\\r\\n\\x00"):
+            if any(ch in value for ch in "<>\r\n\x00"):
                 raise GuideError("近場ガイドの本文にHTMLまたは改行を含みます")
         if not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", record["id"]):
             raise GuideError("近場ガイドIDが不正です")
