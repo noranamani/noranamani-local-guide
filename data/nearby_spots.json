@@ -4,6 +4,24 @@
   "reviewed_on": "2026-10-19",
   "items": [
     {
+      "id": "gongen-park",
+      "name": "権現総合公園",
+      "municipality": "加古川市",
+      "type": "大型遊具・外遊び",
+      "official_url": "https://www.city.kakogawa.lg.jp/soshikikarasagasu/kensetsubu/koenryokuchika/news/46090.html",
+      "idea": "大型の複合遊具と小さな子ども向け遊具があり、遊ぶ時間と自然散策を組み合わせやすい公園です。",
+      "before_you_go": "一般駐車場と高速道路側では利用できる時間や通行できる場所が異なります。公式案内をご確認ください。"
+    },
+    {
+      "id": "mitoro-hill",
+      "name": "みとろの丘（みとろフルーツパーク）",
+      "municipality": "加古川市",
+      "type": "自然体験・屋内外",
+      "official_url": "https://www.city.kakogawa.lg.jp/soshikikarasagasu/chiikishinkobu/mitorofurutsupaku/1415852687342.html",
+      "idea": "芝すべりや広場での外遊びに、植物を楽しめる屋内のグラスハウスを組み合わせられる場所です。",
+      "before_you_go": "グラスハウスや飲食店は園内と休業日が異なります。隣接する観光果樹園とは別施設なので混同しないでください。"
+    },
+    {
       "id": "hiokayama-park",
       "name": "日岡山公園",
       "municipality": "加古川市",
@@ -26,9 +44,9 @@
       "name": "加古川海洋文化センター",
       "municipality": "加古川市",
       "type": "屋内施設・学び",
-      "official_url": "https://kakogawa-mcc.com/facility/",
-      "idea": "海をテーマにした展示室や図書室を訪ねる屋内の候補です。",
-      "before_you_go": "展示・図書室の開室日と、屋外施設の利用状況は当日の公式情報を確認してください。"
+      "official_url": "https://www.city.kakogawa.lg.jp/shiseijoho/kakogawashinoshisetsu/kyoiku_bunkashisetsu/1416287804503.html",
+      "idea": "屋内のあそびひろばと図書室を組み合わせ、天候に左右されにくいお出かけ先にできます。",
+      "before_you_go": "展示室と図書室は休館日や臨時休室が異なることがあります。利用日を確認してください。"
     },
     {
       "id": "onaka-ruins-park",
@@ -44,9 +62,27 @@
       "name": "石ケ谷公園",
       "municipality": "明石市",
       "type": "公園・外遊び",
-      "official_url": "https://www.city.akashi.lg.jp/tosei/kouen_ka/shise/koho/oshirase/h24/ohanami.html",
+      "official_url": "https://e-akashi.jp/isi-park/",
       "idea": "大型遊具がある広場を中心に、外遊びを考えたい公園です。",
       "before_you_go": "公園と体育館などの付帯施設では、利用条件が異なる場合があります。"
+    },
+    {
+      "id": "kakurinji-park",
+      "name": "鶴林寺公園",
+      "municipality": "加古川市",
+      "type": "公園・歴史",
+      "official_url": "https://www.city.kakogawa.lg.jp/soshikikarasagasu/kensetsubu/koenryokuchika/toshikeikaku/park/45661.html",
+      "idea": "芝生広場で休憩したり、園内に保存された蒸気機関車を見に行ったりする寄り道に向いています。",
+      "before_you_go": "鶴林寺の拝観と公園の利用は別です。拝観料や行事日程などはそれぞれの公式案内をご確認ください。"
+    },
+    {
+      "id": "shikata-east-park",
+      "name": "志方東公園",
+      "municipality": "加古川市",
+      "type": "公園・ピクニック",
+      "official_url": "https://www.city.kakogawa.lg.jp/soshikikarasagasu/kensetsubu/koenryokuchika/toshikeikaku/park/45740.html",
+      "idea": "緑に囲まれた芝生広場でのピクニックや、体を動かす時間の候補になる公園です。",
+      "before_you_go": "テニスコートやグラウンドなどの運動施設は、利用条件・予約・料金を個別にお確かめください。"
     }
   ]
 }
