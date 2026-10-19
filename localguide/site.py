@@ -856,7 +856,7 @@ def create_files(root, now):
             '<span class="section-kicker">NEARBY OUTINGS</span>'
             '<h2>近場のよりみちガイド</h2>'
             '<p>公園や屋内施設など、公式案内を確認できる定番の行き先です。</p>'
-            '</div><a class="home-section__more" href="nearby.html">5件の候補を見る →</a></div>'
+            f'</div><a class="home-section__more" href="nearby.html">{len(nearby)}件の候補を見る →</a></div>'
             '<div class="cards nearby-preview-grid">' + preview + '</div></section>'
         )
     if places:
