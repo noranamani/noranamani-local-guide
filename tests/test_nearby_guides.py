@@ -2,12 +2,14 @@
 import copy
 import hashlib
 import json
+import shutil
+from datetime import timedelta
 import tempfile
 import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from localguide.core import GuideError, parse_time
+from localguide.core import GuideError, atomic_json, parse_time, read_json
 from localguide.nearby_guides import HOME_FEATURES, NEARBY_IMAGES, IMAGE_NOTICE, nearby_cards, nearby_image, nearby_page_body, nearby_preview_cards, reviewed_nearby
 from localguide.site import Document, PHOTO_ASSETS, create_files, load_photo_asset, validate_site
 
@@ -19,6 +21,39 @@ class NearbyGuideTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.record = json.loads((ROOT / "data/nearby_spots.json").read_text(encoding="utf-8"))
+
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temp.cleanup)
+        self.root = Path(self.temp.name)
+        for folder in ("config", "data", "schemas"):
+            shutil.copytree(ROOT / folder, self.root / folder)
+        # Keep integration coverage real, but never validate daily production
+        # snapshots against this test's fixed clock. All writes are temporary.
+        previous = (NOW - timedelta(days=1)).isoformat()
+        registry = read_json(self.root / "config/sources.json")
+        for source in registry["sources"]:
+            source["enabled"] = source["id"] == "akashi_open_data"
+            if source["enabled"]:
+                source["checked_at"] = previous
+        atomic_json(self.root / "config/sources.json", registry)
+        for name in ("events", "offers", "store_news"):
+            atomic_json(self.root / f"data/{name}.json", {"schema_version": 1, "items": []})
+        atomic_json(self.root / "data/source_state.json", {"schema_version": 1, "sources": {}})
+        atomic_json(self.root / "data/places.json", {"schema_version": 1, "items": [{
+            "place_id": "nearby-test-place", "name": "テスト専用の架空施設",
+            "municipality": "明石市", "address": None,
+            "indoor_outdoor": "unknown", "admission": None,
+            "official_url": "https://example.com/nearby-fixture",
+            "last_verified_at": previous,
+            "sources": [{
+                "source_id": "akashi_open_data",
+                "url": "https://example.com/nearby-fixture.csv",
+                "source_event_id": "fixture-place", "fetched_at": previous,
+                "last_checked_at": previous, "source_published_at": None,
+                "is_primary": True,
+            }],
+        }]})
 
     def _validate(self, data):
         with tempfile.TemporaryDirectory() as temporary:
@@ -74,7 +109,7 @@ class NearbyGuideTests(unittest.TestCase):
             reviewed_nearby(ROOT), self.record["reviewed_on"]))
 
     def test_generated_site_shows_new_guide_without_indexing_or_ad_changes(self):
-        files, _ = create_files(ROOT, NOW)
+        files, _ = create_files(self.root, NOW)
         self.assertIn("nearby.html", files)
         nearby_page = files["nearby.html"]
         home = files["index.html"]
@@ -89,6 +124,13 @@ class NearbyGuideTests(unittest.TestCase):
         self.assertLess(home.index('id="nearby-guide"'), home.index('id="local-spots"'))
         self.assertNotIn("sitemap.xml", files)
         self.assertEqual(files[".guide-manifest.json"].count('"events": 0'), 1)
+
+    def test_future_verification_is_still_rejected(self):
+        places = read_json(self.root / "data/places.json")
+        places["items"][0]["last_verified_at"] = (NOW + timedelta(days=1)).isoformat()
+        atomic_json(self.root / "data/places.json", places)
+        with self.assertRaisesRegex(GuideError, "確認日時が未来です"):
+            create_files(self.root, NOW)
 
     def test_six_preview_links_resolve_to_reviewed_guidance(self):
         items = reviewed_nearby(ROOT)
@@ -105,7 +147,7 @@ class NearbyGuideTests(unittest.TestCase):
         self.assertNotIn('<img src=x', nearby_preview_cards(malicious))
 
     def test_local_photos_validate_and_missing_image_fails_site_validation(self):
-        files, _ = create_files(ROOT, NOW)
+        files, _ = create_files(self.root, NOW)
         home = files['index.html']
         self.assertEqual(home.count('loading="lazy" decoding="async"'), 6)
         self.assertIn('画像に描かれた風景・設備の実在を保証するものではありません', home)
