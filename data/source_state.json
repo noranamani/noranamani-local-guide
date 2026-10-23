@@ -2,12 +2,12 @@
   "schema_version": 1,
   "sources": {
     "akashi_open_data": {
-      "attempt_day": "2026-10-20",
+      "attempt_day": "2026-10-23",
       "attempts": 1,
-      "last_attempt_at": "2026-10-20T10:58:14.905460+09:00",
+      "last_attempt_at": "2026-10-23T10:42:56.748387+09:00",
       "etag": "\"109e-65a4d527adb4c\"",
       "last_modified": "Mon, 31 Aug 2026 01:00:03 GMT",
-      "last_success_at": "2026-10-20T10:58:14.905460+09:00",
+      "last_success_at": "2026-10-23T10:42:56.748387+09:00",
       "last_error": null,
       "halted": false
     }
