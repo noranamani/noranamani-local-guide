@@ -27,12 +27,14 @@ class OfficialEventHubTests(unittest.TestCase):
 
     def test_only_human_reviewed_official_links(self):
         items, reviewed = official_event_links(ROOT)
-        self.assertEqual(len(items), 6)
+        self.assertEqual(len(items), 11)
         self.assertEqual(reviewed, "2026-10-27")
         self.assertTrue(all(item["url"].startswith("https://") for item in items))
         self.assertIn("姫路市 イベントカレンダー", {item["name"] for item in items})
         self.assertIn("明石観光協会 イベント一覧", {item["name"] for item in items})
-        self.assertEqual(len(self.validate_copy(self.data)[0]), 6)
+        self.assertIn("明石市立天文科学館 おしらせ・イベント", {item["name"] for item in items})
+        self.assertIn("加古川市 おでかけ情報イベントガイド", {item["name"] for item in items})
+        self.assertEqual(len(self.validate_copy(self.data)[0]), 11)
 
     def test_duplicate_unreviewed_and_malicious_links_rejected(self):
         bad = copy.deepcopy(self.data)
@@ -54,7 +56,7 @@ class OfficialEventHubTests(unittest.TestCase):
 
     def test_no_network_no_tracking_and_no_fake_events(self):
         body = event_finder_body(*official_event_links(ROOT))
-        self.assertEqual(body.count('class="card event-source-card"'), 6)
+        self.assertEqual(body.count('class="card event-source-card"'), 11)
         self.assertNotIn("<script", body)
         self.assertNotIn("<img", body)
         self.assertIn("当サイトがイベント日程や空席を自動取得・転載しているわけではありません", body)

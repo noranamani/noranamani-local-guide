@@ -13,6 +13,7 @@ OFFICIAL_HOSTS = frozenset({
     "www.city.himeji.lg.jp",
     "www.city.akashi.lg.jp",
     "www.yokoso-akashi.jp",
+    "www.am12.jp",  # 明石市立天文科学館の公式イベント案内
     "hyogo-akashipark.jp",
     "web.pref.hyogo.lg.jp",
 })
