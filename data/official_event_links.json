@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "policy": "manual_official_links_only",
+  "reviewed_on": "2026-10-27",
+  "items": [
+    {
+      "id": "kakogawa-child",
+      "name": "加古川市 子育てプラザのイベント情報",
+      "municipality": "加古川市",
+      "category": "親子・子育て",
+      "url": "https://www.city.kakogawa.lg.jp/soshikikarasagasu/kodomo/kodomoseisaku/kosodateshien/50291.html",
+      "summary": "駅南と東加古川の子育てプラザの公式案内。開催内容や申込方法はリンク先で確認してください。"
+    },
+    {
+      "id": "kakogawa-newsletter",
+      "name": "加古川市 広報かこがわ",
+      "municipality": "加古川市",
+      "category": "地域の行事",
+      "url": "https://www.city.kakogawa.lg.jp/soshikikarasagasu/kikakubu/kikakubukohoka/kouhou/kohokakogawasaishinban/1443424269108.html",
+      "summary": "市の広報から講座・イベント・子育て情報を探せます。"
+    },
+    {
+      "id": "akashi-tourism",
+      "name": "明石観光協会 イベント一覧",
+      "municipality": "明石市",
+      "category": "観光・おでかけ",
+      "url": "https://www.yokoso-akashi.jp/event/index.html",
+      "summary": "明石観光協会が案内する催しの一覧。参加条件などは個別の主催者情報も確認してください。"
+    },
+    {
+      "id": "akashi-park",
+      "name": "明石公園 公式イベント案内",
+      "municipality": "明石市",
+      "category": "公園・催し",
+      "url": "https://hyogo-akashipark.jp/eventslist/",
+      "summary": "明石公園の行事を公園運営者の公式ページで確認できます。"
+    },
+    {
+      "id": "himeji-calendar",
+      "name": "姫路市 イベントカレンダー",
+      "municipality": "姫路市",
+      "category": "子ども・体験",
+      "url": "https://www.city.himeji.lg.jp/module/event_search.php",
+      "summary": "『子ども・子育て』『体験・参加』などの条件でイベントを検索できます。"
+    },
+    {
+      "id": "hyogo-prefecture",
+      "name": "兵庫県 イベント情報",
+      "municipality": "兵庫県",
+      "category": "県内の行事",
+      "url": "https://web.pref.hyogo.lg.jp/cgi-bin/event_cal_multi/calendar.cgi?event_target=3&type=1",
+      "summary": "開催地域や対象者を選んで県内のイベントを探せます。"
+    }
+  ]
+}
