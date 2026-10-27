@@ -59,7 +59,15 @@ def official_event_links(root):
     return items, raw["reviewed_on"]
 
 
-def event_finder_body(links, reviewed_on):
+def event_finder_body(links, reviewed_on, curated_cards=""):
+    """Render verified local entries separately from outbound official directories."""
+    curated_section = (
+        '<section class="home-section" aria-label="個別の開催情報">'
+        '<h2>主催者公式で確認した開催情報</h2>'
+        '<p>開催日と会場を人手で確認し、期限内のものだけご案内しています。</p>'
+        '<div class="cards">' + curated_cards + '</div></section>'
+        if curated_cards else '<p class="muted">個別イベントの掲載は現在準備中です。下記の公式案内からお探しください。</p>'
+    )
     cards = []
     for item in links:
         name = escape(item["name"], quote=True)
@@ -74,7 +82,7 @@ def event_finder_body(links, reviewed_on):
             '公式イベント案内を確認する →</a></p></article>'
         )
     return (
-        '<section class="listing-lead" aria-label="公式イベントの探し方">'
+        curated_section + '<section class="listing-lead" aria-label="公式イベントの探し方">'
         '<span class="section-kicker">EVENT GUIDE</span>'
         '<p>地域の公式イベント案内をまとめました。リンク先で今後の開催情報を探せます。</p>'
         '<p class="listing-lead__disclaimer">当サイトがイベント日程や空席を自動取得・転載しているわけではありません。'
