@@ -641,7 +641,7 @@ def page(title, description, body, filename, site_url, indexable, nav, home=Fals
     main_class = (' class="home-main"' if home else
                   ' class="article-main"' if filename.startswith("trip-") else
                   ' class="about-main"' if filename == "about.html" else
-                  ' class="listing-main"' if filename in {"travel.html", "places.html", "nearby.html", "event-finder.html"} else "")
+                  ' class="listing-main"' if filename in {"travel.html", "places.html", "nearby.html", "official-events.html"} else "")
     header_class = "site-header site-header--compact" if home else "site-header"
     header_identity = ('<div class="header-identity">'
                        f'<a class="brand" href="index.html">{escaped(SITE_NAME)}</a>'
@@ -649,7 +649,7 @@ def page(title, description, body, filename, site_url, indexable, nav, home=Fals
     active_file = ("index.html" if home else
                    "travel.html" if filename == "travel.html" or filename.startswith("trip-") else
                    "nearby.html" if filename == "nearby.html" else
-                   "event-finder.html" if filename == "event-finder.html" else
+                   "official-events.html" if filename == "official-events.html" else
                    "places.html" if filename == "places.html" else
                    "events.html" if filename == "events.html" or filename.startswith(("event-", "area-", "category-")) else
                    None)
@@ -818,7 +818,7 @@ def create_files(root, now):
                                     qualified_places(places, rules["place_pages"]),
                                     page_state, now, rules["place_pages"]["activate_after_days"])
     nav = ('<a href="index.html">ホーム</a>'
-           + ('<a href="event-finder.html">イベントを探す</a>' if official_links else '')
+           + ('<a href="official-events.html">イベントを探す</a>' if official_links else '')
            + ('<a href="events.html">開催情報一覧</a>' if events else '')
            + ('<a href="nearby.html">近場のよりみち</a>' if nearby else '')
            + ('<a href="places.html">施設一覧</a>' if places else '')
@@ -838,7 +838,7 @@ def create_files(root, now):
         "はりまよりみちの運営案内、掲載情報の確認方法、広告・PR、プライバシーと外部サービスについてご案内します。",
         about_content(), False)
     if official_links:
-        add("event-finder.html", "公式イベント情報を探す",
+        add("official-events.html", "公式イベント情報を探す",
             "加古川・明石・姫路と兵庫県の公式イベント案内へのリンク集。日程・料金・参加条件は公式サイトで確認できます。",
             event_finder_body(official_links, official_reviewed_on,
                               curated_event_cards(curated)), False)
@@ -907,14 +907,14 @@ def create_files(root, now):
         content += ('<section id="local-events" class="home-section">'
                     '<div class="home-status"><h2>主催者公式で確認したイベント</h2>'
                     f'<p>手動確認済みの{len(curated)}件を掲載しています。変更や中止は必ず公式情報でご確認ください。</p>'
-                    '<p><a href="event-finder.html">開催情報と公式イベント案内を見る →</a></p>'
+                    '<p><a href="official-events.html">開催情報と公式イベント案内を見る →</a></p>'
                     '</div></section>')
     else:
         content += ('<section id="local-events" class="home-section">'
                     '<div class="home-status"><h2>イベント情報は準備中です</h2>'
                     '<p>現在、開催日時や会場を確認できるイベントは掲載していません。'
                     '公式情報と利用条件が確認できたものからご案内します。</p>'
-                    + ('<p><a href="event-finder.html">自治体などの公式イベント案内を探す →</a></p>'
+                    + ('<p><a href="official-events.html">自治体などの公式イベント案内を探す →</a></p>'
                        if official_links else '') + '</div></section>')
     if not events and not places and not travel_guides:
         content += ('<section class="notice"><h2>掲載準備中です</h2>'
