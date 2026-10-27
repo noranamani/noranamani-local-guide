@@ -64,7 +64,7 @@ class OfficialEventHubTests(unittest.TestCase):
         self.assertIn("official-events.html", files)
         official = files["official-events.html"]
         self.assertIn('content="noindex,follow"', official)
-        self.assertIn('<h1>公式イベント情報を探す</h1>', official)
+        self.assertIn('<h1>地域のイベント情報を探す</h1>', official)
         self.assertIn('href="official-events.html" aria-current="page"', official)
         self.assertIn('href="official-events.html"', files["index.html"])
         self.assertIn('href="about.html"', official)
