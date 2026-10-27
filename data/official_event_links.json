@@ -20,6 +20,14 @@
       "summary": "市の広報から講座・イベント・子育て情報を探せます。"
     },
     {
+      "id": "kakogawa-events",
+      "name": "加古川市 おでかけ情報イベントガイド",
+      "municipality": "加古川市",
+      "category": "市のイベント検索",
+      "url": "https://www.city.kakogawa.lg.jp/cgi-bin/recruit.php/7/list",
+      "summary": "加古川市公式のイベント一覧。開催日、対象年齢や申込の要否から探せます。"
+    },
+    {
       "id": "akashi-tourism",
       "name": "明石観光協会 イベント一覧",
       "municipality": "明石市",
@@ -36,12 +44,44 @@
       "summary": "明石公園の行事を公園運営者の公式ページで確認できます。"
     },
     {
+      "id": "akashi-astronomy",
+      "name": "明石市立天文科学館 おしらせ・イベント",
+      "municipality": "明石市",
+      "category": "宇宙・科学・親子",
+      "url": "https://www.am12.jp/topics/",
+      "summary": "プラネタリウム、特別展や子ども向けの科学イベントを紹介する施設公式ページです。"
+    },
+    {
       "id": "himeji-calendar",
       "name": "姫路市 イベントカレンダー",
       "municipality": "姫路市",
       "category": "子ども・体験",
       "url": "https://www.city.himeji.lg.jp/module/event_search.php",
       "summary": "『子ども・子育て』『体験・参加』などの条件でイベントを検索できます。"
+    },
+    {
+      "id": "himeji-science",
+      "name": "姫路科学館 講座と教室",
+      "municipality": "姫路市",
+      "category": "科学・工作・体験",
+      "url": "https://www.city.himeji.lg.jp/atom/kouza/index.html",
+      "summary": "小学生向けの工作教室や科学講座の日程、申込期間を確認できます。"
+    },
+    {
+      "id": "himeji-exhibit",
+      "name": "姫路科学館 特別展・企画展",
+      "municipality": "姫路市",
+      "category": "科学・展示",
+      "url": "https://www.city.himeji.lg.jp/atom/tokuten/index.html",
+      "summary": "科学作品展や季節の企画展示を確認できます。"
+    },
+    {
+      "id": "himeji-aquarium",
+      "name": "姫路市立水族館 募集・イベント",
+      "municipality": "姫路市",
+      "category": "生きもの・体験",
+      "url": "https://www.city.himeji.lg.jp/aqua/0000006930.html",
+      "summary": "水族館の体験企画や募集情報を確認できます。受付終了の企画もあるのでご注意ください。"
     },
     {
       "id": "hyogo-prefecture",
