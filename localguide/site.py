@@ -16,6 +16,7 @@ from .validation import inspect_text, publishable, validate_data, validate_confi
 from .travel_guides import reviewed_guides, travel_filename, guide_card, guide_body, search_eligible
 from .nearby_guides import NEARBY_IMAGES, reviewed_nearby, nearby_cards, nearby_page_body, nearby_preview_cards
 from .official_event_hub import official_event_links, event_finder_body
+from .curated_events import public_curated_events, curated_event_cards
 
 
 PHOTO_ASSETS = ("harima-hero-photo.webp", "awaji-photo.webp", *(image[0] for image in NEARBY_IMAGES.values()))
@@ -797,6 +798,7 @@ def create_files(root, now):
     travel_guides = reviewed_guides(data.get("travel_guides", {"schema_version": 1, "items": []}), now)
     nearby = reviewed_nearby(root)
     official_links, official_reviewed_on = official_event_links(root)
+    curated = public_curated_events(root, now, stale)
     state_path = root / "cache/page_state.json"
     page_state = read_json(state_path) if state_path.exists() else {}
     groups = {}
@@ -838,7 +840,8 @@ def create_files(root, now):
     if official_links:
         add("event-finder.html", "公式イベント情報を探す",
             "加古川・明石・姫路と兵庫県の公式イベント案内へのリンク集。日程・料金・参加条件は公式サイトで確認できます。",
-            event_finder_body(official_links, official_reviewed_on), False)
+            event_finder_body(official_links, official_reviewed_on,
+                              curated_event_cards(curated)), False)
 
     cards = "".join(event_content(e, sources, now) for e in events)
     place_cards = "".join(place_content(p, sources) for p in places)
@@ -900,6 +903,12 @@ def create_files(root, now):
                     '<div class="home-section__heading"><div><span class="section-kicker">EVENTS</span>'
                     '<h2>開催情報</h2></div><a class="home-section__more" href="events.html">一覧を見る →</a></div>'
                     '<div class="cards">' + cards + '</div></section>')
+    elif curated:
+        content += ('<section id="local-events" class="home-section">'
+                    '<div class="home-status"><h2>主催者公式で確認したイベント</h2>'
+                    f'<p>手動確認済みの{len(curated)}件を掲載しています。変更や中止は必ず公式情報でご確認ください。</p>'
+                    '<p><a href="event-finder.html">開催情報と公式イベント案内を見る →</a></p>'
+                    '</div></section>')
     else:
         content += ('<section id="local-events" class="home-section">'
                     '<div class="home-status"><h2>イベント情報は準備中です</h2>'
@@ -967,7 +976,7 @@ def create_files(root, now):
             files["robots.txt"] += "Sitemap: " + url.rstrip("/") + "/sitemap.xml\n"
     files["_headers"] = cloudflare_headers(not bool(indexable_files))
     files[".guide-manifest.json"] = json.dumps({"schema_version": 1, "generated_at": now.isoformat(),
-                                               "files": sorted(files), "events": len(events), "places": len(places),
+                                               "files": sorted(files), "events": len(events) + len(curated), "places": len(places),
                                                "travel_guides": len(travel_guides)}, ensure_ascii=False, indent=2) + "\n"
     return files, page_state
 
