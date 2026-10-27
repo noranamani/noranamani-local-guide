@@ -59,12 +59,12 @@ class OfficialEventHubTests(unittest.TestCase):
         self.assertNotIn("<img", body)
         self.assertIn("当サイトがイベント日程や空席を自動取得・転載しているわけではありません", body)
         files, _ = create_files(ROOT, now_jst())
-        self.assertIn("event-finder.html", files)
-        official = files["event-finder.html"]
+        self.assertIn("official-events.html", files)
+        official = files["official-events.html"]
         self.assertIn('content="noindex,follow"', official)
         self.assertIn('<h1>公式イベント情報を探す</h1>', official)
-        self.assertIn('href="event-finder.html" aria-current="page"', official)
-        self.assertIn('href="event-finder.html"', files["index.html"])
+        self.assertIn('href="official-events.html" aria-current="page"', official)
+        self.assertIn('href="official-events.html"', files["index.html"])
         self.assertIn('href="about.html"', official)
         self.assertEqual(files[".guide-manifest.json"].count('"events": 0'), 1)
         self.assertNotIn("sitemap.xml", files)
