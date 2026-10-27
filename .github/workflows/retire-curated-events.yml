@@ -1,0 +1,54 @@
+name: Retire stale owner-reviewed event listings (offline)
+
+on:
+  # UTC 15:20 = JST 00:20; away from the Akashi CSV refresh at 08:25.
+  schedule:
+    - cron: '20 15 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: harima-curated-event-lifecycle
+  cancel-in-progress: false
+
+jobs:
+  retire:
+    if: github.repository == 'noranamani/noranamani-local-guide' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout reviewed main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: true
+      - name: Configure Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install pinned project dependencies
+        run: python -m pip install -r requirements.txt
+      - name: Run offline regression suite
+        run: python -m unittest discover -s tests -q
+      - name: Expire only reviewed local records
+        run: python -m scripts.event_lifecycle --apply
+      - name: Verify fresh Cloudflare site generation
+        run: |
+          python -m scripts.cloudflare_build
+          python -m localguide validate --site
+      - name: Push only changed curated-event review states
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add -- data/curated_events.json
+          if git diff --cached --quiet; then
+            echo 'No event review states changed'
+          else
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git commit -m 'chore(events): retire expired or unverified manual listings'
+            # Never force push. Concurrent main updates fail safely.
+            git push origin HEAD:main
+          fi
