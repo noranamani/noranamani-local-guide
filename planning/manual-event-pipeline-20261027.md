@@ -3,7 +3,7 @@
 ## 対象と公開状態
 
 - [Issue #41](https://github.com/noranamani/noranamani-local-guide/issues/41)。**未許諾の民間RSS/HTML自動取得は行わない**。
-- 第1段階：`data/official_event_links.json` の公開元への通常リンク6件を `event-finder.html` に表示。確認日は2026-10-27。外部サイトを静的ビルド時に読むことはない。
+- 第1段階：`data/official_event_links.json` の公開元への通常リンク6件を `official-events.html` に表示。確認日は2026-10-27。外部サイトを静的ビルド時に読むことはない。
 - 第2段階：Googleアラート、地域メディアなどで人が見つけた**URLだけ**をローカル `cache/event_candidates.json` に登録。Git管理外・非公開、原文/画像/メール本文を保存しない。
 - 第3段階：確認済みイベントは `data/curated_events.json` に記録し、GitHub PRで掲載可否を承認したものだけ表示。毎日00:20 JST（GitHub Actionsの実行遅延あり）に開催終了・情報の鮮度切れをチェックし、必要なときだけ `review_state` を非公開状態に移行させてmainにpush。**実際の掲載内容の再確認・日時延長・自動取得はしない**。
 - 全ページ `noindex` のまま。検索登録の判断は別作業。楽天旅行記事、広告HTML、明石市CSV日次取得には変更しない。
@@ -62,4 +62,4 @@ python -m localguide validate --site
 
 ## 本番承認前の品質確認
 
-PRの `unittest` と `preview` が全成功し、PC 1440/768pxとスマホ390/320pxでトップ・`event-finder.html` のリンク・表示・横はみ出し・キーボード操作を確認する。新しい `event-finder.html` の `noindex` とサイト全体の `X-Robots-Tag: noindex`、楽天広告HTMLの不変を確認してから所有者承認によりマージする。
+PRの `unittest` と `preview` が全成功し、PC 1440/768pxとスマホ390/320pxでトップ・`official-events.html` のリンク・表示・横はみ出し・キーボード操作を確認する。新しい `official-events.html` の `noindex` とサイト全体の `X-Robots-Tag: noindex`、楽天広告HTMLの不変を確認してから所有者承認によりマージする。
