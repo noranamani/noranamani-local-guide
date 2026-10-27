@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "policy": "outbound_text_links_only",
+  "reviewed_on": "2026-10-27",
+  "items": [
+    {
+      "id": "kakogawa-note",
+      "name": "かこがわノート｜イベント記事",
+      "area": "加古川・高砂・播磨",
+      "category": "地域情報メディア",
+      "url": "https://kakogawa-note.com/category/event/",
+      "description": "地域メディアのイベント記事一覧です。開催日や参加条件は記事の掲載日と主催者の案内を確認してください。",
+      "link_policy_url": "https://kakogawa-note.com/link/"
+    },
+    {
+      "id": "abc-kakogawa",
+      "name": "ABCハウジング｜加古川住宅公園のイベント",
+      "area": "加古川市",
+      "category": "民間施設・体験イベント",
+      "url": "https://abc-housing.asahi.co.jp/kinki/campaign/kakogawa/",
+      "description": "加古川住宅公園の催しをご案内するページです。対象年齢、整理券、会員登録などの参加条件はリンク先で確認してください。",
+      "link_policy_url": "https://abc-housing.asahi.co.jp/infouse.html"
+    }
+  ]
+}

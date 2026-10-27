@@ -60,7 +60,7 @@ def official_event_links(root):
     return items, raw["reviewed_on"]
 
 
-def event_finder_body(links, reviewed_on, curated_cards=""):
+def event_finder_body(links, reviewed_on, curated_cards="", community_section=""):
     """Render verified local entries separately from outbound official directories."""
     curated_section = (
         '<section class="home-section" aria-label="個別の開催情報">'
@@ -90,5 +90,5 @@ def event_finder_body(links, reviewed_on, curated_cards=""):
         '日付・料金・対象・予約条件・中止は各主催者の最新の案内をご確認ください。</p>'
         f'<p class="muted">リンクの最終編集確認日：{escape(reviewed_on, quote=True)}</p>'
         '</section><div class="cards">'
-        + "".join(cards) + '</div>'
+        + "".join(cards) + '</div>' + community_section
     )
