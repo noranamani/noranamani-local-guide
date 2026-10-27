@@ -16,6 +16,7 @@ from .validation import inspect_text, publishable, validate_data, validate_confi
 from .travel_guides import reviewed_guides, travel_filename, guide_card, guide_body, search_eligible
 from .nearby_guides import NEARBY_IMAGES, reviewed_nearby, nearby_cards, nearby_page_body, nearby_preview_cards
 from .official_event_hub import official_event_links, event_finder_body
+from .community_event_sources import reviewed_community_event_sources, community_event_section
 from .curated_events import public_curated_events, curated_event_cards
 
 
@@ -798,6 +799,7 @@ def create_files(root, now):
     travel_guides = reviewed_guides(data.get("travel_guides", {"schema_version": 1, "items": []}), now)
     nearby = reviewed_nearby(root)
     official_links, official_reviewed_on = official_event_links(root)
+    community_links, community_reviewed_on = reviewed_community_event_sources(root)
     curated = public_curated_events(root, now, stale)
     state_path = root / "cache/page_state.json"
     page_state = read_json(state_path) if state_path.exists() else {}
@@ -838,10 +840,11 @@ def create_files(root, now):
         "はりまよりみちの運営案内、掲載情報の確認方法、広告・PR、プライバシーと外部サービスについてご案内します。",
         about_content(), False)
     if official_links:
-        add("official-events.html", "公式イベント情報を探す",
-            "加古川・明石・姫路と兵庫県の公式イベント案内へのリンク集。日程・料金・参加条件は公式サイトで確認できます。",
+        add("official-events.html", "地域のイベント情報を探す",
+            "播磨地域の自治体等の公式イベント案内と、独立した民間のイベント情報サイトを分けて紹介します。",
             event_finder_body(official_links, official_reviewed_on,
-                              curated_event_cards(curated)), False)
+                              curated_event_cards(curated),
+                              community_event_section(community_links, community_reviewed_on)), False)
 
     cards = "".join(event_content(e, sources, now) for e in events)
     place_cards = "".join(place_content(p, sources) for p in places)
