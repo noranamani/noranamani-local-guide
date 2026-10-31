@@ -14,13 +14,13 @@
           "source_id": "akashi_open_data",
           "url": "https://www.city.akashi.lg.jp/documents/29427/282031_tourism.csv",
           "source_event_id": "011-00001",
-          "fetched_at": "2026-10-30T11:45:22.085532+09:00",
-          "last_checked_at": "2026-10-30T11:45:22.085532+09:00",
+          "fetched_at": "2026-10-31T11:37:02.722657+09:00",
+          "last_checked_at": "2026-10-31T11:37:02.722657+09:00",
           "source_published_at": "2026-08-25",
           "is_primary": true
         }
       ],
-      "last_verified_at": "2026-10-30T11:45:22.085532+09:00"
+      "last_verified_at": "2026-10-31T11:37:02.722657+09:00"
     },
     {
       "place_id": "c678fa5065c72c29b390ff38",
@@ -35,13 +35,13 @@
           "source_id": "akashi_open_data",
           "url": "https://www.city.akashi.lg.jp/documents/29427/282031_tourism.csv",
           "source_event_id": "011-00002",
-          "fetched_at": "2026-10-30T11:45:22.085532+09:00",
-          "last_checked_at": "2026-10-30T11:45:22.085532+09:00",
+          "fetched_at": "2026-10-31T11:37:02.722657+09:00",
+          "last_checked_at": "2026-10-31T11:37:02.722657+09:00",
           "source_published_at": "2026-08-25",
           "is_primary": true
         }
       ],
-      "last_verified_at": "2026-10-30T11:45:22.085532+09:00"
+      "last_verified_at": "2026-10-31T11:37:02.722657+09:00"
     },
     {
       "place_id": "b16a45434bacfdbf98d459fa",
@@ -56,13 +56,13 @@
           "source_id": "akashi_open_data",
           "url": "https://www.city.akashi.lg.jp/documents/29427/282031_tourism.csv",
           "source_event_id": "011-00003",
-          "fetched_at": "2026-10-30T11:45:22.085532+09:00",
-          "last_checked_at": "2026-10-30T11:45:22.085532+09:00",
+          "fetched_at": "2026-10-31T11:37:02.722657+09:00",
+          "last_checked_at": "2026-10-31T11:37:02.722657+09:00",
           "source_published_at": "2026-08-25",
           "is_primary": true
         }
       ],
-      "last_verified_at": "2026-10-30T11:45:22.085532+09:00"
+      "last_verified_at": "2026-10-31T11:37:02.722657+09:00"
     },
     {
       "place_id": "241023c407475fea1f1bc463",
@@ -77,13 +77,13 @@
           "source_id": "akashi_open_data",
           "url": "https://www.city.akashi.lg.jp/documents/29427/282031_tourism.csv",
           "source_event_id": "011-00004",
-          "fetched_at": "2026-10-30T11:45:22.085532+09:00",
-          "last_checked_at": "2026-10-30T11:45:22.085532+09:00",
+          "fetched_at": "2026-10-31T11:37:02.722657+09:00",
+          "last_checked_at": "2026-10-31T11:37:02.722657+09:00",
           "source_published_at": "2026-08-25",
           "is_primary": true
         }
       ],
-      "last_verified_at": "2026-10-30T11:45:22.085532+09:00"
+      "last_verified_at": "2026-10-31T11:37:02.722657+09:00"
     }
   ]
 }
