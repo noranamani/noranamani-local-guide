@@ -9,6 +9,7 @@ on:
       - '.github/workflows/live-site-smoke.yml'
       - 'data/official_event_links.json'
       - 'data/nearby_spots.json'
+      - 'data/nearby_facility_links.json'
       - 'localguide/site.py'
   schedule:
     # JST 20:37, after the regular and backup facility update windows.
