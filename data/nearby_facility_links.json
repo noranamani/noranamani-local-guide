@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "policy": "manual_official_text_links_only",
+  "reviewed_on": "2026-11-16",
+  "items": [
+    {
+      "id": "himeji-science",
+      "name": "姫路科学館",
+      "municipality": "姫路市",
+      "kind": "科学展示・プラネタリウム",
+      "official_url": "https://www.city.himeji.lg.jp/atom/",
+      "idea": "科学の常設展示やプラネタリウムを楽しめる施設です。",
+      "before_you_go": "臨時休館・投影プログラム・料金・駐車場の案内は公式サイトを確認してください。"
+    },
+    {
+      "id": "himeji-aquarium",
+      "name": "姫路市立水族館",
+      "municipality": "姫路市",
+      "kind": "水族館・自然の学び",
+      "official_url": "https://www.city.himeji.lg.jp/aqua/",
+      "idea": "播磨の里地や里海の生きものについて学べる展示があります。",
+      "before_you_go": "開館日、展示・イベントの実施状況、料金とアクセスを公式案内で確認してください。"
+    },
+    {
+      "id": "himeji-zoo",
+      "name": "姫路市立動物園",
+      "municipality": "姫路市",
+      "kind": "動物園・屋外のおでかけ",
+      "official_url": "https://www.city.himeji.lg.jp/dobutuen/",
+      "idea": "姫路城に近い場所で動物たちの展示や園内の散策を楽しめます。",
+      "before_you_go": "動物園専用駐車場はありません。周辺の有料駐車場と当日の開園状況を確認してください。"
+    }
+  ]
+}
