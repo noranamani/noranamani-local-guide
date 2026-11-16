@@ -122,6 +122,14 @@
       "category": "広域観光情報",
       "url": "https://e-harima-tourism.jp/event/",
       "summary": "明石・加古川・高砂・稲美・播磨町をまたいで観光イベントを探せる案内です。主催者の情報もご確認ください。"
+    },
+    {
+      "id": "himeji-child-calendar",
+      "name": "姫路市 子ども・子育てイベント検索",
+      "municipality": "姫路市",
+      "category": "子ども・子育て／公式カレンダー",
+      "url": "https://www.city.himeji.lg.jp/event2/35curr_1.html",
+      "summary": "子ども・子育てに関する催しを公式カレンダーで確認できます。申込期間や対象年齢は行事ごとの原案内をご覧ください。"
     }
   ]
 }

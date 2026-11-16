@@ -7,6 +7,9 @@ on:
     # not trigger a loop; the independent daily schedule catches regressions.
     paths:
       - '.github/workflows/live-site-smoke.yml'
+      - 'data/official_event_links.json'
+      - 'data/nearby_spots.json'
+      - 'localguide/site.py'
   schedule:
     # JST 20:37, after the regular and backup facility update windows.
     - cron: '37 11 * * *'
