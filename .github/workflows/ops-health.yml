@@ -16,6 +16,7 @@ on:
     workflows:
       - 'Refresh approved Akashi facility CSV'
       - 'Retire stale owner-reviewed event listings (offline)'
+      - 'Verify published Harima Pages site'
     types: [completed]
 
 permissions:

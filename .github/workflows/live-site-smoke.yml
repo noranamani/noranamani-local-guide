@@ -1,0 +1,36 @@
+name: Verify published Harima Pages site
+
+on:
+  push:
+    branches: [main]
+    # The first merge runs this probe immediately. Subsequent data commits do
+    # not trigger a loop; the independent daily schedule catches regressions.
+    paths:
+      - '.github/workflows/live-site-smoke.yml'
+  schedule:
+    # JST 20:37, after the regular and backup facility update windows.
+    - cron: '37 11 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: harima-public-site-smoke
+  cancel-in-progress: true
+
+jobs:
+  verify-live:
+    if: github.repository == 'noranamani/noranamani-local-guide' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify actual HTTPS, titles, source links, and noindex on Cloudflare Pages
+        run: python -m scripts.live_site_probe
