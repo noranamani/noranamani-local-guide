@@ -26,8 +26,10 @@ class FamilyTravelEditorialTests(unittest.TestCase):
         Draft202012Validator.check_schema(schema)
         Draft202012Validator(schema, format_checker=FormatChecker()).validate(self.data)
         guides = reviewed_guides(self.data, NOW)
-        self.assertEqual(len(guides), 3)
+        self.assertEqual(len(guides), 2)
         self.assertEqual(guides[0]["review_status"], "preview")
+        current_guides = reviewed_guides(self.data, parse_time("2026-11-16T12:00:00+09:00"))
+        self.assertEqual(len(current_guides), 3)
         urls = [stop["official_url"] for day in self.guide["days"] for stop in day["stops"]]
         self.assertEqual(len(set(urls)), 3)
 
