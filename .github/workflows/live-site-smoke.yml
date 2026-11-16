@@ -32,5 +32,9 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Verify actual HTTPS, titles, source links, and noindex on Cloudflare Pages
+      - name: Generate and validate current expected files before public comparison
+        run: |
+          python -m scripts.cloudflare_build
+          python -m localguide validate --site
+      - name: Verify all published pages, internal links, styles and images
         run: python -m scripts.live_site_probe

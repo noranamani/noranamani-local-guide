@@ -1,93 +1,174 @@
-"""Read-only HTTPS checks against the public Cloudflare Pages deployment.
+"""Public Cloudflare Pages verification, covering every current HTML/CSS/image.
 
-No credentials, page modification, scraping of unrelated sites, or downloads.
-Run by GitHub Actions because local ChatGPT tooling may not reach pages.dev.
+Only this site's hostname is contacted. External source and ad links are
+checked offline, but never fetched.
 """
+import hashlib
+from html.parser import HTMLParser
+from pathlib import Path
 import re
 import sys
 import time
 from urllib.error import HTTPError, URLError
-from urllib.parse import urlsplit
+from urllib.parse import urljoin, urlsplit
 from urllib.request import Request, urlopen
+
+from localguide.core import read_json
 
 BASE = "https://harima-yorimichi.pages.dev"
 LIMIT_BYTES = 2 * 1024 * 1024
 PAGES = {
     "/": ("はりまよりみち",),
-    "/official-events.html": (
-        "地域のイベント情報を探す", "高砂市 イベントカレンダー",
-        "播磨町 イベントカレンダー", "稲美町 イベントカレンダー",
-    ),
+    "/official-events.html": ("地域のイベント情報を探す",
+                              "高砂市 イベントカレンダー",
+                              "播磨町 イベントカレンダー",
+                              "稲美町 イベントカレンダー"),
     "/travel.html": ("家族旅行", "trip-himeji-ako-family-one-night.html"),
     "/trip-himeji-ako-family-one-night.html": ("姫路と赤穂1泊2日",),
     "/places.html": ("明石市立天文科学館",),
 }
 ROBOTS = re.compile(r'<meta\s+name="robots"\s+content="noindex,follow"', re.I)
+MIME = {".html": "text/html", ".css": "text/css",
+        ".svg": "image/svg+xml", ".webp": "image/webp"}
+
+
+class References(HTMLParser):
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.links = []
+
+    def handle_starttag(self, tag, attrs):
+        values = dict(attrs)
+        if tag in ("a", "link") and values.get("href"):
+            self.links.append(values["href"])
+        if tag in ("img", "source") and values.get("src"):
+            self.links.append(values["src"])
+
+
+def inventory(root):
+    output = Path(root) / "docs"
+    files = read_json(output / ".guide-manifest.json").get("files")
+    if (not isinstance(files, list) or any(not isinstance(n, str) for n in files)
+            or len(set(files)) != len(files)):
+        raise ValueError("生成ファイル一覧が不正です")
+    if not {"index.html", "nearby.html", "places.html", "official-events.html",
+            "travel.html", "styles.css"} <= set(files):
+        raise ValueError("主要ページが生成されていません")
+    result = []
+    for name in sorted(files):
+        if name == "_headers":
+            continue
+        if not name or name.startswith(".") or Path(name).name != name or "\\" in name:
+            raise ValueError("生成ファイル名が安全でありません")
+        if Path(name).suffix in MIME:
+            path = output / name
+            if path.is_symlink() or not path.is_file():
+                raise ValueError("生成ファイルが存在しません")
+            result.append(name)
+    return result
+
+
+def url_path(name):
+    return "/" if name == "index.html" else "/" + name
 
 
 def evaluate(path, body, headers):
     errors = []
     if not ROBOTS.search(body):
-        errors.append("HTMLのnoindex指定がありません")
-    for value in PAGES[path]:
+        errors.append("noindex指定がありません")
+    for value in PAGES.get(path, ()):
         if value not in body:
-            errors.append("必要なコンテンツが見つかりません: " + value)
+            errors.append("主要な表示内容が不足: " + value)
     robot_header = headers.get("X-Robots-Tag") or headers.get("x-robots-tag")
     if robot_header and "noindex" not in robot_header.lower():
-        errors.append("HTTPのrobots指定が想定と異なります")
+        errors.append("HTTP robots指定が不正です")
+    return errors
+
+
+def local_reference_errors(route, html, expected):
+    parser = References()
+    parser.feed(html)
+    errors = []
+    for link in parser.links:
+        url = urlsplit(link)
+        if url.scheme in ("http", "https") and url.hostname != urlsplit(BASE).hostname:
+            continue
+        if url.scheme and url.scheme != "https":
+            errors.append("ローカルリンクの形式が不正")
+            continue
+        if url.netloc and url.hostname != urlsplit(BASE).hostname:
+            continue
+        if not url.path:
+            continue
+        path = urlsplit(urljoin(route, url.path)).path.lstrip("/") or "index.html"
+        if path not in expected:
+            errors.append("配信対象外の内部リンク: " + path)
     return errors
 
 
 def fetch(path):
-    url = BASE + path
-    request = Request(url, headers={
-        "User-Agent": "harima-yorimichi-live-smoke/1.0",
-        "Accept": "text/html",
-    })
+    request = Request(BASE + path, headers={
+        "User-Agent": "harima-yorimichi-live-smoke/2.0",
+        "Accept": "*/*", "Accept-Encoding": "identity"})
     with urlopen(request, timeout=20) as response:
         final = urlsplit(response.geturl())
         if final.scheme != "https" or final.hostname != urlsplit(BASE).hostname:
-            raise ValueError("未許可ドメインへのリダイレクトを検出")
+            raise ValueError("未許可ホストへのリダイレクト")
         if response.status != 200:
             raise ValueError("HTTP 200以外")
-        media_type = response.headers.get_content_type()
-        if media_type != "text/html":
-            raise ValueError("HTML以外のレスポンス")
-        content = response.read(LIMIT_BYTES + 1)
-        if len(content) > LIMIT_BYTES:
-            raise ValueError("HTMLがサイズ上限を超過")
-        return content.decode("utf-8"), dict(response.headers)
+        data = response.read(LIMIT_BYTES + 1)
+        if not data or len(data) > LIMIT_BYTES:
+            raise ValueError("配信ファイルのサイズ異常")
+        return data, dict(response.headers)
+
+
+def check(name, root, expected, loader=fetch):
+    route = url_path(name)
+    data, headers = loader(route)
+    mime = MIME[Path(name).suffix]
+    actual = (headers.get("Content-Type") or headers.get("content-type") or "").split(";")[0].strip().lower()
+    if actual != mime:
+        return ["Content-Type不一致: " + name + " (" + actual + ")"]
+    if mime == "text/html":
+        html = data.decode("utf-8")
+        return evaluate(route, html, headers) + local_reference_errors(route, html, expected)
+    if mime == "image/webp" and (data[:4] != b"RIFF" or data[8:12] != b"WEBP"):
+        return ["WebPの形式が不正: " + name]
+    local = (Path(root) / "docs" / name).read_bytes()
+    if hashlib.sha256(local).digest() != hashlib.sha256(data).digest():
+        return ["画像・CSSが生成物と一致しません: " + name]
+    return []
 
 
 def main():
-    remaining = set(PAGES)
-    last_failures = {}
-    # Pages deployment may lag behind the main commit. Retry only our own
-    # public pages and never touch the CSV acquisition rate limit.
-    for attempt in range(1, 5):
-        for path in sorted(remaining):
+    root = Path(__file__).resolve().parents[1]
+    names = inventory(root)
+    expected = set(names)
+    pending = set(names)
+    errors = {}
+    for attempt in range(4):
+        for name in sorted(pending):
             try:
-                html, headers = fetch(path)
-                errors = evaluate(path, html, headers)
+                problems = check(name, root, expected)
             except (HTTPError, URLError, TimeoutError, OSError, UnicodeError,
                     ValueError) as exc:
-                errors = ["HTTPS/HTTP取得に失敗: " + type(exc).__name__]
-            if errors:
-                last_failures[path] = errors
-                print("未確認:", path, " / ".join(errors), flush=True)
+                problems = ["取得・配信の検証失敗: " + type(exc).__name__]
+            if problems:
+                errors[name] = problems
+                print("未確認:", name, " / ".join(problems), flush=True)
             else:
-                print("OK:", path, "noindex・主要コンテンツ確認", flush=True)
-                last_failures.pop(path, None)
-                remaining.discard(path)
-        if not remaining:
-            print("公開ページ5件のHTTP・主要コンテンツ検証が完了しました", flush=True)
+                pending.discard(name)
+                errors.pop(name, None)
+                print("OK:", name, flush=True)
+        if not pending:
+            pages = sum(n.endswith(".html") for n in names)
+            print(f"全公開ファイルの検証成功: HTML {pages}件 / CSS・画像 {len(names)-pages}件"
+                  f" / 合計 {len(names)}件", flush=True)
             return 0
-        if attempt < 4:
+        if attempt < 3:
             time.sleep(8)
-    print("公開ページの検証に失敗しました。Cloudflare Pagesのデプロイ状況を確認してください。",
-          file=sys.stderr)
-    for path, errors in last_failures.items():
-        print(path, ": ", " / ".join(errors), file=sys.stderr)
+    for name, messages in errors.items():
+        print("FAIL:", name, " / ".join(messages), file=sys.stderr)
     return 1
 
 
