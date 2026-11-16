@@ -101,7 +101,7 @@ class HomepageRefreshTests(unittest.TestCase):
             self.assertLess(home.index('class="home-hero"'), home.index('id="family-trip"'))
             self.assertNotIn("気分にあわせて探す", home)
             self.assertNotIn('class="browse-grid"', home)
-            self.assertEqual(home.count('class="card trip-card trip-card--compact"'), 3)
+            self.assertEqual(home.count('class="card trip-card trip-card--compact"'), 2)
             self.assertIn("淡路島1泊2日", home)
             self.assertIn("山陰1泊2日", home)
             self.assertEqual(home.count("<h1"), 1)
