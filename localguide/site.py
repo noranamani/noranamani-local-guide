@@ -957,7 +957,7 @@ def create_files(root, now):
         add("travel.html", "加古川発・家族旅行プラン", "加古川から車で行ける1泊2日旅行のモデルコースと、宿泊予約前に確認したい条件のまとめです。", listing, travel_indexable)
         for guide in travel_guides:
             add(travel_filename(guide), guide["title"], guide["summary"], guide_body(guide),
-                search_eligible(guide, now), heading_in_body=(guide["id"] in {"awaji-family-one-night", "sanin-family-one-night"}))
+                search_eligible(guide, now), heading_in_body=True)
     if nearby:
         nearby_reviewed_on = read_json(root / "data/nearby_spots.json")["reviewed_on"]
         add("nearby.html", "近場のよりみちガイド", "加古川・明石・播磨町周辺の公園・屋内施設を独自編集で紹介。公式リンクで最新の利用条件を確認できます。", nearby_page_body(nearby, nearby_reviewed_on), False)
