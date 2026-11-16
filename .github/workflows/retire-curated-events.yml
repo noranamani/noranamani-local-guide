@@ -1,6 +1,12 @@
 name: Retire stale owner-reviewed event listings (offline)
 
 on:
+  # Real event-lifecycle smoke on safe workflow changes, without a cron wait.
+  # Event data bot commits are excluded by this narrow path.
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/retire-curated-events.yml'
   # UTC 15:20 = JST 00:20; away from the Akashi CSV refresh at 08:25.
   schedule:
     - cron: '20 15 * * *'
