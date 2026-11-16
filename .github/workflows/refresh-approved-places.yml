@@ -4,10 +4,14 @@ on:
   # UTC 23:25 = 08:25 JST; avoids the other sites' early morning jobs.
   schedule:
     - cron: '25 23 * * *'
+    # Backup at 17:17 JST if GitHub entirely missed the morning trigger.
+    # The gate checks ALL earlier refresh runs for this JST day, including failed ones.
+    - cron: '17 8 * * *'
   workflow_dispatch:
 
 permissions:
   contents: write
+  actions: read
 
 concurrency:
   group: harima-official-facility-refresh
@@ -34,13 +38,25 @@ jobs:
           python-version: '3.12'
       - name: Install pinned project dependencies
         run: python -m pip install -r requirements.txt
-      - name: Run offline regression tests before collecting
-        run: python -m unittest discover -s tests -q
+      - name: Avoid a second daily network request on backup schedule
+        id: backup
+        if: github.event_name == 'schedule' && github.event.schedule == '17 8 * * *'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+        run: python -m scripts.refresh_fallback_gate
+      - name: Run focused acquisition regression tests before collecting
+        if: steps.backup.outputs.proceed != 'false'
+        run: |
+          python -m unittest discover -s tests -p 'test_approved_facility_refresh.py' -q
+          python -m unittest discover -s tests -p 'test_pipeline.py' -q
       - name: Refresh one authorized CSV and validate preview in isolation
         id: refresh
+        if: steps.backup.outputs.proceed != 'false'
         run: python -m scripts.refresh_approved_places
       - name: Persist only validated facility data, or failed-request state
-        if: always() && steps.checkout.outcome == 'success'
+        if: always() && steps.checkout.outcome == 'success' && steps.backup.outputs.proceed != 'false'
         env:
           REFRESH_OUTCOME: ${{ steps.refresh.outcome }}
         shell: bash

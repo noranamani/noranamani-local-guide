@@ -211,6 +211,9 @@ class SafeScheduledFacilityRefreshTests(unittest.TestCase):
         path = PROJECT_ROOT / ".github/workflows/refresh-approved-places.yml"
         workflow = path.read_text(encoding="utf-8")
         self.assertIn("cron: '25 23 * * *'", workflow)
+        self.assertIn("cron: '17 8 * * *'", workflow)
+        self.assertIn("scripts.refresh_fallback_gate", workflow)
+        self.assertIn("steps.backup.outputs.proceed != 'false'", workflow)
         self.assertIn("workflow_dispatch:", workflow)
         self.assertIn("contents: write", workflow)
         self.assertIn("git add -- data/source_state.json", workflow)
