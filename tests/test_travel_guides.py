@@ -126,7 +126,7 @@ class FamilyTravelEditorialTests(unittest.TestCase):
         self.assertIn('<h1>' + sanin["title"] + '</h1>', content)
         self.assertIn('class="travel-booking-reference travel-booking-reference--picttext"', content)
         self.assertLess(content.index("広告・PR：この記事には"), content.index("1泊2日の訪問ルート"))
-        self.assertIn("2025年の家族旅行", content)
+        self.assertIn("2026年の家族旅行", content)
         self.assertIn("旅行記（記事確認中）", guide_card(sanin))
 
     def test_sanin_picttext_ad_rejects_rewrites_and_cross_property_tracking(self):
