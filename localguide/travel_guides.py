@@ -217,7 +217,7 @@ def guide_body(guide):
     affiliate_markup = approved_affiliate_html(guide)
     is_actual = guide.get("trip_basis") == "actual_trip"
     picttext = (guide.get("affiliate") or {}).get("type") == "manually_generated_picttext_html"
-    status = ("2026年の家族旅行で訪れた順番をもとにした記録です。最新の営業時間・料金は各公式案内をご確認ください。"
+    status = ("2025年の家族旅行で訪れた順番をもとにした記録です。最新の営業時間・料金は各公式案内をご確認ください。"
               if is_actual
               else "公開前確認中のモデルコースです。個別宿泊施設の料金・定員は未確認です."
               if affiliate_markup and guide["review_status"] == "preview"
