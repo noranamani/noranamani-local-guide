@@ -17,6 +17,9 @@ from localguide.core import read_json
 
 BASE = "https://harima-yorimichi.pages.dev"
 LIMIT_BYTES = 2 * 1024 * 1024
+# Cloudflare Pages may need a few minutes to build after a main merge.
+MAX_ATTEMPTS = 20
+RETRY_SECONDS = 12
 PAGES = {
     "/": ("はりまよりみち",),
     "/official-events.html": ("地域のイベント情報を探す",
@@ -148,7 +151,7 @@ def main():
     expected = set(names)
     pending = set(names)
     errors = {}
-    for attempt in range(4):
+    for attempt in range(MAX_ATTEMPTS):
         for name in sorted(pending):
             try:
                 problems = check(name, root, expected)
@@ -167,8 +170,9 @@ def main():
             print(f"全公開ファイルの検証成功: HTML {pages}件 / CSS・画像 {len(names)-pages}件"
                   f" / 合計 {len(names)}件", flush=True)
             return 0
-        if attempt < 3:
-            time.sleep(8)
+        if attempt < MAX_ATTEMPTS - 1:
+            print(f"Cloudflare反映確認を再試行 ({attempt + 1}/{MAX_ATTEMPTS})", flush=True)
+            time.sleep(RETRY_SECONDS)
     for name, messages in errors.items():
         print("FAIL:", name, " / ".join(messages), file=sys.stderr)
     return 1
