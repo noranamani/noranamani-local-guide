@@ -39,6 +39,18 @@ def _record_attempt_only(root, before, staging_state, message=FAILURE_MESSAGE):
     return True
 
 
+def _record_preflight_stop(root, before, reason):
+    """Persist one fail-closed policy status without consuming a request quota."""
+    changed = deepcopy(before)
+    previous = changed["sources"].get(SOURCE_ID, {}).copy()
+    if previous.get("last_error") == reason:
+        return False
+    previous["last_error"] = reason
+    changed["sources"][SOURCE_ID] = previous
+    atomic_json(root / "data/source_state.json", changed)
+    return True
+
+
 def refresh_once(root, now, fetcher=None, builder=build_for_cloudflare):
     """Return 'updated' or 'skipped', raise GuideError for a failed refresh.
 
@@ -56,15 +68,25 @@ def refresh_once(root, now, fetcher=None, builder=build_for_cloudflare):
         raise GuideError("自動更新は明石市の審査済み観光施設CSV1件だけに限定しています")
 
     source = enabled[0]
-    # An expired policy review or an access-denial halt must not be auto-renewed.
-    approved(source, now)
     previous_state = read_json(root / "data/source_state.json")
+    # A policy failure is recorded ONCE so the next successful Pages build can
+    # omit expired records. Never pretend it was a network request/success.
+    try:
+        approved(source, now)
+    except GuideError:
+        _record_preflight_stop(
+            root, previous_state, "情報源の利用条件を再審査してください。取得は停止中です。"
+        )
+        raise
     previous = previous_state["sources"].get(SOURCE_ID, {})
     if previous.get("halted"):
         raise GuideError("アクセス停止中です。取得再開には情報源の手動再審査が必要です")
     if (previous.get("attempt_day") == now.date().isoformat()
             and previous.get("attempts", 0) >= 1):
-        return "skipped"
+        if previous.get("last_success_at") and (
+                parse_time(previous["last_success_at"]).date() == now.date()):
+            return "skipped"
+        raise GuideError("本日は取得試行済みで失敗しました。再取得せず次の運用日に確認します")
 
     with tempfile.TemporaryDirectory(prefix="harima-verified-places-") as directory:
         staged = Path(directory)

@@ -327,6 +327,19 @@ class ValidationTests(Workspace):
         with self.assertRaises(GuideError):
             validate_data(self.root, NOW)
 
+    def test_stale_review_allows_offline_validation_but_never_publication(self):
+        from localguide.site import create_files
+        future = NOW + timedelta(days=31)
+        # Structural/license checks remain in force, but the offline renderer
+        # can safely exclude old source data without acquiring anything.
+        validate_data(self.root, future)
+        files, _ = create_files(self.root, future)
+        self.assertNotIn("event-fixture", files["index.html"])
+        self.assertIn('content="noindex,follow"', files["index.html"])
+        self.assertIn("X-Robots-Tag: noindex", files["_headers"])
+        with self.assertRaisesRegex(GuideError, "30日以内"):
+            approved(fixture_source(), future)
+
     def test_thin_page_threshold_cannot_be_lowered(self):
         rules = read_json(self.root / "config/page_rules.json")
         rules["list_pages"]["min_active_items"] = 1

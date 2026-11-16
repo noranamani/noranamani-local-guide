@@ -72,7 +72,10 @@ def validate_config(root, now):
             raise GuideError("enabledは真偽値で指定してください")
         safe_url(source["url"])
         if source["enabled"]:
-            approved(source, now)
+            # Static validation checks license/robots/structure but does not require
+            # the review date to be fresh. Only actual acquisition and publication
+            # use the full 30-day gate; stale records are filtered by publishable().
+            approved(source, now, require_current_review=False)
     return areas, categories, rules, config
 
 

@@ -13,7 +13,7 @@ USER_AGENT = "noranamani-local-guide/0.1"
 MAX_BYTES = 2 * 1024 * 1024
 
 
-def approved(source, now):
+def approved(source, now, *, require_current_review=True):
     if not source.get("enabled"):
         raise GuideError("無効な情報源です")
     for key in ("robots_review_status", "terms_review_status", "reuse_rights_status"):
@@ -26,7 +26,9 @@ def approved(source, now):
     if source.get("content_scope") != "factual_metadata_only" or source.get("privacy_review_status") != "allowed":
         raise GuideError("事実列の利用範囲と個人情報除外の審査が必要です")
     checked = parse_time(source.get("checked_at"))
-    if checked > now or now - checked > timedelta(days=30):
+    if checked > now:
+        raise GuideError("情報源の審査日時が未来です")
+    if require_current_review and now - checked > timedelta(days=30):
         raise GuideError("情報源の審査は30日以内の再確認が必要です")
     if source.get("adapter") not in ("event_csv", "places_csv") or not isinstance(source.get("field_map"), dict):
         raise GuideError("対応する審査済みCSVマッピングがありません")
