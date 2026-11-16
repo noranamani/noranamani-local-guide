@@ -79,7 +79,7 @@ class CommunityEventLinksTests(unittest.TestCase):
             files, _ = create_files(ROOT, now_jst())
         event_html = files["official-events.html"]
         self.assertIn("<h1>地域のイベント情報を探す</h1>", event_html)
-        self.assertEqual(event_html.count('class="card event-source-card"'), 15)
+        self.assertEqual(event_html.count('class="card event-source-card"'), 16)
         self.assertEqual(event_html.count('class="card community-event-source-card"'), 2)
         self.assertIn("地域の民間イベント情報サイト", event_html)
         self.assertIn('content="noindex,follow"', event_html)
