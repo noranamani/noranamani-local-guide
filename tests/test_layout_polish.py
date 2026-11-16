@@ -67,8 +67,12 @@ class LayoutPolishTests(unittest.TestCase):
                 full = guide_card(guide)
                 self.assertIn('class="card trip-card trip-card--compact"', compact)
                 self.assertIn('aria-label="' + guide["title"] + 'を読む"', compact)
-                self.assertIn("広告・PRリンクあり", compact)
-                self.assertIn("広告・PRリンク", full)
+                if guide.get("affiliate"):
+                    self.assertIn("広告・PRリンクあり", compact)
+                    self.assertIn("広告・PRリンク", full)
+                else:
+                    self.assertIn("公式情報の確認はこちら", compact)
+                    self.assertNotIn("広告・PRリンクあり", compact)
                 self.assertIn(guide["summary"], full)
                 self.assertEqual(compact.count("<a "), 1)
                 self.assertNotIn("<img", compact)
