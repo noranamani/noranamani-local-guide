@@ -1,0 +1,86 @@
+name: Audit local-guide automation health
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ops-health.yml'
+      - 'scripts/ops_health.py'
+      - 'data/source_state.json'
+      - 'config/sources.json'
+  schedule:
+    # JST 22:47, after the morning and backup acquisition windows.
+    - cron: '47 13 * * *'
+  workflow_dispatch:
+  workflow_run:
+    workflows:
+      - 'Refresh approved Akashi facility CSV'
+      - 'Retire stale owner-reviewed event listings (offline)'
+    types: [completed]
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: harima-operations-issue-audit
+  cancel-in-progress: false
+
+jobs:
+  audit:
+    if: >-
+      github.repository == 'noranamani/noranamani-local-guide' &&
+      (github.event_name != 'workflow_run' ||
+       (github.event.workflow_run.head_repository.full_name == 'noranamani/noranamani-local-guide' &&
+        github.event.workflow_run.head_branch == 'main'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Evaluate last successful source refresh and policy deadline
+        id: health
+        env:
+          RELATED_CONCLUSION: ${{ github.event.workflow_run.conclusion }}
+        run: python -m scripts.ops_health
+      - name: Create one deduplicated operations issue if an action is required
+        if: steps.health.outputs.alert == 'true'
+        uses: actions/github-script@v7
+        env:
+          HEALTH_CODES: ${{ steps.health.outputs.codes }}
+          RELATED_RUN_URL: ${{ github.event.workflow_run.html_url }}
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const {owner, repo} = context.repo;
+            const title = '【はりまよりみち】自動更新の要確認';
+            const open = await github.paginate(github.rest.issues.listForRepo,
+              {owner, repo, state: 'open', per_page: 100});
+            if (open.some(x => !x.pull_request && x.title === title)) {
+              core.info('An operations issue is already open; no duplicate created.');
+              return;
+            }
+            const reason = process.env.HEALTH_CODES || 'unknown';
+            const runUrl = process.env.RELATED_RUN_URL ||
+              `https://github.com/${owner}/${repo}/actions`;
+            await github.rest.issues.create({
+              owner, repo, title,
+              body: [
+                '自動診断が更新停止・データ鮮度・情報源審査期限のいずれかを検出しました。',
+                '',
+                '- 検出コード: `' + reason + '`',
+                '- 関連する実行: ' + runUrl,
+                '- 確認先: data/source_state.json、config/sources.json、Actionsの各実行ログ',
+                '',
+                '原則: 同じ日本時間の日付で公式CSVへのリクエストは最大1回。',
+                '許諾・robots・アクセス拒否の停止は人手の確認なしに解除しない。',
+                '既存の施設データを偽の最終確認日時で更新しない。',
+                '',
+                '対応・確認が済むまでこのIssueを開いたままにしてください。'
+              ].join('\n')
+            });

@@ -124,7 +124,8 @@ class SafeScheduledFacilityRefreshTests(unittest.TestCase):
         self.assertEqual(state["attempt_day"], NOW.date().isoformat())
         self.assertIsNotNone(state["last_error"])
         self.assertFalse(state["halted"])
-        self.assertEqual(refresh_once(self.root, NOW, self.unchanged), "skipped")
+        with self.assertRaisesRegex(GuideError, "取得試行済み"):
+            refresh_once(self.root, NOW, self.unchanged)
         self.assertEqual(self.calls, [SOURCE_ID])
 
     def test_http_access_denial_persists_halt_and_prevents_next_day_call(self):
@@ -191,10 +192,28 @@ class SafeScheduledFacilityRefreshTests(unittest.TestCase):
         self.assertEqual(self.calls, [])
         self.assertEqual((self.root / "data/places.json").read_bytes(), self.before_places)
 
+    def test_expired_source_reports_preflight_stop_without_extra_network(self):
+        future = NOW + timedelta(days=33)
+        with self.assertRaisesRegex(GuideError, "30日以内"):
+            refresh_once(self.root, future, self.unchanged)
+        self.assertEqual(self.calls, [])
+        state = read_json(self.root / "data/source_state.json")["sources"][SOURCE_ID]
+        self.assertEqual(state["last_success_at"],
+                         self.before_state["sources"][SOURCE_ID]["last_success_at"])
+        self.assertEqual(state["attempt_day"], self.before_state["sources"][SOURCE_ID]["attempt_day"])
+        self.assertIn("再審査", state["last_error"])
+        first = (self.root / "data/source_state.json").read_bytes()
+        with self.assertRaises(GuideError):
+            refresh_once(self.root, future, self.unchanged)
+        self.assertEqual(first, (self.root / "data/source_state.json").read_bytes())
+
     def test_workflow_only_commits_allowlisted_files_and_limits_schedule(self):
         path = PROJECT_ROOT / ".github/workflows/refresh-approved-places.yml"
         workflow = path.read_text(encoding="utf-8")
         self.assertIn("cron: '25 23 * * *'", workflow)
+        self.assertIn("cron: '17 8 * * *'", workflow)
+        self.assertIn("scripts.refresh_fallback_gate", workflow)
+        self.assertIn("steps.backup.outputs.proceed != 'false'", workflow)
         self.assertIn("workflow_dispatch:", workflow)
         self.assertIn("contents: write", workflow)
         self.assertIn("git add -- data/source_state.json", workflow)
