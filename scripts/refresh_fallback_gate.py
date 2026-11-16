@@ -1,8 +1,6 @@
 """Fail-closed guard for the second JST daily schedule; never call the CSV here."""
 import json
 import os
-from datetime import timedelta
-from pathlib import Path
 from urllib.request import Request, urlopen
 
 from localguide.core import GuideError, now_jst, parse_time

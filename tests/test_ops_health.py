@@ -49,6 +49,12 @@ class OperationsHealthTests(unittest.TestCase):
         self.config["sources"][0]["checked_at"] = "invalid"
         self.assertIn("source_review_invalid", assess(self.now, self.config, self.state))
 
+    def test_missing_or_corrupted_state_is_not_reported_healthy(self):
+        self.assertIn("never_succeeded",
+                      assess(self.now, self.config, {"sources": {}}))
+        self.assertIn("state_invalid",
+                      assess(self.now, self.config, {"sources": []}))
+
     def test_future_timestamps_cannot_hide_outages(self):
         self.state["sources"]["akashi_open_data"]["last_success_at"] = (
             self.now + timedelta(minutes=1)).isoformat()

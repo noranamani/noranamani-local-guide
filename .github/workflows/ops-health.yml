@@ -1,6 +1,13 @@
 name: Audit local-guide automation health
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ops-health.yml'
+      - 'scripts/ops_health.py'
+      - 'data/source_state.json'
+      - 'config/sources.json'
   schedule:
     # JST 22:47, after the morning and backup acquisition windows.
     - cron: '47 13 * * *'

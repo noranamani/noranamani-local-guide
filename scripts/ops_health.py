@@ -3,7 +3,7 @@ import os
 from datetime import timedelta
 from pathlib import Path
 
-from localguide.core import now_jst, parse_time, read_json
+from localguide.core import GuideError, now_jst, parse_time, read_json
 from scripts.source_review_health import inspect_sources
 
 MAX_SUCCESS_AGE = timedelta(hours=40)
@@ -26,7 +26,14 @@ def assess(now, config, state, related_conclusion=None):
                 notices.append("source_review_due_soon")
     except (ValueError, TypeError, KeyError):
         notices.append("source_review_invalid")
-    record = state.get("sources", {}).get(SOURCE_ID, {})
+    records = state.get("sources", {})
+    if not isinstance(records, dict):
+        records = {}
+        notices.append("state_invalid")
+    record = records.get(SOURCE_ID, {})
+    if not isinstance(record, dict):
+        record = {}
+        notices.append("state_invalid")
     if record.get("halted"):
         notices.append("access_halted")
     checked = record.get("last_success_at")
@@ -55,9 +62,20 @@ def assess(now, config, state, related_conclusion=None):
 def main():
     root = Path(__file__).resolve().parents[1]
     now = now_jst()
-    config = read_json(root / "config/sources.json")
-    state = read_json(root / "data/source_state.json")
-    reasons = assess(now, config, state, os.getenv("RELATED_CONCLUSION"))
+    preliminary = []
+    try:
+        config = read_json(root / "config/sources.json")
+    except GuideError:
+        config = {"sources": []}
+        preliminary.append("config_read_error")
+    try:
+        state = read_json(root / "data/source_state.json")
+    except GuideError:
+        state = {"sources": {}}
+        preliminary.append("state_read_error")
+    reasons = sorted(set(
+        assess(now, config, state, os.getenv("RELATED_CONCLUSION")) + preliminary
+    ))
     print("運用診断: " + (", ".join(reasons) if reasons else "正常"))
     summary = os.getenv("GITHUB_STEP_SUMMARY")
     if summary:
