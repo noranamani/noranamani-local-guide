@@ -5,7 +5,7 @@ import tempfile
 import unittest
 
 from scripts.live_site_probe import (
-    BASE, PAGES, check, evaluate, inventory, local_reference_errors, url_path,
+    BASE, PAGES, MAX_ATTEMPTS, RETRY_SECONDS, check, evaluate, inventory, local_reference_errors, url_path,
 )
 
 
@@ -14,6 +14,10 @@ class LiveSiteSmokeTests(unittest.TestCase):
         return ('<html><head><title>はりまよりみち</title>'
                 '<meta name="robots" content="noindex,follow"></head><body>'
                 + " ".join(PAGES.get(route, ())) + '</body></html>')
+
+    def test_cloudflare_deploy_delay_window_is_several_minutes(self):
+        self.assertGreaterEqual((MAX_ATTEMPTS - 1) * RETRY_SECONDS, 180)
+        self.assertLess((MAX_ATTEMPTS - 1) * RETRY_SECONDS, 420)
 
     def test_existing_five_page_rules_and_noindex(self):
         for route in PAGES:
