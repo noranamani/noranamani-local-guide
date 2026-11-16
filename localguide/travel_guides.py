@@ -239,7 +239,8 @@ def guide_body(guide):
             '<span class="article-cover__note">※背景は装飾イメージです</span></div>'
         )
     else:
-        article_cover = '<div class="article-cover" aria-hidden="true"></div>'
+        article_cover = ('<div class="article-cover"><h1>' + escape(guide["title"]) + '</h1>'
+                         '<span class="article-cover__note">※背景は装飾イメージです</span></div>')
     jumps = ('<nav class="article-jump" aria-label="日程別に移動">' +
              "".join('<a href="#day-' + str(i) + '">' + str(i) + '日目の行程を見る →</a>'
                      for i in range(1, len(guide["days"]) + 1)) + '</nav>')

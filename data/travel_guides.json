@@ -117,6 +117,54 @@
         "destination_url": "https://travel.rakuten.co.jp/HOTEL/84942/84942.html?cid=tr_af_1632",
         "source_html": "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr><td><div style=\"border:1px solid #95a5a6;border-radius:.75rem;background-color:#FFFFFF;margin:0px;padding:5px;text-align:center;overflow:hidden;\"><table><tr><td style=\"width:100px\"><a href=\"https://hb.afl.rakuten.co.jp/hgc/588985ea.8619e683.588985eb.c075811a/?pc=https%3A%2F%2Ftravel.rakuten.co.jp%2FHOTEL%2F84942%2F84942.html%3Fcid%3Dtr_af_1632&link_type=picttext&ut=eyJwYWdlIjoiaXRlbSIsInR5cGUiOiJwaWN0dGV4dCIsInNpemUiOiIxMDB4MTAwIiwibmFtIjoxLCJuYW1wIjoicmlnaHQiLCJjb20iOjEsImNvbXAiOiJkb3duIiwicHJpY2UiOjEsImJvciI6MSwiY29sIjoxLCJiYnRuIjoxLCJwcm9kIjowLCJhbXAiOmZhbHNlfQ%3D%3D\" target=\"_blank\" rel=\"nofollow sponsored noopener\" style=\"word-wrap:break-word;\"><img src=\"https://hbb.afl.rakuten.co.jp/hgb/588985ea.8619e683.588985eb.c075811a/?me_id=2100001&item_id=84942&pc=https%3A%2F%2Fimg.travel.rakuten.co.jp%2Fimage%2Fimgr_100%3Fno%3D84942\" border=\"0\" style=\"margin:2px\" alt=\"\" title=\"\"></a></td><td style=\"vertical-align:top;display: block;\"><p style=\"font-size:12px;line-height:1.4em;text-align:left;margin:0px;padding:2px 6px;word-wrap:break-word\"><a href=\"https://hb.afl.rakuten.co.jp/hgc/588985ea.8619e683.588985eb.c075811a/?pc=https%3A%2F%2Ftravel.rakuten.co.jp%2FHOTEL%2F84942%2F84942.html%3Fcid%3Dtr_af_1632&link_type=picttext&ut=eyJwYWdlIjoiaXRlbSIsInR5cGUiOiJwaWN0dGV4dCIsInNpemUiOiIxMDB4MTAwIiwibmFtIjoxLCJuYW1wIjoicmlnaHQiLCJjb20iOjEsImNvbXAiOiJkb3duIiwicHJpY2UiOjEsImJvciI6MSwiY29sIjoxLCJiYnRuIjoxLCJwcm9kIjowLCJhbXAiOmZhbHNlfQ%3D%3D\" target=\"_blank\" rel=\"nofollow sponsored noopener\" style=\"word-wrap:break-word;\">松江市宍道ふるさと森林公園</a></p></td></tr></table></div><br><p style=\"color:#000000;font-size:12px;line-height:1.4em;margin:5px;word-wrap:break-word\"></p></td></tr></table>"
       }
+    },
+    {
+      "id": "himeji-ako-family-one-night",
+      "review_status": "preview",
+      "title": "加古川発・姫路と赤穂1泊2日｜お城・博物館・海浜公園をめぐる家族旅行案",
+      "summary": "加古川から車で姫路の城と歴史を楽しみ、赤穂の大きな海浜公園や塩づくりの展示へ足を延ばす1泊2日の提案プランです。実際の訪問記録ではありません。",
+      "origin": "加古川方面から車で出発する想定。訪問順は提案であり未実施",
+      "last_reviewed_at": "2026-11-16T10:55:00+09:00",
+      "days": [
+        {
+          "title": "1日目｜姫路の歴史をゆっくり体験",
+          "stops": [
+            {
+              "name": "世界遺産・国宝 姫路城",
+              "description": "天守や西の丸など、家族の体力に合わせて見学ルートを選ぶ案です。城内は階段や段差があるため、観覧方法とバリアフリー情報を公式案内で確認してください。",
+              "official_url": "https://www.city.himeji.lg.jp/castle/0000007738.html"
+            },
+            {
+              "name": "兵庫県立歴史博物館",
+              "description": "姫路城周辺の歴史や文化に触れる屋内の立ち寄り先です。企画展の内容・休館日・観覧条件を公式ページで確認し、子どもの興味に合わせて展示を選んでください。",
+              "official_url": "https://rekihaku.pref.hyogo.lg.jp/guide/information/"
+            }
+          ]
+        },
+        {
+          "title": "2日目｜赤穂の公園と塩の学び",
+          "stops": [
+            {
+              "name": "兵庫県立赤穂海浜公園",
+              "description": "大きな広場や散策路、遊びの設備がある海沿いの公園です。公園内の施設ごとに営業時間・入園条件・別料金が異なるため、事前に公式情報を確認してください。",
+              "official_url": "https://www.hyogo-park.or.jp/akokaihin/contents/about/index.html"
+            },
+            {
+              "name": "赤穂市立海洋科学館・塩の国",
+              "description": "瀬戸内海や塩の歴史を学ぶ科学館と復元塩田を訪れる案です。塩づくり体験は開催状況や受付条件が変わるため、実施可否を個別に確認してください。",
+              "official_url": "https://www.hyogo-tourism.jp/fcnet/location/detail_1369.html"
+            }
+          ]
+        }
+      ],
+      "lodging_note": "姫路・赤穂周辺の宿泊先は未選定です。家族全員の年齢と人数、部屋数、食事、駐車場、キャンセル条件をそろえて宿泊料金の合計を比較してください。この記事に予約広告は掲載していません。",
+      "planning_notes": [
+        "姫路城は段差や階段があるため、歩きやすい靴と余裕を持った行程を検討してください。所要時間や混雑は固定していません。",
+        "障害者手帳等の割引は本人と同伴者の対象、確認書類、適用施設を公式窓口で事前に確認してください。",
+        "博物館と科学館には休館日・入場条件があります。2日間の日程に応じて順番や訪問先を調整してください。",
+        "赤穂海浜公園の駐車場・園内施設・体験料金と宿泊費は別です。金額はここでは見積もっていません。",
+        "実訪問や宿泊予約を済ませた記録ではなく、公式情報をもとに作成したモデルコースの案です。"
+      ]
     }
   ]
 }

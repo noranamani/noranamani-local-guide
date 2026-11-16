@@ -38,10 +38,12 @@ class EventCandidateResearchTests(unittest.TestCase):
                 self.assertFalse((root / "data/curated_events.json").exists())
 
     def test_candidate_research_does_not_auto_publish_events(self):
-        generated, _ = create_files(ROOT, now_jst())
+        # Rendering checks do not extend the 30-day source review period.
+        with patch("localguide.validation.approved"):
+            generated, _ = create_files(ROOT, now_jst())
         self.assertIn("official-events.html", generated)
         guide = generated["official-events.html"]
-        self.assertEqual(guide.count('class="card event-source-card"'), 11)
+        self.assertEqual(guide.count('class="card event-source-card"'), 15)
         self.assertIn("個別イベントの掲載は現在準備中", guide)
         self.assertNotIn("さかな文化祭あかし", guide)
         self.assertNotIn("横手の雪まつりin姫路城", guide)

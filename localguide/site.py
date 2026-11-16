@@ -665,6 +665,9 @@ def page(title, description, body, filename, site_url, indexable, nav, home=Fals
     return f'''<!doctype html>
 <html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{escaped(title)} | {escaped(SITE_NAME)}</title><meta name="description" content="{escaped(description)}">
+<meta property="og:type" content="website"><meta property="og:locale" content="ja_JP">
+<meta property="og:site_name" content="{escaped(SITE_NAME)}"><meta property="og:title" content="{escaped(title)} | {escaped(SITE_NAME)}">
+<meta property="og:description" content="{escaped(description)}"><meta name="twitter:card" content="summary">
 <meta name="robots" content="{robots}">{canonical}{hero_preload}<link rel="stylesheet" href="styles.css"></head>
 <body><a class="skip-link" href="#main-content">本文へ移動</a>
 <header class="{header_class}"><div class="site-header__inner">
@@ -943,11 +946,18 @@ def create_files(root, now):
                    '<p class="listing-lead__disclaimer">営業時間・料金・宿泊条件は、'
                    '必ず各施設の公式サイトでご確認ください。</p></section>'
                    '<div class="cards trip-list-grid">' +
-                   "".join(guide_card(g) for g in travel_guides) + '</div>')
+                   "".join(guide_card(g) for g in travel_guides) + '</div>'
+                    '<section class="notice" aria-label="家族旅行の宿選びチェック">'
+                    '<h2>家族4〜6人の宿泊先を比べるとき</h2>'
+                    '<p>宿泊検索では大人と子どもの人数・年齢、寝具・食事の区分、部屋数を同じ条件にそろえ、予約確定前の合計金額を比較してください。</p>'
+                    '<p>「最安料金」は家族全員の総額とは限りません。駐車場代・キャンセル条件・チェックイン時刻も個別に確認してください。</p>'
+                    '<p>入場料や障害者手帳等の割引は施設ごとに異なります。対象者・同伴者・必要な証明書を必ず公式窓口でご確認ください。</p>'
+                    '<p class="muted">各旅行記事の宿泊リンクには広告・PRを含む場合があります。実際の訪問記録とモデルコースは区別して掲載しています。</p>'
+                    '</section>')
         add("travel.html", "加古川発・家族旅行プラン", "加古川から車で行ける1泊2日旅行のモデルコースと、宿泊予約前に確認したい条件のまとめです。", listing, travel_indexable)
         for guide in travel_guides:
             add(travel_filename(guide), guide["title"], guide["summary"], guide_body(guide),
-                search_eligible(guide, now), heading_in_body=(guide["id"] in {"awaji-family-one-night", "sanin-family-one-night"}))
+                search_eligible(guide, now), heading_in_body=True)
     if nearby:
         nearby_reviewed_on = read_json(root / "data/nearby_spots.json")["reviewed_on"]
         add("nearby.html", "近場のよりみちガイド", "加古川・明石・播磨町周辺の公園・屋内施設を独自編集で紹介。公式リンクで最新の利用条件を確認できます。", nearby_page_body(nearby, nearby_reviewed_on), False)

@@ -1,0 +1,22 @@
+name: Review approved CSV policy deadline
+
+on:
+  schedule:
+    # JST 08:35; GitHub may delay scheduled runs.
+    - cron: "35 23 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check due dates without calling any external source
+        run: python -m scripts.source_review_health

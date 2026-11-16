@@ -16,6 +16,10 @@ OFFICIAL_HOSTS = frozenset({
     "www.am12.jp",  # 明石市立天文科学館の公式イベント案内
     "hyogo-akashipark.jp",
     "web.pref.hyogo.lg.jp",
+    "www.city.takasago.lg.jp",
+    "www.town.harima.lg.jp",
+    "www.town.hyogo-inami.lg.jp",
+    "e-harima-tourism.jp",
 })
 FIELDS = frozenset({"id", "name", "municipality", "category", "url", "summary"})
 

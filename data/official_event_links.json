@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "policy": "manual_official_links_only",
-  "reviewed_on": "2026-10-27",
+  "reviewed_on": "2026-11-16",
   "items": [
     {
       "id": "kakogawa-child",
@@ -90,6 +90,38 @@
       "category": "県内の行事",
       "url": "https://web.pref.hyogo.lg.jp/cgi-bin/event_cal_multi/calendar.cgi?event_target=3&type=1",
       "summary": "開催地域や対象者を選んで県内のイベントを探せます。"
+    },
+    {
+      "id": "takasago-calendar",
+      "name": "高砂市 イベントカレンダー",
+      "municipality": "高砂市",
+      "category": "市のイベント情報",
+      "url": "https://www.city.takasago.lg.jp/gyoseisite/calendar.html",
+      "summary": "開催月や分野から市内の催しを探せます。最新の日程と参加条件は個別の公式案内をご確認ください。"
+    },
+    {
+      "id": "harima-calendar",
+      "name": "播磨町 イベントカレンダー",
+      "municipality": "播磨町",
+      "category": "町のイベント情報",
+      "url": "https://www.town.harima.lg.jp/cgi-bin/event_cal_multi/calendar.cgi",
+      "summary": "町内の催しを開催日ごとに探せます。申込みの要否や対象年齢は個別案内をご覧ください。"
+    },
+    {
+      "id": "inami-calendar",
+      "name": "稲美町 イベントカレンダー",
+      "municipality": "稲美町",
+      "category": "町のイベント情報",
+      "url": "https://www.town.hyogo-inami.lg.jp/event/now.html",
+      "summary": "稲美町の行事や募集情報を確認できます。会場や実施条件は最新の案内で再確認してください。"
+    },
+    {
+      "id": "higashiharima-tourism",
+      "name": "まるごと東はりま イベント案内",
+      "municipality": "東播磨地域",
+      "category": "広域観光情報",
+      "url": "https://e-harima-tourism.jp/event/",
+      "summary": "明石・加古川・高砂・稲美・播磨町をまたいで観光イベントを探せる案内です。主催者の情報もご確認ください。"
     }
   ]
 }
