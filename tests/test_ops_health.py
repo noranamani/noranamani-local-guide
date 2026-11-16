@@ -49,6 +49,12 @@ class OperationsHealthTests(unittest.TestCase):
         self.config["sources"][0]["checked_at"] = "invalid"
         self.assertIn("source_review_invalid", assess(self.now, self.config, self.state))
 
+    def test_bad_source_config_is_reported(self):
+        self.assertIn("source_configuration",
+                      assess(self.now, {"sources": None}, self.state))
+        self.assertIn("source_configuration",
+                      assess(self.now, {"sources": ["bad"]}, self.state))
+
     def test_missing_or_corrupted_state_is_not_reported_healthy(self):
         self.assertIn("never_succeeded",
                       assess(self.now, self.config, {"sources": {}}))

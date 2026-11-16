@@ -13,7 +13,12 @@ SOURCE_ID = "akashi_open_data"
 def assess(now, config, state, related_conclusion=None):
     """Return stable issue codes (no secret/data payloads) for automatic alerts."""
     notices = []
-    enabled = [s for s in config.get("sources", []) if s.get("enabled")]
+    sources = config.get("sources", [])
+    if not isinstance(sources, list) or not all(isinstance(s, dict) for s in sources):
+        sources = []
+        notices.append("source_configuration")
+    enabled = [s for s in sources if s.get("enabled")]
+    config = {"sources": sources}
     if len(enabled) != 1 or enabled[0].get("id") != SOURCE_ID:
         notices.append("source_configuration")
     try:

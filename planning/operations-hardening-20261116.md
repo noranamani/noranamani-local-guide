@@ -21,8 +21,8 @@
 
 ## 運用点検
 1. [Actions](https://github.com/noranamani/noranamani-local-guide/actions)から各ジョブの実行時刻・conclusionを確認する。GitHubのcronは最大数時間遅延する可能性がある。
-2. [source_state.json](../../data/source_state.json)で`attempt_day`、`attempts`、`last_success_at`、`halted`、`last_error`を確認。
-3. [places.json](../../data/places.json)の日時を確認し、4件が不自然に消えたり重複したりしていないか確認。
+2. [source_state.json](../data/source_state.json)で`attempt_day`、`attempts`、`last_success_at`、`halted`、`last_error`を確認。
+3. [places.json](../data/places.json)の日時を確認し、4件が不自然に消えたり重複したりしていないか確認。
 4. Cloudflare Pagesの実際のデプロイとHTMLを確認する（GitHub側の成功だけでは公開反映を保証しない）。
 5. 人手の再審査期限：2026-12-16より前。情報源の利用条件、robots、ライセンス、対象CSVを再確認してから審査記録を更新。
 
