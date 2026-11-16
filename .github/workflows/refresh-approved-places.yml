@@ -1,6 +1,13 @@
 name: Refresh approved Akashi facility CSV
 
 on:
+  # Run a real end-to-end source refresh when this workflow itself is fixed on
+  # main, without waiting for a future cron or exposing arbitrary push triggers.
+  # No loop: data-only bot commits do not match this path filter.
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/refresh-approved-places.yml'
   # UTC 23:25 = 08:25 JST; avoids the other sites' early morning jobs.
   schedule:
     - cron: '25 23 * * *'
