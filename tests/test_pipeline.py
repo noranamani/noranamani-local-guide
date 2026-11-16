@@ -340,6 +340,22 @@ class ValidationTests(Workspace):
         with self.assertRaisesRegex(GuideError, "30日以内"):
             approved(fixture_source(), future)
 
+    def test_offline_aging_bypass_never_waives_actual_source_rights(self):
+        future = NOW + timedelta(days=31)
+        for key in ("robots_review_status", "terms_review_status",
+                    "reuse_rights_status", "privacy_review_status"):
+            with self.subTest(key=key):
+                self.update_source(**{key: "unverified"})
+                with self.assertRaises(GuideError):
+                    validate_data(self.root, future)
+                self.update_source(**{key: "allowed"})
+
+    def test_future_review_timestamp_remains_invalid_offline(self):
+        future = NOW + timedelta(days=31)
+        self.update_source(checked_at=(future + timedelta(days=1)).isoformat())
+        with self.assertRaises(GuideError):
+            validate_data(self.root, future)
+
     def test_thin_page_threshold_cannot_be_lowered(self):
         rules = read_json(self.root / "config/page_rules.json")
         rules["list_pages"]["min_active_items"] = 1
