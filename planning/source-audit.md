@@ -244,7 +244,7 @@ HTTP 401/403/429、未審査リダイレクト、CSV形式変更、急減、タ�
 
 ## 2026-11-16：審査期限見直しと停止防止
 
-- 明石市の[公式オープンデータ配布ページ](https://www.city.akashi.lg.jp/soumu/j_kanri_ka/shise/opendata/index.html)（2026-10-28更新）で観光施設CSVの継続掲載を確認。
+- 明石市の[公式オープンデータ配布ページ](https://www.city.akashi.lg.jp/soumu/j_kanri_ka/shise/opendata/index.html)で観光施設CSV（2026-08-25版）の継続掲載と公開一覧（2026-10-27版）を確認。
 - [利用規約PDF](https://www.city.akashi.lg.jp/documents/29427/opendata_kiyaku.pdf)で商用利用・CC BY互換・出典/加工表示・第三者権利を再確認。使用は既存の事実5列・4公共施設に限定。
 - robots.txtは2026-10-14に404を確認した既存審査記録を維持。今回の外部参照環境では最新HTTPコードを独立確認できていないため、次回は直接確認し変更があれば取得を停止。
 - 規約と配布ページを再点検した日として checked_at を2026-11-16に更新。自動更新で審査日を延長しない。
