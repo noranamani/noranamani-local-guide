@@ -24,6 +24,7 @@ PAGES = {
                               "播磨町 イベントカレンダー",
                               "稲美町 イベントカレンダー",
                               "姫路市 子ども・子育てイベント検索"),
+    "/nearby.html": ("姫路科学館", "姫路市立水族館", "姫路市立動物園"),
     "/travel.html": ("家族旅行", "trip-himeji-ako-family-one-night.html"),
     "/trip-himeji-ako-family-one-night.html": ("姫路と赤穂1泊2日",),
     "/places.html": ("明石市立天文科学館",),
