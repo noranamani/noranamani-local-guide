@@ -16,20 +16,28 @@ def assess(now, config, state, related_conclusion=None):
     enabled = [s for s in config.get("sources", []) if s.get("enabled")]
     if len(enabled) != 1 or enabled[0].get("id") != SOURCE_ID:
         notices.append("source_configuration")
-    for _, status, _ in inspect_sources(config, now)[0]:
-        if status == "expired":
-            notices.append("source_review_expired")
-        elif status == "due_soon":
-            notices.append("source_review_due_soon")
+    try:
+        for _, status, checked_at in inspect_sources(config, now)[0]:
+            if parse_time(checked_at) > now:
+                notices.append("source_review_invalid")
+            elif status == "expired":
+                notices.append("source_review_expired")
+            elif status == "due_soon":
+                notices.append("source_review_due_soon")
+    except (ValueError, TypeError, KeyError):
+        notices.append("source_review_invalid")
     record = state.get("sources", {}).get(SOURCE_ID, {})
     if record.get("halted"):
         notices.append("access_halted")
     checked = record.get("last_success_at")
+    success_today = False
     if not checked:
         notices.append("never_succeeded")
     else:
         try:
-            age = now - parse_time(checked)
+            verified = parse_time(checked)
+            success_today = verified.date() == now.date()
+            age = now - verified
             if age < timedelta(0):
                 notices.append("future_success_timestamp")
             elif age > MAX_SUCCESS_AGE:
@@ -37,8 +45,7 @@ def assess(now, config, state, related_conclusion=None):
         except (ValueError, TypeError):
             notices.append("invalid_success_timestamp")
     if (record.get("attempt_day") == now.date().isoformat()
-            and record.get("last_error")
-            and (not checked or parse_time(checked).date() != now.date())):
+            and record.get("last_error") and not success_today):
         notices.append("daily_attempt_failed")
     if related_conclusion and related_conclusion not in ("success", "skipped"):
         notices.append("workflow_failure")

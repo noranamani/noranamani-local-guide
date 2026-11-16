@@ -41,6 +41,14 @@ class OperationsHealthTests(unittest.TestCase):
         self.state["sources"]["akashi_open_data"].pop("last_success_at")
         self.assertIn("never_succeeded", assess(self.now, self.config, self.state))
 
+    def test_invalid_health_timestamps_are_reported(self):
+        self.state["sources"]["akashi_open_data"]["last_success_at"] = "invalid"
+        self.state["sources"]["akashi_open_data"]["last_error"] = "safe failure"
+        self.assertIn("invalid_success_timestamp",
+                      assess(self.now, self.config, self.state))
+        self.config["sources"][0]["checked_at"] = "invalid"
+        self.assertIn("source_review_invalid", assess(self.now, self.config, self.state))
+
     def test_future_timestamps_cannot_hide_outages(self):
         self.state["sources"]["akashi_open_data"]["last_success_at"] = (
             self.now + timedelta(minutes=1)).isoformat()
