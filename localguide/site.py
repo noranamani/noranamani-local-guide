@@ -15,6 +15,7 @@ from .page_places import qualified_places, sustained_listing
 from .validation import inspect_text, publishable, validate_data, validate_config
 from .travel_guides import reviewed_guides, travel_filename, guide_card, guide_body, search_eligible
 from .nearby_guides import NEARBY_IMAGES, reviewed_nearby, nearby_cards, nearby_page_body, nearby_preview_cards
+from .nearby_facility_links import reviewed_facility_links, facility_links_section
 from .official_event_hub import official_event_links, event_finder_body
 from .community_event_sources import reviewed_community_event_sources, community_event_section
 from .curated_events import public_curated_events, curated_event_cards
@@ -801,6 +802,7 @@ def create_files(root, now):
     places = [p for p in data["places"]["items"] if publishable(p, sources, now, stale)]
     travel_guides = reviewed_guides(data.get("travel_guides", {"schema_version": 1, "items": []}), now)
     nearby = reviewed_nearby(root)
+    himeji_facilities, himeji_reviewed_on = reviewed_facility_links(root)
     official_links, official_reviewed_on = official_event_links(root)
     community_links, community_reviewed_on = reviewed_community_event_sources(root)
     curated = public_curated_events(root, now, stale)
@@ -960,7 +962,9 @@ def create_files(root, now):
                 search_eligible(guide, now), heading_in_body=True)
     if nearby:
         nearby_reviewed_on = read_json(root / "data/nearby_spots.json")["reviewed_on"]
-        add("nearby.html", "近場のよりみちガイド", "加古川・明石・播磨町周辺の公園・屋内施設を独自編集で紹介。公式リンクで最新の利用条件を確認できます。", nearby_page_body(nearby, nearby_reviewed_on), False)
+        add("nearby.html", "近場のよりみちガイド", "加古川・明石・姫路・播磨町周辺の公園・屋内施設を独自編集で紹介。公式リンクで最新の利用条件を確認できます。",
+            nearby_page_body(nearby, nearby_reviewed_on)
+            + facility_links_section(himeji_facilities, himeji_reviewed_on), False)
     if places:
         places_listing = ('<section class="listing-lead" aria-label="施設の探し方">'
                           '<span class="section-kicker">LOCAL SPOTS</span>'
