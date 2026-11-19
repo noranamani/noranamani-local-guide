@@ -28,13 +28,14 @@ PAGES = {
                               "稲美町 イベントカレンダー",
                               "姫路市 子ども・子育てイベント検索"),
     "/nearby.html": ("姫路科学館", "姫路市立水族館", "姫路市立動物園"),
-    "/travel.html": ("家族旅行", "trip-himeji-ako-family-one-night.html"),
+    "/travel.html": ("家族旅行", "trip-himeji-ako-family-one-night.html", "travel-budget.html"),
+    "/travel-budget.html": ("家族旅行の費用・割引シミュレーター", "travel-budget.js", "budget-total"),
     "/trip-himeji-ako-family-one-night.html": ("姫路と赤穂1泊2日",),
     "/places.html": ("明石市立天文科学館",),
 }
 ROBOTS = re.compile(r'<meta\s+name="robots"\s+content="noindex,follow"', re.I)
 MIME = {".html": "text/html", ".css": "text/css",
-        ".svg": "image/svg+xml", ".webp": "image/webp"}
+        ".svg": "image/svg+xml", ".webp": "image/webp", ".js": "text/javascript"}
 
 
 class References(HTMLParser):
@@ -57,7 +58,7 @@ def inventory(root):
             or len(set(files)) != len(files)):
         raise ValueError("生成ファイル一覧が不正です")
     if not {"index.html", "nearby.html", "places.html", "official-events.html",
-            "travel.html", "styles.css"} <= set(files):
+            "travel.html", "styles.css", "travel-budget.html", "travel-budget.js"} <= set(files):
         raise ValueError("主要ページが生成されていません")
     result = []
     for name in sorted(files):
@@ -141,7 +142,7 @@ def check(name, root, expected, loader=fetch):
         return ["WebPの形式が不正: " + name]
     local = (Path(root) / "docs" / name).read_bytes()
     if hashlib.sha256(local).digest() != hashlib.sha256(data).digest():
-        return ["画像・CSSが生成物と一致しません: " + name]
+        return ["画像・CSS・JavaScriptが生成物と一致しません: " + name]
     return []
 
 
