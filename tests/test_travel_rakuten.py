@@ -187,7 +187,7 @@ class RepoTravelPolicyTests(unittest.TestCase):
         rules = json.loads((root / "config/page_rules.json").read_text(encoding="utf-8"))
         self.assertFalse(rules["travel"]["early_stage_auto_generate"])
         self.assertFalse(rules["travel"]["is_primary_content"])
-        self.assertIsNone(rules["site_url"])
+        self.assertEqual(rules["site_url"], "https://harima-yorimichi.pages.dev")
 
 
 if __name__=="__main__":
