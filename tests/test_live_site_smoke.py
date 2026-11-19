@@ -38,7 +38,7 @@ class LiveSiteSmokeTests(unittest.TestCase):
             docs = Path(t) / "docs"
             docs.mkdir()
             names = ["index.html", "styles.css", "official-events.html",
-                     "travel.html", "nearby.html", "places.html",
+                     "travel.html", "travel-budget.html", "travel-budget.js", "nearby.html", "places.html",
                      "nearby-hero.webp", "_headers"]
             for name in names:
                 (docs / name).write_text("fixture", encoding="utf-8")
