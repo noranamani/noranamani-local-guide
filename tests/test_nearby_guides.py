@@ -108,12 +108,12 @@ class NearbyGuideTests(unittest.TestCase):
         self.assertIn("公式リンクの最終編集確認日", nearby_page_body(
             reviewed_nearby(ROOT), self.record["reviewed_on"]))
 
-    def test_generated_site_shows_new_guide_without_indexing_or_ad_changes(self):
+    def test_generated_site_shows_new_guide_with_reviewed_indexing_and_no_ad_changes(self):
         files, _ = create_files(self.root, NOW)
         self.assertIn("nearby.html", files)
         nearby_page = files["nearby.html"]
         home = files["index.html"]
-        self.assertIn('content="noindex,follow"', nearby_page)
+        self.assertIn('content="index,follow"', nearby_page)
         self.assertIn('<h1>近場のよりみちガイド</h1>', nearby_page)
         self.assertEqual(nearby_page.count("<h1"), 1)
         self.assertIn('href="nearby.html"', home)
@@ -122,7 +122,8 @@ class NearbyGuideTests(unittest.TestCase):
         self.assertIn('href="nearby.html" aria-current="page"', nearby_page)
         self.assertLess(home.index('id="family-trip"'), home.index('id="nearby-guide"'))
         self.assertLess(home.index('id="nearby-guide"'), home.index('id="local-spots"'))
-        self.assertNotIn("sitemap.xml", files)
+        self.assertIn("sitemap.xml", files)
+        self.assertIn("/nearby.html", files["sitemap.xml"])
         self.assertEqual(files[".guide-manifest.json"].count('"events": 0'), 1)
 
     def test_future_verification_is_still_rejected(self):
@@ -160,14 +161,14 @@ class NearbyGuideTests(unittest.TestCase):
                     (output / name).write_bytes(content)
                 else:
                     (output / name).write_text(content, encoding='utf-8')
-            validate_site(output)
+            validate_site(output, read_json(self.root / "config/page_rules.json")["site_url"])
             missing = NEARBY_IMAGES['gongen-park'][0]
             (output / missing).unlink()
             manifest = json.loads((output / '.guide-manifest.json').read_text(encoding='utf-8'))
             manifest['files'].remove(missing)
             (output / '.guide-manifest.json').write_text(json.dumps(manifest), encoding='utf-8')
             with self.assertRaises(GuideError):
-                validate_site(output)
+                validate_site(output, read_json(self.root / "config/page_rules.json")["site_url"])
 
     def test_external_or_modified_image_markup_is_rejected(self):
         markup = nearby_preview_cards(reviewed_nearby(ROOT))

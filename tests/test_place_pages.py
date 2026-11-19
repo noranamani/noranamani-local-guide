@@ -155,7 +155,8 @@ class PlaceListingSiteTests(unittest.TestCase):
         self.assertIn('content="index,follow"', files["places.html"])
         self.assertIn('content="index,follow"', files["index.html"])
         self.assertIn("/places.html", files["sitemap.xml"])
-        self.assertIn("/index.html", files["sitemap.xml"])
+        self.assertIn("https://example.org/local-guide/", files["sitemap.xml"])
+        self.assertNotIn("/index.html", files["sitemap.xml"])
 
     def test_site_url_required_even_after_week(self):
         self.rules["site_url"] = None

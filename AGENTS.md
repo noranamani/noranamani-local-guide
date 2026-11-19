@@ -42,7 +42,7 @@
 
 ## Cloudflare Pages
 - 本サイトはCloudflare Pagesの https://harima-yorimichi.pages.dev/ で**先行公開済み**。本番ブランチは `main`、GitHub連携の自動デプロイが稼働しているため、`main`へのマージは実際の本番公開作業として扱う。CI・変更内容・所有者の公開方針を確認してからマージする。
-- `python -m scripts.cloudflare_build` とCIによるオフライン検証を維持する。`site_url=null`またはSEO基準未達の間はHTTP `X-Robots-Tag: noindex` を付与する。
+- `python -m scripts.cloudflare_build` とCIによるオフライン検証を維持する。2026-11-19から `site_url` は確認済みの本番URLを使用し、独自の旅行費用計算ページとその入口となるトップを、手動確認済みの情報が存在する場合に段階的に検索対象にする。近場ガイド自体は最終手動確認から60日以内の時だけ検索対象にする。旅行の未承認プレビュー、記事確認待ち、薄い一覧、運営案内などは引き続きページ単位の `noindex`。全ページに `X-Robots-Tag: noindex` を付けて検索対象を妨げない。
 - 公開専用のAPIトークンや接続資格情報をGitHubへ記録しない。既存ガジェットサイトの秘密値も転用しない。
 
 ## Phase 1O — リリース診断と編集準備
@@ -53,7 +53,7 @@
 ## 公開ブランド（Phase 1Q）
 - 公開用サイト名は**「はりまよりみち」**、画面の説明文は**「加古川・明石・姫路と周辺のイベント・お店・おでかけ情報」**に統一する。
 - GitHubの個人アカウント名は、公開HTMLのサイト名、出典加工表記、Cloudflareのプロジェクト名・URLに含めない。内部リポジトリ名とPythonパッケージ名はそのまま維持する。
-- Cloudflare Pagesのプロジェクト名は `harima-yorimichi`。現在の公開URLは `https://harima-yorimichi.pages.dev/`。SEO用設定は別問題なので、`config/page_rules.json` の `site_url=null` と全ページ `noindex` を現在の審査方針どおり維持する。
+- Cloudflare Pagesのプロジェクト名は `harima-yorimichi`。公開URLは `https://harima-yorimichi.pages.dev/`。2026-11-19にユーザーのSEO公開依頼を受け、`site_url` を本番URLに設定し、品質条件を満たす一部ページだけ `index,follow` と canonical・sitemap を生成する。残りは `noindex,follow` のままにし、検索登録を保証する表現は使わない。
 
 ## ChatGPT × ローカルCodex 共同開発（2026-10-16）
 

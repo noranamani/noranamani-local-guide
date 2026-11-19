@@ -69,13 +69,13 @@ class HimejiOfficialFacilityLinkTests(unittest.TestCase):
         self.assertIn("専用駐車場はありません", html)
         self.assertEqual(facility_links_section([], None), "")
 
-    def test_merged_page_keeps_existing_nine_photos_and_noindex(self):
+    def test_merged_page_keeps_existing_nine_photos_and_reviewed_indexing(self):
         files, _ = create_files(ROOT, now_jst())
         near = files["nearby.html"]
         self.assertIn("姫路科学館", near)
         self.assertIn("姫路市立水族館", near)
         self.assertIn("姫路市立動物園", near)
-        self.assertIn('content="noindex,follow"', near)
+        self.assertIn('content="index,follow"', near)
         self.assertEqual(near.count('class="card nearby-card"'), 9)
         self.assertEqual(near.count('class="card event-source-card"'), 3)
 

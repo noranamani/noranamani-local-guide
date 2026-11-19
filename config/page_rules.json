@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "timezone": "Asia/Tokyo",
-  "site_url": null,
+  "site_url": "https://harima-yorimichi.pages.dev",
   "publication": {
     "require_verified_source": true,
     "exclude_cancelled": true,
