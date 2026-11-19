@@ -329,6 +329,8 @@ class ValidationTests(Workspace):
 
     def test_stale_review_allows_offline_validation_but_never_publication(self):
         from localguide.site import create_files
+        # Explicit prelaunch fixture: SEO opt-in does not waive source rights.
+        self.update_rules(site_url=None)
         future = NOW + timedelta(days=31)
         # Structural/license checks remain in force, but the offline renderer
         # can safely exclude old source data without acquiring anything.
@@ -557,6 +559,7 @@ class SiteTests(Workspace):
         self.assertEqual(validate_site(self.root / "docs")["events"], 1)
 
     def test_empty_site_no_fake_events_or_seo(self):
+        self.update_rules(site_url=None)
         self.save_events([])
         result = build(self.root, NOW)
         self.assertEqual(result["events"], 0)
