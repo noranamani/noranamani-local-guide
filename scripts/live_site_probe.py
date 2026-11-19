@@ -133,7 +133,9 @@ def check(name, root, expected, loader=fetch):
     data, headers = loader(route)
     mime = MIME[Path(name).suffix]
     actual = (headers.get("Content-Type") or headers.get("content-type") or "").split(";")[0].strip().lower()
-    if actual != mime:
+    # Cloudflare Pages serves static JavaScript as application/javascript.
+    # text/javascript is also valid; do not allow HTML fallback responses.
+    if actual != mime and not (Path(name).suffix == ".js" and actual == "application/javascript"):
         return ["Content-Type不一致: " + name + " (" + actual + ")"]
     if mime == "text/html":
         html = data.decode("utf-8")

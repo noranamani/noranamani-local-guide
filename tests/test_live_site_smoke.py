@@ -81,6 +81,18 @@ class LiveSiteSmokeTests(unittest.TestCase):
                                   lambda _: (b"changed", {"Content-Type": "text/css"})))
             self.assertTrue(check("index.html", t, expected,
                                   lambda _: (html, {"Content-Type": "text/plain"})))
+            script = b'"use strict";'
+            (docs / "travel-budget.js").write_bytes(script)
+            expected.add("travel-budget.js")
+            for mime in ("application/javascript", "text/javascript"):
+                with self.subTest(mime=mime):
+                    self.assertEqual(check("travel-budget.js", t, expected,
+                                           lambda _: (script, {"Content-Type": mime + "; charset=utf-8"})), [])
+            self.assertTrue(check("travel-budget.js", t, expected,
+                                  lambda _: (b"<html>wrong fallback</html>",
+                                             {"Content-Type": "text/html"})))
+            self.assertTrue(check("travel-budget.js", t, expected,
+                                  lambda _: (b"tampered", {"Content-Type": "application/javascript"})))
         self.assertEqual(url_path("index.html"), "/")
 
 
