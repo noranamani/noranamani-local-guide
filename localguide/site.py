@@ -856,7 +856,7 @@ def create_files(root, now):
 
     add("travel-budget.html", "家族旅行の費用・割引シミュレーター",
         "家族の人数、移動費、宿泊費、入場料や手動確認した割引を入力して旅行予算を無料計算できます。",
-        budget_body(), False)
+        budget_body(bool(travel_guides), bool(nearby)), False)
 
     cards = "".join(event_content(e, sources, now) for e in events)
     place_cards = "".join(place_content(p, sources) for p in places)
