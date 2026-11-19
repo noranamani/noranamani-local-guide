@@ -33,8 +33,8 @@ PAGES = {
     "/trip-himeji-ako-family-one-night.html": ("姫路と赤穂1泊2日",),
     "/places.html": ("明石市立天文科学館",),
 }
-ROBOTS_META = re.compile(r'<meta\\s+name="robots"\\s+content="([^"]+)"', re.I)
-CANONICAL_META = re.compile(r'<link\\s+rel="canonical"\\s+href="([^"]+)"', re.I)
+ROBOTS_META = re.compile(r'<meta\s+name="robots"\s+content="([^"]+)"', re.I)
+CANONICAL_META = re.compile(r'<link\s+rel="canonical"\s+href="([^"]+)"', re.I)
 MIME = {".html": "text/html", ".css": "text/css", ".txt": "text/plain",
         ".xml": "application/xml",
         ".svg": "image/svg+xml", ".webp": "image/webp", ".js": "text/javascript"}
