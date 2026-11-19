@@ -4,7 +4,7 @@
 
 ## 2026-11-19：検索エンジンへの段階的公開
 
-本番URL `https://harima-yorimichi.pages.dev/` を canonical の基準として設定。家族旅行の費用・割引シミュレーター、鮮度基準（最終手動確認から60日以内）と公式リンク数の条件を満たす近場ガイド、そこへの導線を持つトップを段階的に `index,follow` にします。確認待ち旅行記事・薄い一覧・運営案内は引き続き `noindex,follow`。Googleに登録済み・検索結果表示済みを意味しません。
+本番URL `https://harima-yorimichi.pages.dev/` を canonical の基準として設定。既存の手動確認済み情報と組み合わせた無料旅行費用・割引ツールと、その入口となるトップを検索対象にします。近場ガイド自体は公式リンク6件以上かつ最終手動確認から60日以内の場合だけ `index,follow` にします。確認待ち旅行記事・薄い一覧・運営案内は引き続き `noindex,follow`。Googleに登録済み・検索結果表示済みを意味しません。
 
 `robots.txt` と `sitemap.xml` は静的生成物から自動作成し、Cloudflareの公開監視がページごとの robots / canonical と sitemap の配信内容も検証します。個別ページの検索登録方針は既存のデータ審査条件から逸脱しません。
 
