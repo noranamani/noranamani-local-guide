@@ -262,7 +262,7 @@ def _number_input(identifier, label, default="", *, step="1", placeholder="0"):
     )
 
 
-def budget_body():
+def budget_body(travel_available=True, nearby_available=True):
     persons = "".join(
         _number_input("count-" + key, label + "（人）", str(default))
         for key, label, default in FARE_CATEGORIES
@@ -341,12 +341,11 @@ def budget_body():
         '<p class="budget-muted">試算は予約・料金を保証しません。'
         '宿泊、年齢区分、割引の対象・証明方法は各施設の公式案内で最終確認してください。</p>'
         '</aside></div>'
-        '<section class="notice budget-related">'
-        '<h2>次は行き先を探す</h2>'
-        '<p>モデルコースや実際の旅の記録は'
-        '<a href="travel.html">家族旅行プラン</a>から確認できます。'
-        '宿泊を検討する際は、旅行記事内に広告・PRリンクが含まれる場合があります。</p>'
-        '<p><a href="nearby.html">近場のよりみちガイドを見る</a></p>'
-        '</section>'
+        + ('<section class="notice budget-related"><h2>次は行き先を探す</h2>'
+           + ('<p><a href="travel.html">家族旅行プランを見る</a>（旅行記事には広告・PRを含む場合があります）</p>'
+              if travel_available else '')
+           + ('<p><a href="nearby.html">近場のよりみちガイドを見る</a></p>'
+              if nearby_available else '')
+           + '</section>' if travel_available or nearby_available else '')
         '<script src="travel-budget.js" defer></script>'
     )
