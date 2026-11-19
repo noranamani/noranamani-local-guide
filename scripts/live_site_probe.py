@@ -33,8 +33,10 @@ PAGES = {
     "/trip-himeji-ako-family-one-night.html": ("姫路と赤穂1泊2日",),
     "/places.html": ("明石市立天文科学館",),
 }
-ROBOTS = re.compile(r'<meta\s+name="robots"\s+content="noindex,follow"', re.I)
-MIME = {".html": "text/html", ".css": "text/css",
+ROBOTS_META = re.compile(r'<meta\\s+name="robots"\\s+content="([^"]+)"', re.I)
+CANONICAL_META = re.compile(r'<link\\s+rel="canonical"\\s+href="([^"]+)"', re.I)
+MIME = {".html": "text/html", ".css": "text/css", ".txt": "text/plain",
+        ".xml": "application/xml",
         ".svg": "image/svg+xml", ".webp": "image/webp", ".js": "text/javascript"}
 
 
@@ -78,16 +80,23 @@ def url_path(name):
     return "/" if name == "index.html" else "/" + name
 
 
-def evaluate(path, body, headers):
+def evaluate(path, body, headers, expected_robots="noindex,follow", expected_canonical=None):
     errors = []
-    if not ROBOTS.search(body):
-        errors.append("noindex指定がありません")
+    remote_robots = ROBOTS_META.findall(body)
+    if remote_robots != [expected_robots]:
+        errors.append("検索登録metaが生成物と一致しません")
+    canonical = CANONICAL_META.findall(body)
+    if canonical != ([expected_canonical] if expected_canonical else []):
+        errors.append("canonicalが生成物と一致しません")
     for value in PAGES.get(path, ()):
         if value not in body:
             errors.append("主要な表示内容が不足: " + value)
     robot_header = headers.get("X-Robots-Tag") or headers.get("x-robots-tag")
-    if robot_header and "noindex" not in robot_header.lower():
-        errors.append("HTTP robots指定が不正です")
+    if robot_header:
+        if "noindex" in robot_header.lower() and expected_robots == "index,follow":
+            errors.append("HTTPヘッダーが検索登録を禁止しています")
+        elif "noindex" not in robot_header.lower() and expected_robots == "noindex,follow":
+            errors.append("HTTP robots指定が不正です")
     return errors
 
 
@@ -135,11 +144,19 @@ def check(name, root, expected, loader=fetch):
     actual = (headers.get("Content-Type") or headers.get("content-type") or "").split(";")[0].strip().lower()
     # Cloudflare Pages serves static JavaScript as application/javascript.
     # text/javascript is also valid; do not allow HTML fallback responses.
-    if actual != mime and not (Path(name).suffix == ".js" and actual == "application/javascript"):
+    valid_alternate = (Path(name).suffix == ".js" and actual == "application/javascript") or (
+        Path(name).suffix == ".xml" and actual == "text/xml")
+    if actual != mime and not valid_alternate:
         return ["Content-Type不一致: " + name + " (" + actual + ")"]
     if mime == "text/html":
         html = data.decode("utf-8")
-        return evaluate(route, html, headers) + local_reference_errors(route, html, expected)
+        local_html = (Path(root) / "docs" / name).read_text(encoding="utf-8")
+        local_robots = ROBOTS_META.findall(local_html)
+        local_canonicals = CANONICAL_META.findall(local_html)
+        if len(local_robots) != 1 or len(local_canonicals) > 1:
+            return ["生成物のmetaが不正: " + name]
+        return evaluate(route, html, headers, local_robots[0],
+                        local_canonicals[0] if local_canonicals else None) + local_reference_errors(route, html, expected)
     if mime == "image/webp" and (data[:4] != b"RIFF" or data[8:12] != b"WEBP"):
         return ["WebPの形式が不正: " + name]
     local = (Path(root) / "docs" / name).read_bytes()
