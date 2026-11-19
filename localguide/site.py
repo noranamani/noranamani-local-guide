@@ -1139,6 +1139,8 @@ def validate_site(output, site_url=None):
             canonical = [site_url.rstrip("/") + "/" + filename] if indexable and site_url else []
             if document.canonical != canonical or (indexable and not site_url):
                 raise GuideError("canonicalまたはsite_urlが不正です")
+            if filename != "travel-budget.html" and "travel-budget.js" in document.links:
+                raise GuideError("計算ツール以外にスクリプトが含まれています")
             documents[filename] = document
             if filename.startswith("event-"):
                 from .core import parse_time
