@@ -33,6 +33,19 @@ class LiveSiteSmokeTests(unittest.TestCase):
         self.assertEqual(evaluate("/", self.page("/"), {"X-Robots-Tag": "noindex"}), [])
         self.assertEqual(BASE, "https://harima-yorimichi.pages.dev")
 
+    def test_indexed_page_has_matching_meta_canonical_and_no_block_header(self):
+        canonical = "https://harima-yorimichi.pages.dev/"
+        html = ('<html><head><meta name="robots" content="index,follow">'
+                '<link rel="canonical" href="' + canonical + '"></head>'
+                '<body>はりまよりみち</body></html>')
+        self.assertEqual(evaluate("/", html, {}, "index,follow", canonical), [])
+        self.assertTrue(evaluate("/", html, {"X-Robots-Tag": "noindex"},
+                                 "index,follow", canonical))
+        self.assertTrue(evaluate("/", html.replace("index,follow", "noindex,follow"),
+                                 {}, "index,follow", canonical))
+        self.assertTrue(evaluate("/", html.replace(canonical, canonical + "index.html"),
+                                 {}, "index,follow", canonical))
+
     def test_manifest_identifies_all_public_assets_and_rejects_invalid_inventory(self):
         with tempfile.TemporaryDirectory() as t:
             docs = Path(t) / "docs"
