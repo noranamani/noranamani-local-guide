@@ -14,6 +14,7 @@ from .normalize import identifier
 from .page_places import qualified_places, sustained_listing
 from .validation import inspect_text, publishable, validate_data, validate_config
 from .travel_guides import reviewed_guides, travel_filename, guide_card, guide_body, search_eligible
+from .travel_budget import BUDGET_STYLE, BUDGET_JS, budget_body
 from .nearby_guides import NEARBY_IMAGES, reviewed_nearby, nearby_cards, nearby_page_body, nearby_preview_cards
 from .nearby_facility_links import reviewed_facility_links, facility_links_section
 from .official_event_hub import official_event_links, event_finder_body
@@ -596,7 +597,7 @@ body { background: #f7f8f5; }
   .nearby-preview-grid { grid-template-columns: minmax(0, 1fr); }
   .nearby-preview-card__body { padding: 1rem; }
 }
-"""
+""" + BUDGET_STYLE
 
 
 # Original, self-contained artwork. No external photos or third-party assets.
@@ -643,13 +644,14 @@ def page(title, description, body, filename, site_url, indexable, nav, home=Fals
     main_class = (' class="home-main"' if home else
                   ' class="article-main"' if filename.startswith("trip-") else
                   ' class="about-main"' if filename == "about.html" else
-                  ' class="listing-main"' if filename in {"travel.html", "places.html", "nearby.html", "official-events.html"} else "")
+                  ' class="listing-main"' if filename in {"travel.html", "travel-budget.html", "places.html", "nearby.html", "official-events.html"} else "")
     header_class = "site-header site-header--compact" if home else "site-header"
     header_identity = ('<div class="header-identity">'
                        f'<a class="brand" href="index.html">{escaped(SITE_NAME)}</a>'
                        f'<p class="tagline">{escaped(SITE_TAGLINE)}</p></div>') if not home else ""
     active_file = ("index.html" if home else
                    "travel.html" if filename == "travel.html" or filename.startswith("trip-") else
+                   "travel-budget.html" if filename == "travel-budget.html" else
                    "nearby.html" if filename == "nearby.html" else
                    "official-events.html" if filename == "official-events.html" else
                    "places.html" if filename == "places.html" else
@@ -829,8 +831,9 @@ def create_files(root, now):
            + ('<a href="events.html">開催情報一覧</a>' if events else '')
            + ('<a href="nearby.html">近場のよりみち</a>' if nearby else '')
            + ('<a href="places.html">施設一覧</a>' if places else '')
-           + ('<a href="travel.html">家族旅行</a>' if travel_guides else ''))
-    files, indexable_files = {"styles.css": STYLE, "harima-hero.svg": HERO_SCENE,
+           + ('<a href="travel.html">家族旅行</a>' if travel_guides else '')
+           + '<a href="travel-budget.html">旅行費用計算</a>')
+    files, indexable_files = {"styles.css": STYLE, "travel-budget.js": BUDGET_JS, "harima-hero.svg": HERO_SCENE,
                               "awaji-card.svg": AWAJI_SCENE,
                               **{name: load_photo_asset(name) for name in PHOTO_ASSETS}}, []
     url = rules["site_url"]
@@ -850,6 +853,10 @@ def create_files(root, now):
             event_finder_body(official_links, official_reviewed_on,
                               curated_event_cards(curated),
                               community_event_section(community_links, community_reviewed_on)), False)
+
+    add("travel-budget.html", "家族旅行の費用・割引シミュレーター",
+        "家族の人数、移動費、宿泊費、入場料や手動確認した割引を入力して旅行予算を無料計算できます。",
+        budget_body(bool(travel_guides), bool(nearby)), False)
 
     cards = "".join(event_content(e, sources, now) for e in events)
     place_cards = "".join(place_content(p, sources) for p in places)
@@ -884,6 +891,12 @@ def create_files(root, now):
                     '</div><a class="home-section__more" href="travel.html">旅行プラン一覧 →</a></div>'
                     '<div class="cards home-trip-cards">'
                     + "".join(guide_card(g, compact=True) for g in travel_guides) + '</div></section>')
+    content += ('<section class="home-section"><div class="home-section__heading">'
+                '<div><span class="section-kicker">FREE TOOL</span>'
+                '<h2>旅行にかかる費用を計算</h2>'
+                '<p>移動・宿泊・食事・入場料をまとめて計算。割引も条件を確認して入力できます。</p>'
+                '</div><a class="home-section__more" href="travel-budget.html">無料で計算する →</a>'
+                '</div></section>')
     if nearby:
         preview = nearby_preview_cards(nearby)
         content += (
@@ -947,6 +960,7 @@ def create_files(root, now):
                    '<span>旅の記録と提案を区別して掲載</span></div>'
                    '<p class="listing-lead__disclaimer">営業時間・料金・宿泊条件は、'
                    '必ず各施設の公式サイトでご確認ください。</p></section>'
+                   '<p><a class="action-link action-link--secondary" href="travel-budget.html">旅行費用・割引を無料で計算する →</a></p>'
                    '<div class="cards trip-list-grid">' +
                    "".join(guide_card(g) for g in travel_guides) + '</div>'
                     '<section class="notice" aria-label="家族旅行の宿選びチェック">'
@@ -1049,7 +1063,12 @@ class Document(HTMLParser):
                     safe_url(image_url)
                 except GuideError:
                     self.errors.append("楽天広告画像のURLが不正です")
-        elif tag in ("script", "iframe", "form", "object", "embed", "base"):
+        elif tag == "script":
+            if set(values) != {"src", "defer"} or values.get("src") != "travel-budget.js" or values.get("defer") is not None:
+                self.errors.append("許可されないスクリプトがあります")
+            else:
+                self.links.append("travel-budget.js")
+        elif tag in ("iframe", "form", "object", "embed", "base"):
             self.errors.append("許可されない埋め込み要素・動的処理があります")
         if any(k.startswith("on") for k in values):
             self.errors.append("イベント属性は禁止です")
@@ -1120,6 +1139,8 @@ def validate_site(output, site_url=None):
             canonical = [site_url.rstrip("/") + "/" + filename] if indexable and site_url else []
             if document.canonical != canonical or (indexable and not site_url):
                 raise GuideError("canonicalまたはsite_urlが不正です")
+            if filename != "travel-budget.html" and "travel-budget.js" in document.links:
+                raise GuideError("計算ツール以外にスクリプトが含まれています")
             documents[filename] = document
             if filename.startswith("event-"):
                 from .core import parse_time
