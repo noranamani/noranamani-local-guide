@@ -645,7 +645,7 @@ def canonical_url(site_url, filename):
     return site_url.rstrip("/") + ("/" if filename == "index.html" else "/" + filename)
 
 
-def evergreen_nearby_indexable(root, now, nearby):
+def evergreen_nearby_indexable(root, now, nearby, *, max_age_days=60):
     """Whitelist independently reviewed, sufficiently rich evergreen guidance.
 
     Never change the editor's review date automatically. A stale or future
@@ -659,7 +659,7 @@ def evergreen_nearby_indexable(root, now, nearby):
     except (ValueError, KeyError, TypeError, OSError):
         return False
     age = today - reviewed
-    return timedelta(0) <= age <= timedelta(days=60)
+    return timedelta(0) <= age and (max_age_days is None or age <= timedelta(days=max_age_days))
 
 
 def page(title, description, body, filename, site_url, indexable, nav, home=False, heading_in_body=False):
@@ -834,6 +834,9 @@ def create_files(root, now):
     community_links, community_reviewed_on = reviewed_community_event_sources(root)
     curated = public_curated_events(root, now, stale)
     nearby_indexable = evergreen_nearby_indexable(root, now, nearby)
+    # The original client-side calculator is evergreen even if the separately
+    # curated nearby directory later needs another editorial link review.
+    tool_indexable = evergreen_nearby_indexable(root, now, nearby, max_age_days=None)
     state_path = root / "cache/page_state.json"
     page_state = read_json(state_path) if state_path.exists() else {}
     groups = {}
@@ -882,7 +885,7 @@ def create_files(root, now):
 
     add("travel-budget.html", "家族旅行の費用・割引シミュレーター",
         "家族の人数、移動費、宿泊費、入場料や手動確認した割引を入力して旅行予算を無料計算できます。",
-        budget_body(bool(travel_guides), bool(nearby)), True)
+        budget_body(bool(travel_guides), bool(nearby)), tool_indexable)
 
     cards = "".join(event_content(e, sources, now) for e in events)
     place_cards = "".join(place_content(p, sources) for p in places)
@@ -976,7 +979,7 @@ def create_files(root, now):
                 '<p>出典と確認状況を表示します。旅行記事は実際の記録と提案プランを区別して紹介します。</p></div>'
                 '</section>')
     travel_indexable = any(search_eligible(g, now) for g in travel_guides)
-    add("index.html", "家族で出かける地域ガイド", "加古川・明石・姫路周辺の確認済み開催情報と施設案内、播磨からの家族旅行モデルコース。公式情報と確認日時を表示します。", content, qualified(events, rules) or places_ready or travel_indexable or nearby_indexable)
+    add("index.html", "家族で出かける地域ガイド", "加古川・明石・姫路周辺の確認済み開催情報と施設案内、播磨からの家族旅行モデルコース。公式情報と確認日時を表示します。", content, qualified(events, rules) or places_ready or travel_indexable or tool_indexable)
     if travel_guides:
         listing = ('<section class="listing-lead" aria-label="旅行記事について">'
                    '<span class="section-kicker">FAMILY TRIP</span>'
@@ -1134,6 +1137,13 @@ class Document(HTMLParser):
 
 def validate_site(output, site_url=None):
     output = Path(output)
+    # Public callers often validate the whole generated workspace without
+    # spelling out the canonical origin; trust the local reviewed config, not
+    # an arbitrary URL copied from the HTML being checked.
+    if site_url is None:
+        cfg_path = output.parent / "config/page_rules.json"
+        if cfg_path.is_file():
+            site_url = read_json(cfg_path)["site_url"]
     manifest = read_json(output / ".guide-manifest.json")
     expected = set(manifest["files"]) | {".guide-manifest.json"}
     if not {"index.html", "styles.css"} <= expected:
