@@ -161,14 +161,14 @@ class NearbyGuideTests(unittest.TestCase):
                     (output / name).write_bytes(content)
                 else:
                     (output / name).write_text(content, encoding='utf-8')
-            validate_site(output)
+            validate_site(output, read_json(self.root / "config/page_rules.json")["site_url"])
             missing = NEARBY_IMAGES['gongen-park'][0]
             (output / missing).unlink()
             manifest = json.loads((output / '.guide-manifest.json').read_text(encoding='utf-8'))
             manifest['files'].remove(missing)
             (output / '.guide-manifest.json').write_text(json.dumps(manifest), encoding='utf-8')
             with self.assertRaises(GuideError):
-                validate_site(output)
+                validate_site(output, read_json(self.root / "config/page_rules.json")["site_url"])
 
     def test_external_or_modified_image_markup_is_rejected(self):
         markup = nearby_preview_cards(reviewed_nearby(ROOT))
