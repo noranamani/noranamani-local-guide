@@ -73,7 +73,8 @@ class OfficialEventHubTests(unittest.TestCase):
         self.assertIn('href="official-events.html"', files["index.html"])
         self.assertIn('href="about.html"', official)
         self.assertEqual(files[".guide-manifest.json"].count('"events": 0'), 1)
-        self.assertNotIn("sitemap.xml", files)
+        self.assertIn("sitemap.xml", files)
+        self.assertNotIn("official-events.html", files["sitemap.xml"])
         self.assertNotIn("static.cloudflareinsights.com", official)
 
 
