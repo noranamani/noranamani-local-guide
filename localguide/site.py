@@ -5,6 +5,7 @@ import os
 import shutil
 import tempfile
 import xml.etree.ElementTree as ET
+from datetime import date, timedelta, timezone
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urljoin, urlsplit
@@ -637,8 +638,32 @@ def date_label(value):
     return value.replace("T", " ").replace("+09:00", "（日本時間）")
 
 
+def canonical_url(site_url, filename):
+    """Use the public origin for home, never duplicate /index.html in the sitemap."""
+    if not site_url:
+        return ""
+    return site_url.rstrip("/") + ("/" if filename == "index.html" else "/" + filename)
+
+
+def evergreen_nearby_indexable(root, now, nearby):
+    """Whitelist independently reviewed, sufficiently rich evergreen guidance.
+
+    Never change the editor's review date automatically. A stale or future
+    reviewed_on record stops organic indexing while ordinary viewing remains.
+    """
+    if len(nearby) < 6:
+        return False
+    try:
+        reviewed = date.fromisoformat(read_json(root / "data/nearby_spots.json")["reviewed_on"])
+        today = now.astimezone(timezone(timedelta(hours=9))).date()
+    except (ValueError, KeyError, TypeError, OSError):
+        return False
+    age = today - reviewed
+    return timedelta(0) <= age <= timedelta(days=60)
+
+
 def page(title, description, body, filename, site_url, indexable, nav, home=False, heading_in_body=False):
-    canonical = f'<link rel="canonical" href="{escaped(site_url.rstrip("/") + "/" + filename)}">' if site_url and indexable else ""
+    canonical = f'<link rel="canonical" href="{escaped(canonical_url(site_url, filename))}">' if site_url and indexable else ""
     robots = "index,follow" if site_url and indexable else "noindex,follow"
     heading = "" if home or heading_in_body else f"<h1>{escaped(title)}</h1>"
     main_class = (' class="home-main"' if home else
@@ -808,6 +833,7 @@ def create_files(root, now):
     official_links, official_reviewed_on = official_event_links(root)
     community_links, community_reviewed_on = reviewed_community_event_sources(root)
     curated = public_curated_events(root, now, stale)
+    nearby_indexable = evergreen_nearby_indexable(root, now, nearby)
     state_path = root / "cache/page_state.json"
     page_state = read_json(state_path) if state_path.exists() else {}
     groups = {}
@@ -856,7 +882,7 @@ def create_files(root, now):
 
     add("travel-budget.html", "家族旅行の費用・割引シミュレーター",
         "家族の人数、移動費、宿泊費、入場料や手動確認した割引を入力して旅行予算を無料計算できます。",
-        budget_body(bool(travel_guides), bool(nearby)), False)
+        budget_body(bool(travel_guides), bool(nearby)), True)
 
     cards = "".join(event_content(e, sources, now) for e in events)
     place_cards = "".join(place_content(p, sources) for p in places)
@@ -950,7 +976,7 @@ def create_files(root, now):
                 '<p>出典と確認状況を表示します。旅行記事は実際の記録と提案プランを区別して紹介します。</p></div>'
                 '</section>')
     travel_indexable = any(search_eligible(g, now) for g in travel_guides)
-    add("index.html", "家族で出かける地域ガイド", "加古川・明石・姫路周辺の確認済み開催情報と施設案内、播磨からの家族旅行モデルコース。公式情報と確認日時を表示します。", content, qualified(events, rules) or places_ready or travel_indexable)
+    add("index.html", "家族で出かける地域ガイド", "加古川・明石・姫路周辺の確認済み開催情報と施設案内、播磨からの家族旅行モデルコース。公式情報と確認日時を表示します。", content, qualified(events, rules) or places_ready or travel_indexable or nearby_indexable)
     if travel_guides:
         listing = ('<section class="listing-lead" aria-label="旅行記事について">'
                    '<span class="section-kicker">FAMILY TRIP</span>'
@@ -978,7 +1004,7 @@ def create_files(root, now):
         nearby_reviewed_on = read_json(root / "data/nearby_spots.json")["reviewed_on"]
         add("nearby.html", "近場のよりみちガイド", "加古川・明石・姫路・播磨町周辺の公園・屋内施設を独自編集で紹介。公式リンクで最新の利用条件を確認できます。",
             nearby_page_body(nearby, nearby_reviewed_on)
-            + facility_links_section(himeji_facilities, himeji_reviewed_on), False)
+            + facility_links_section(himeji_facilities, himeji_reviewed_on), nearby_indexable)
     if places:
         places_listing = ('<section class="listing-lead" aria-label="施設の探し方">'
                           '<span class="section-kicker">LOCAL SPOTS</span>'
@@ -1002,7 +1028,7 @@ def create_files(root, now):
             tree = ET.Element(f"{{{ns}}}urlset")
             for filename in indexable_files:
                 entry = ET.SubElement(tree, f"{{{ns}}}url")
-                ET.SubElement(entry, f"{{{ns}}}loc").text = url.rstrip("/") + "/" + filename
+                ET.SubElement(entry, f"{{{ns}}}loc").text = canonical_url(url, filename)
             files["sitemap.xml"] = ET.tostring(tree, encoding="unicode", xml_declaration=True)
             files["robots.txt"] += "Sitemap: " + url.rstrip("/") + "/sitemap.xml\n"
     files["_headers"] = cloudflare_headers(not bool(indexable_files))
@@ -1135,8 +1161,10 @@ def validate_site(output, site_url=None):
                     or not "".join(document.title).strip() or not "".join(document.headings).strip()
                     or document.heading_count != 1 or not document.metas.get("description") or not document.metas.get("viewport")):
                 raise GuideError(f"HTML検証に失敗: {filename}")
+            if document.metas.get("robots") not in {"index,follow", "noindex,follow"}:
+                raise GuideError("検索エンジンの登録設定が不正です")
             indexable = document.metas.get("robots") == "index,follow"
-            canonical = [site_url.rstrip("/") + "/" + filename] if indexable and site_url else []
+            canonical = [canonical_url(site_url, filename)] if indexable and site_url else []
             if document.canonical != canonical or (indexable and not site_url):
                 raise GuideError("canonicalまたはsite_urlが不正です")
             if filename != "travel-budget.html" and "travel-budget.js" in document.links:
@@ -1170,7 +1198,7 @@ def validate_site(output, site_url=None):
             raise GuideError("site_url未確定でsitemapを生成できません")
         xml = ET.fromstring((output / "sitemap.xml").read_text())
         locations = [node.text for node in xml.iter("{http://www.sitemaps.org/schemas/sitemap/0.9}loc")]
-        valid = {site_url.rstrip("/") + "/" + name for name, doc in documents.items() if doc.metas["robots"] == "index,follow"}
+        valid = {canonical_url(site_url, name) for name, doc in documents.items() if doc.metas["robots"] == "index,follow"}
         if not locations or len(locations) != len(set(locations)) or set(locations) != valid:
             raise GuideError("sitemapに非公開・不正なURLがあります")
     return manifest
