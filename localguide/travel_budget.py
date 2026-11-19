@@ -347,5 +347,5 @@ def budget_body(travel_available=True, nearby_available=True):
            + ('<p><a href="nearby.html">近場のよりみちガイドを見る</a></p>'
               if nearby_available else '')
            + '</section>' if travel_available or nearby_available else '')
-        '<script src="travel-budget.js" defer></script>'
+        + '<script src="travel-budget.js" defer></script>'
     )
