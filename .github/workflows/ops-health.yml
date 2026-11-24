@@ -85,3 +85,37 @@ jobs:
                 '対応・確認が済むまでこのIssueを開いたままにしてください。'
               ].join('\n')
             });
+      - name: Close previously opened operations issue only when the complete health assessment is clean
+        if: steps.health.outputs.alert == 'false'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const {owner, repo} = context.repo;
+            const title = '【はりまよりみち】自動更新の要確認';
+            const open = await github.paginate(github.rest.issues.listForRepo,
+              {owner, repo, state: 'open', per_page: 100});
+            const issues = open.filter(x =>
+              !x.pull_request &&
+              x.title === title &&
+              typeof x.body === 'string' &&
+              x.body.startsWith('自動診断が更新停止・データ鮮度・情報源審査期限'));
+            if (issues.length > 1) {
+              core.setFailed('More than one matching operations issue; manual review required.');
+              return;
+            }
+            if (issues.length === 0) {
+              core.info('No outdated operations issue to close.');
+              return;
+            }
+            const issue_number = issues[0].number;
+            await github.rest.issues.createComment({
+              owner, repo, issue_number,
+              body: '更新監査で自動取得の停止・データ鮮度・情報源の期限について問題未検出となりました。'
+                + ' このIssueは解消済みとして閉じます。'
+                + ' 新しい異常が発生した場合は同じ監視ワークフローが再度Issueを作成します。'
+                + ' 無許可の情報源を有効化したり、データ取得時刻を書き換えたりしていません。'
+            });
+            await github.rest.issues.update({
+              owner, repo, issue_number, state: 'closed', state_reason: 'completed'
+            });
