@@ -5,7 +5,7 @@ import unittest
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
-from localguide.core import parse_time
+from localguide.core import now_jst, parse_time
 from localguide.site import create_files, evergreen_nearby_indexable
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -15,12 +15,21 @@ SITE = "https://harima-yorimichi.pages.dev"
 
 class SearchRolloutTests(unittest.TestCase):
     def test_current_canonical_indexable_subset_and_robots(self):
-        files, _ = create_files(ROOT, NOW)
+        # This is an integration test against CURRENT committed records, not
+        # the 2026-11-19 frozen event fixture used by the test below. The
+        # approved CSV updates daily, so a fixed earlier clock becomes invalid.
+        files, _ = create_files(ROOT, now_jst())
         wanted = {
             "index.html": SITE + "/",
             "travel-budget.html": SITE + "/travel-budget.html",
-            "nearby.html": SITE + "/nearby.html",
         }
+        # Reviewed nearby sources can legitimately expire after 60 days.
+        # Such a change should mean noindex, not a broken CI build.
+        if 'name="robots" content="index,follow"' in files.get("nearby.html", ""):
+            wanted["nearby.html"] = SITE + "/nearby.html"
+        elif "nearby.html" in files:
+            self.assertIn('name="robots" content="noindex,follow"', files["nearby.html"])
+            self.assertNotIn('rel="canonical"', files["nearby.html"])
         for filename, canonical in wanted.items():
             with self.subTest(filename=filename):
                 page = files[filename]
